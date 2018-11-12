@@ -46,8 +46,8 @@ public class CodeGenerator {
 
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        //String projectPath = "D:\\workspace\\idea_workspace\\qc_workspace\\QualityCheck\\quality";
-        String projectPath = "D:\\IDEA\\QualityCheck\\quality";
+        String projectPath = "D:\\workspace\\idea_workspace\\qc_workspace\\QualityCheck\\quality";
+        //String projectPath = "D:\\IDEA\\QualityCheck\\quality";
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setAuthor("yerui");
         //允许重写
@@ -55,9 +55,12 @@ public class CodeGenerator {
         //不弹出新窗口打开输出目录
         gc.setOpen(false);
         gc.setSwagger2(true);
+
         gc.setEnableCache(false);// XML 二级缓存
         gc.setBaseResultMap(true);// XML ResultMap
         gc.setBaseColumnList(true);// XML columList
+
+
         mpg.setGlobalConfig(gc);
 
         // 数据源配置
@@ -74,6 +77,7 @@ public class CodeGenerator {
         PackageConfig pc = new PackageConfig();
         pc.setModuleName(scanner("请输入模块"));
         pc.setParent("com.quality");
+
         mpg.setPackageInfo(pc);
 
         // 自定义配置
@@ -92,8 +96,10 @@ public class CodeGenerator {
                         + "/" + tableInfo.getEntityName() + "Mapper.xml";
             }
         });
+
         cfg.setFileOutConfigList(focList);
         mpg.setCfg(cfg);
+
         mpg.setTemplate(new TemplateConfig().setXml(null));
 
         // 策略配置
@@ -112,18 +118,21 @@ public class CodeGenerator {
         //设置表名
         strategy.setInclude(scanner("请输入表名，多个用逗号分开"));
         //自定义基础的entity类的字段，如id
-        strategy.setSuperEntityColumns("id","crtTime","updTime");
+        strategy.setSuperEntityColumns("id","crtTime","updTime","deleted");
         //驼峰转链接符
         strategy.setControllerMappingHyphenStyle(true);
         //设置字段的注解
         strategy.entityTableFieldAnnotationEnable(true);
        /* strategy.setTablePrefix(pc.getModuleName() + "_");*/
         mpg.setStrategy(strategy);
+
         //设置成vm引擎
         mpg.setTemplateEngine(new VelocityTemplateEngine());
         //设置自定义的模板引擎
         TemplateConfig tc = new TemplateConfig();
         tc.setController("/template/controller.java.vm");
+        //关闭mapper下的XML文件下的XML生成，与resource下的重复，这里关闭
+        tc.setXml(null);
         mpg.setTemplate(tc);
         mpg.execute();
     }

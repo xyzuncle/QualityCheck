@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class CodeGenerator {
-
-    private static String URL="jdbc:mysql://localhost:3306/quality?characterEncoding=utf8&useSSL=true";
+    //更新阿里云的数据库密码
+    private static String URL="jdbc:mysql://39.105.201.114:3306/quality?characterEncoding=utf8&useSSL=true";
 
     /**
      * <p>
@@ -66,7 +66,8 @@ public class CodeGenerator {
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("123456");
+        //数据库密码，阿里云数据库密码
+        dsc.setPassword("7731ea5491bc");
         mpg.setDataSource(dsc);
 
         // 包配置

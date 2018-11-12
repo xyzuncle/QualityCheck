@@ -22,19 +22,17 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<slf4j.version>1.7.25</slf4j.version>
+		<dozer.version>5.5.1</dozer.version>
+		<mybatis-plus-boot-starter.version>3.0-RC3</mybatis-plus-boot-starter.version>
 	</properties>
 
 	<dependencies>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
+		</dependency>-->
 
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -45,6 +43,133 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+
+
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-boot-starter</artifactId>
+			<version>${mybatis-plus-boot-starter.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>tomcat-jdbc</artifactId>
+                    <groupId>org.apache.tomcat</groupId>
+                </exclusion>
+            </exclusions>
+		</dependency>
+
+        <!--如果不加这个配置 value 拿不到yml的自定义配置-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <version>2.0.1.RELEASE</version>
+        </dependency>
+
+
+		<!-- 模板引擎 -->
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity-engine-core</artifactId>
+			<version>RELEASE</version>
+		</dependency>
+
+		<!-- 模板引擎，需要指定 mpg.setTemplateEngine(new FreemarkerTemplateEngine()); -->
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.33</version>
+		</dependency>
+
+		<!-- Email -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-velocity</artifactId>
+			<version>RELEASE</version>
+		</dependency>
+
+		<!--okhttp的包,用于请求restful 请求-->
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>3.6.0</version>
+		</dependency>
+
+		<!-- 热部署组件 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!--swagger2 在线API jar包-->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.6.1</version>
+		</dependency>
+
+		<!--swagger2 用到的UI-->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.6.1</version>
+		</dependency>
+
+        <dependency>
+            <groupId>com.vip.vjtools</groupId>
+            <artifactId>vjkit</artifactId>
+            <version>1.0.6</version>
+        </dependency>
+
+		<!-- druid -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid-spring-boot-starter</artifactId>
+			<version>1.1.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.30</version>
+		</dependency>
+
+		<!--时间工具类-->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+            <version>2.9.9</version>
+		</dependency>
+        <!--摘要运算-->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.9</version>
+        </dependency>
+
 	</dependencies>
 
 	<build>

@@ -46,7 +46,8 @@ public class CodeGenerator {
 
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        String projectPath = "D:\\workspace\\idea_workspace\\qc_workspace\\QualityCheck\\quality";
+        //String projectPath = "D:\\workspace\\idea_workspace\\qc_workspace\\QualityCheck\\quality";
+        String projectPath = "D:\\IDEA\\QualityCheck\\quality";
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setAuthor("yerui");
         //允许重写

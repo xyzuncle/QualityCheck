@@ -22,6 +22,18 @@ public class BaseEntity {
     @JSONField(format = "yyyy-MM-dd")
     private Date updTime;
 
+    @ApiModelProperty(value = "逻辑删除标志位 0未删除 1 已经删除", required = false)
+    @TableLogic
+    private Integer deleted;
+
+    public Integer getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Integer deleted) {
+        this.deleted = deleted;
+    }
+
     public String getId() {
         return id;
     }

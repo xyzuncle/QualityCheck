@@ -31,7 +31,7 @@ server:
   port: 8080
 #mybatis
 mybatis-plus:
-  type-aliases-package: com.quality.quality.domain
+  type-aliases-package: com.quality.domain
   global-config:
     #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
     field-strategy: 2
@@ -47,7 +47,7 @@ mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
 #swagger
 myswagger:
-  packageName: com.quality.quality.controller
+  packageName: com.quality.controller
   serviceName: 质检认证服务
   description: 质检系统所有服务的接口
 #log

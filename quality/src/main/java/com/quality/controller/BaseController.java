@@ -29,8 +29,7 @@ public class BaseController<T,S extends IService<T>> {
     protected Class<T> entityClass;
 
 
-
-    @Autowired(required=true)
+    @Autowired
     protected S defaultDAO;
 
     @Autowired

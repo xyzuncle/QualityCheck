@@ -75,7 +75,7 @@ public class CodeGenerator {
 
         // 包配置
         PackageConfig pc = new PackageConfig();
-        pc.setModuleName(scanner("请输入模块"));
+       /* pc.setModuleName(scanner("请输入模块"));*/
         pc.setParent("com.quality");
 
         mpg.setPackageInfo(pc);
@@ -92,7 +92,7 @@ public class CodeGenerator {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
-                return projectPath + "/src/main/resources/mapper/" + pc.getModuleName()
+                return projectPath + "/src/main/resources/mapper/"
                         + "/" + tableInfo.getEntityName() + "Mapper.xml";
             }
         });

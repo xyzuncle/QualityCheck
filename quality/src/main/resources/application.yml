@@ -2,7 +2,7 @@
 spring:
   datasource:
     url: jdbc:mysql://39.105.201.114:3306/quality?characterEncoding=utf8&useSSL=true
-    username: root
+      username: root
     password: 7731ea5491bc
     type: com.alibaba.druid.pool.DruidDataSource
     druid:

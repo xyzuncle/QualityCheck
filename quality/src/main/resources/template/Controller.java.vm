@@ -1,9 +1,9 @@
 package ${package.Controller};
 
 
-import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.plugins.Page;
-import com.kq.common.exception.BaseException;
+
+
+import com.quality.controller.BaseController;
 import ${package.Entity}.${entity};
 import ${package.Service}.${table.serviceName};
 import io.swagger.annotations.Api;
@@ -11,12 +11,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import com.kq.perimission.controller.BaseController;
+
 
 import org.springframework.stereotype.Controller;
-import com.kq.perimission.util.Servlets;
-import com.kq.perimission.util.Sort;
-import com.kq.perimission.util.Tools;
+import com.quality.util.Servlets;
+import com.quality.util.Sort;
+import com.quality.exception.BaseException;
+import com.quality.util.Tools;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
  * <p>
@@ -51,7 +53,7 @@ private final Logger logger=LoggerFactory.getLogger(${table.controllerName}.clas
 @RequestMapping(value = "/query.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @ResponseBody
 public Object queryConditionPage(HttpServletRequest request){
-    Page<${entity}> ${entity}ListPage=null;
+    IPage<${entity}> ${entity}ListPage=null;
     try{
         //把查询条件都写好了
         Map<String, Object> searchParams=Servlets.getParametersStartingWith(request,"search-");
@@ -72,7 +74,7 @@ public Object queryConditionPage(HttpServletRequest request){
 public Object saveOrUpdate(@RequestBody ${entity} ${entity}){
     boolean result=false;
     try{
-        result=this.defaultDAO.insertOrUpdate(${entity});
+        result=this.defaultDAO.saveOrUpdate(${entity});
     }catch(Exception e){
         e.printStackTrace();
         throw new BaseException("保存失败",500);
@@ -84,7 +86,7 @@ public Object saveOrUpdate(@RequestBody ${entity} ${entity}){
 @RequestMapping(value = "/removeById.do", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @ResponseBody
 public Object delete${entity}ById(@ApiParam(value = "${entity}ID") @RequestParam(name = "entityID")  String entityID){
-        boolean result=this.defaultDAO.deleteById(entityID);
+        boolean result=this.defaultDAO.removeById(entityID);
         return super.jsonObjectResult(result,"删除成功");
 }
 
@@ -94,7 +96,7 @@ public Object delete${entity}ById(@ApiParam(value = "${entity}ID") @RequestParam
 @ResponseBody
 public Object queryById(@ApiParam(value = "${entity}唯一标识") @RequestParam(name = "id") String id){
     try{
-            ${entity} ${entity} =this.defaultDAO.selectById(id);
+            ${entity} ${entity} =this.defaultDAO.getById(id);
             return super.jsonObjectResult(${entity},"查询成功");
         }catch(Exception e){
             e.printStackTrace();
@@ -110,7 +112,7 @@ public Object deleteByIds(@ApiParam(value = "多个元素ID") @RequestParam(name
     try{
         String[]str=Tools.str2StrArray(entityIDS);
         List<String> strArr1=Arrays.asList(str);
-        result=this.defaultDAO.deleteBatchIds(strArr1);
+        result=this.defaultDAO.removeByIds(strArr1);
     }catch(Exception e){
         e.printStackTrace();
         throw new BaseException("删除失败",500);

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quality.system.mapper.QualityLoggerMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quality.system.entity.QualityLogger">
+    <result column="id" property="id" />
+    <result column="crtTime" property="crtTime" />
+    <result column="updTime" property="updTime" />
+    <result column="deleted" property="deleted" />
+        <result column="remoteAddr" property="remoteAddr" />
+        <result column="method" property="method" />
+        <result column="beanName" property="beanName" />
+        <result column="requestUri" property="requestUri" />
+        <result column="signature" property="signature" />
+        <result column="args" property="args" />
+        <result column="requestTime" property="requestTime" />
+        <result column="result" property="result" />
+        <result column="crtUser" property="crtUser" />
+        <result column="remarks" property="remarks" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        crtTime,
+        updTime,
+        deleted,
+        remoteAddr, method, beanName, requestUri, signature, args, requestTime, result, crtUser, remarks
+    </sql>
+
+</mapper>

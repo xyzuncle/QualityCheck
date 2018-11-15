@@ -1,77 +1,81 @@
-package ${package.Controller};
+package com.quality.system.controller;
 
 
-import com.quality.common.exception.BaseException;
-import com.quality.common.util.Servlets;
-import com.quality.common.util.Sort;
-import com.quality.common.util.Tools;
+
+
+import com.quality.common.aop.WebLogAction;
+
 import com.quality.common.controller.BaseController;
-import ${package.Entity}.${entity};
-import ${package.Service}.${table.serviceName};
+import com.quality.system.entity.QualityLogger;
+import com.quality.system.service.IQualityLoggerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import org.springframework.stereotype.Controller;
+import com.quality.common.util.Servlets;
+import com.quality.common.util.Sort;
+import com.quality.common.exception.BaseException;
+import com.quality.common.util.Tools;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
  * <p>
  *
  * </p>
  *
- * @author ${author}
- * @since ${date}
+ * @author yerui
+ * @since 2018-11-13
  */
 
-@Api(value = "${entity}Controller}",description = "$!{table.comment}具体API")
+@Api(value = "QualityLoggerController}",description = "具体API")
 @Controller
-@RequestMapping("/${entity}")
-public class ${table.controllerName} extends ${superControllerClass}<${entity},${table.serviceName}>{
+@RequestMapping("/QualityLogger")
+public class QualityLoggerController extends BaseController<QualityLogger,IQualityLoggerService> {
 
-private final Logger logger=LoggerFactory.getLogger(${table.controllerName}.class);
+private final Logger logger=LoggerFactory.getLogger(QualityLoggerController.class);
 
 /**
 *
 * 带分页的查询条件
 * @return
 */
-@ApiOperation(value = "${entity}多条件查询", notes = "多条件查询")
+@ApiOperation(value = "QualityLogger多条件查询", notes = "多条件查询")
 @RequestMapping(value = "/query.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @ResponseBody
 public Object queryConditionPage(HttpServletRequest request){
-    IPage<${entity}> ${entity}ListPage=null;
+    IPage<QualityLogger> QualityLoggerListPage=null;
     try{
         //把查询条件都写好了
         Map<String, Object> searchParams=Servlets.getParametersStartingWith(request,"search-");
         //如果需要按多个字段排序，请传多个参数,为了反射方便，数据库不使用下划线了
         Sort sort = new Sort(Sort.DESC,Tools.str2StrArray("crtTime") );
-        ${entity}ListPage=queryContion(searchParams,sort);
-        return super.jsonObjectResult(${entity}ListPage,"查询成功");
+        QualityLoggerListPage=queryContion(searchParams,sort);
+        return super.jsonObjectResult(QualityLoggerListPage,"查询成功");
     }catch(Exception e){
         e.printStackTrace();
         throw new BaseException("查询失败",500);
     }
 }
 
-@ApiOperation(value = "增加/修改${entity}信息",
-        notes = "保存和修改${entity}信息")
+@ApiOperation(value = "增加/修改QualityLogger信息",
+        notes = "保存和修改QualityLogger信息")
 @RequestMapping(value = "/save.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @ResponseBody
-public Object saveOrUpdate(@RequestBody ${entity} ${entity}){
+public Object saveOrUpdate(@RequestBody QualityLogger QualityLogger){
     boolean result=false;
     try{
-        result=this.defaultDAO.saveOrUpdate(${entity});
+        result=this.defaultDAO.saveOrUpdate(QualityLogger);
     }catch(Exception e){
         e.printStackTrace();
         throw new BaseException("保存失败",500);
@@ -79,22 +83,23 @@ public Object saveOrUpdate(@RequestBody ${entity} ${entity}){
         return super.jsonObjectResult(result,"保存成功");
     }
 
-@ApiOperation(value = "根据Id删除${entity}信息")
+@ApiOperation(value = "根据Id删除QualityLogger信息")
 @RequestMapping(value = "/removeById.do", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @ResponseBody
-public Object delete${entity}ById(@ApiParam(value = "${entity}ID") @RequestParam(name = "entityID")  String entityID){
+@WebLogAction(name="deleteQualityLoggerById")
+public Object deleteQualityLoggerById(@ApiParam(value = "QualityLoggerID") @RequestParam(name = "entityID")  String entityID){
         boolean result=this.defaultDAO.removeById(entityID);
         return super.jsonObjectResult(result,"删除成功");
 }
 
 
-@ApiOperation(value = "根据ID获取${entity}的基本信息")
+@ApiOperation(value = "根据ID获取QualityLogger的基本信息")
 @RequestMapping(value = "/queryById.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @ResponseBody
-public Object queryById(@ApiParam(value = "${entity}唯一标识") @RequestParam(name = "id") String id){
+public Object queryById(@ApiParam(value = "QualityLogger唯一标识") @RequestParam(name = "id") String id){
     try{
-            ${entity} ${entity} =this.defaultDAO.getById(id);
-            return super.jsonObjectResult(${entity},"查询成功");
+            QualityLogger QualityLogger =this.defaultDAO.getById(id);
+            return super.jsonObjectResult(QualityLogger,"查询成功");
         }catch(Exception e){
             e.printStackTrace();
             throw new BaseException("查询失败",500);
@@ -121,11 +126,11 @@ public Object deleteByIds(@ApiParam(value = "多个元素ID") @RequestParam(name
 
 @RequestMapping(value = "/list.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @ResponseBody
-public Object get${entity}List(HttpServletRequest request){
+public Object getQualityLoggerList(HttpServletRequest request){
     try{
     //把查询条件都写好了
         Map<String, Object> searchParams=Servlets.getParametersStartingWith(request,"search-");
-        List<${entity}> list=super.queryContionNoPage(searchParams);
+        List<QualityLogger> list=super.queryContionNoPage(searchParams);
         return super.jsonObjectResult(list,"查询成功");
     }catch(Exception e){
         e.printStackTrace();

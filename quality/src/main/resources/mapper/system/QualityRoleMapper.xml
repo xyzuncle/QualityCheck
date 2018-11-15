@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quality.system.mapper.QualityRoleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quality.system.entity.QualityRole">
+    <result column="id" property="id" />
+    <result column="crtTime" property="crtTime" />
+    <result column="updTime" property="updTime" />
+    <result column="deleted" property="deleted" />
+        <result column="roleCode" property="roleCode" />
+        <result column="roleName" property="roleName" />
+        <result column="sort" property="sort" />
+        <result column="crtUser" property="crtUser" />
+        <result column="updUser" property="updUser" />
+        <result column="remarks" property="remarks" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        crtTime,
+        updTime,
+        deleted,
+        roleCode, roleName, sort, crtUser, updUser, remarks
+    </sql>
+
+</mapper>

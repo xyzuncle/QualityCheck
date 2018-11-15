@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quality.system.mapper.QualityUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quality.system.entity.QualityUser">
+    <result column="id" property="id" />
+    <result column="crtTime" property="crtTime" />
+    <result column="updTime" property="updTime" />
+    <result column="deleted" property="deleted" />
+        <result column="orgId" property="orgId" />
+        <result column="userName" property="userName" />
+        <result column="loginName" property="loginName" />
+        <result column="password" property="password" />
+        <result column="salt" property="salt" />
+        <result column="phone" property="phone" />
+        <result column="mobile" property="mobile" />
+        <result column="email" property="email" />
+        <result column="sort" property="sort" />
+        <result column="crtUser" property="crtUser" />
+        <result column="updUser" property="updUser" />
+        <result column="loginFlag" property="loginFlag" />
+        <result column="remarks" property="remarks" />
+        <result column="orgName" property="orgName" />
+        <result column="roleName" property="roleName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        crtTime,
+        updTime,
+        deleted,
+        orgId, userName, loginName, password, salt, phone, mobile, email, sort, crtUser, updUser, loginFlag, remarks, orgName, roleName
+    </sql>
+
+</mapper>

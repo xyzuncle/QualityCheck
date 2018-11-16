@@ -28,10 +28,11 @@ spring:
     encoding: UTF-8
   aop:
     auto: true
-    proxy-target-class: false
+    ##开启CGLIB 作为动态代理类
+    proxy-target-class: true
 #server
 server:
-  port: 8080
+  port: 8088
 #mybatis
 mybatis-plus:
   type-aliases-package: com.quality.*.entity

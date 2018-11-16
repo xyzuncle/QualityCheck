@@ -3,6 +3,8 @@ package com.quality.common.util;
 
 /*import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;*/
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import java.security.MessageDigest;
 
 /**
@@ -52,13 +54,15 @@ public class MD5 {
 	 * 随机盐值
 	 */
 
-/*	public static String encryptPassword(String passWord){
+	public static String encryptPassword(String passWord){
 		String reuslt  = new BCryptPasswordEncoder().encode(passWord);
 		return reuslt;
 	}
 
 
 	public static void main(String[] args) {
-		System.out.println(MD5.compilePass("123456","$2a$10$pAdYNgfAVeeeSSPOIdYYZuNNYjSYCWJBR.wt5i4jhoM5aUPkZU63e"));
-	}*/
+		String pd = MD5.encryptPassword("123456");
+		System.out.println(pd);
+
+	}
 }

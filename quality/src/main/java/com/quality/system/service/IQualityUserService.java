@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author yerui
  * @since 2018-11-15
  */
-public interface IQualityUserService extends IService<QualityUser> {
+public interface IQualityUserService extends IService<QualityUser>{
 
 }

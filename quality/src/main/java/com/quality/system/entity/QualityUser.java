@@ -4,6 +4,11 @@ import com.quality.common.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * <p>
@@ -14,7 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @since 2018-11-15
  */
 @ApiModel(value="QualityUser对象", description="用户表")
-public class QualityUser extends BaseEntity {
+public class QualityUser extends BaseEntity implements UserDetails, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -103,8 +108,41 @@ public class QualityUser extends BaseEntity {
         this.loginName = loginName;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        /**
+         * 等权限设计好，这里完善，用于基于表达式的权限安全访问
+         */
+        return null;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return loginName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setPassword(String password) {

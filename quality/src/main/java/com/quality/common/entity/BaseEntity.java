@@ -6,6 +6,13 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
+/**
+ * @Description: 把公有字段放入基类
+ * @Author: yerui
+ * @CreateDate : 2018/11/16 14:20
+ * @Version: 1.0
+ *
+ */
 public class BaseEntity {
 
     @TableId(value = "id", type = IdType.UUID)

@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 
 import com.quality.common.dto.ObjectRestResponse;
+import com.quality.common.dto.PageResult;
 import com.quality.common.exception.BaseException;
 import com.quality.common.specifications.DynamicSpecifications;
 import com.quality.common.specifications.SearchFilter;
@@ -62,7 +63,7 @@ public class BaseController<T,S extends IService<T>> {
             }
         }
         IPage<T> pagelist = null;
-        pagelist = defaultDAO.page(new Page<T>(pageNumber,pageSize),spec);
+        pagelist = defaultDAO.page(new PageResult<T>(pageNumber,pageSize),spec);
         return pagelist;
     }
 

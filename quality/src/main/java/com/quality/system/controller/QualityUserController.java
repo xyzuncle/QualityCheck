@@ -5,6 +5,7 @@ package com.quality.system.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.quality.common.controller.BaseController;
+import com.quality.common.dto.PageResult;
 import com.quality.common.exception.BaseException;
 import com.quality.common.util.Servlets;
 import com.quality.common.util.Sort;
@@ -53,15 +54,15 @@ private final Logger logger= LoggerFactory.getLogger(QualityUserController.class
 @ApiOperation(value = "QualityUser多条件查询", notes = "多条件查询")
 @RequestMapping(value = "/query.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @ResponseBody
-public Object queryConditionPage(HttpServletRequest request){
-    IPage<QualityUser> QualityUserListPage=null;
+public PageResult<QualityUser> queryConditionPage(HttpServletRequest request){
+    PageResult<QualityUser> QualityUserListPage=null;
     try{
         //把查询条件都写好了
         Map<String, Object> searchParams= Servlets.getParametersStartingWith(request,"search-");
         //如果需要按多个字段排序，请传多个参数,为了反射方便，数据库不使用下划线了
         Sort sort = new Sort(Sort.DESC,Tools.str2StrArray("crtTime") );
-        QualityUserListPage=queryContion(searchParams,sort);
-        return super.jsonObjectResult(QualityUserListPage,"查询成功");
+        QualityUserListPage= (PageResult<QualityUser>) queryContion(searchParams,sort);
+        return QualityUserListPage;
     }catch(Exception e){
         e.printStackTrace();
         throw new BaseException("查询失败",500);

@@ -66,7 +66,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {//1
 				.and()
 				.authorizeRequests()
                     .antMatchers("/images/captcha",
-                            "/login.html","/assets/**","/module/**","/index.html").permitAll()
+                            "/login.html","/assets/**","/module/**","/index.html","/swagger-resources/**").permitAll()
                      //声明方法必须是post方法
                     .antMatchers(HttpMethod.POST,"/loginToken").permitAll()
                     .and().httpBasic().disable()

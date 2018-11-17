@@ -62,6 +62,7 @@ public PageResult<QualityUser> queryConditionPage(HttpServletRequest request){
         //如果需要按多个字段排序，请传多个参数,为了反射方便，数据库不使用下划线了
         Sort sort = new Sort(Sort.DESC,Tools.str2StrArray("crtTime") );
         QualityUserListPage= (PageResult<QualityUser>) queryContion(searchParams,sort);
+        QualityUserListPage.setMsg("查询成功");
         return QualityUserListPage;
     }catch(Exception e){
         e.printStackTrace();

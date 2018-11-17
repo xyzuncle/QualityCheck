@@ -1,6 +1,7 @@
 package com.quality.common.dto;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Collections;
 import java.util.List;
@@ -8,8 +9,8 @@ import java.util.List;
 /**
  * 分页结果对象,这里以layui框架的table为标准
  *
- * @author wangfan
- * @date 2017-7-24 下午4:28:59
+ * @author yerui
+ * @date  2018年11月17日22:48:28
  */
 public class PageResult<T> implements IPage<T> {
 
@@ -20,9 +21,9 @@ public class PageResult<T> implements IPage<T> {
     private long count; // 总数量, bootstrapTable是total
 
     private List<T> data; // 当前数据, bootstrapTable是rows
-
+    @JsonIgnore
     private long pageSize; // 一页多少条
-
+    @JsonIgnore
     private long pageNumber; //当前页
 
     private boolean optimizeCountSql;
@@ -116,6 +117,7 @@ public class PageResult<T> implements IPage<T> {
     }
 
     @Override
+    @JsonIgnore
     public List<T> getRecords() {
 
         return this.data;
@@ -128,6 +130,7 @@ public class PageResult<T> implements IPage<T> {
     }
 
     @Override
+    @JsonIgnore
     public long getTotal() {
         return this.count;
     }
@@ -139,6 +142,7 @@ public class PageResult<T> implements IPage<T> {
     }
 
     @Override
+    @JsonIgnore
     public long getSize() {
         return this.pageSize;
     }
@@ -150,6 +154,7 @@ public class PageResult<T> implements IPage<T> {
     }
 
     @Override
+    @JsonIgnore
     public long getCurrent() {
         return pageNumber;
     }

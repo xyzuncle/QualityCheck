@@ -50,7 +50,7 @@ layui.define(['config', 'admin', 'layer'], function (exports) {
         // 从服务器获取登录用户的信息
         getUser: function (success) {
             layer.load(2);
-            admin.req('userInfo', {}, function (data) {
+            admin.req('QualityUser/userInfo.do', {}, function (data) {
                 layer.closeAll('loading');
                 if (200 == data.code) {
                     config.putUser(data.user);

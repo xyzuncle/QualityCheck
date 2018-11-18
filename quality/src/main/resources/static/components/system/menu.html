@@ -1,45 +1,45 @@
 <div class="layui-card">
     <div class="layui-card-header">
-        <h2 class="header-title">角色管理</h2>
+        <h2 class="header-title">菜单管理</h2>
         <span class="layui-breadcrumb pull-right">
           <a href="#!console">首页</a>
-          <a><cite>角色管理</cite></a>
+          <a><cite>菜单管理</cite></a>
         </span>
     </div>
     <div class="layui-card-body">
         <div class="layui-form toolbar">
 
-            编码：<input id="search-LIKE-roleCode" class="layui-input search-input" type="text" placeholder="输入关键字"/>&emsp;
-            名称：<input id="search-LIKE-roleName" class="layui-input search-input" type="text" placeholder="输入关键字"/>&emsp;
+            编码：<input id="search-LIKE-menuCode" class="layui-input search-input" type="text" placeholder="输入关键字"/>&emsp;
+            名称：<input id="search-LIKE-menuName" class="layui-input search-input" type="text" placeholder="输入关键字"/>&emsp;
 
-            <button id="role-btn-search" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
-            <button id="role-btn-reset"  class="layui-btn  icon-btn layui-btn-primary">重置</button>
-            <button id="role-btn-add" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+            <button id="menu-btn-search" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+            <button id="menu-btn-reset"  class="layui-btn  icon-btn layui-btn-primary">重置</button>
+            <button id="menu-btn-add" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
 
         </div>
 
         <!-- 数据表格 -->
-        <table class="layui-table" id="role-table" lay-filter="role-table"></table>
+        <table class="layui-table" id="menu-table" lay-filter="menu-table"></table>
 
     </div>
 </div>
 
 <!-- 表单弹窗 -->
-<script type="text/html" id="role-model">
-    <form id="role-form" lay-filter="role-form" class="layui-form model-form">
+<script type="text/html" id="menu-model">
+    <form id="menu-form" lay-filter="menu-form" class="layui-form model-form">
         <input name="id" type="hidden"/>
         <div class="layui-form-item">
-            <label class="layui-form-label">角色编码</label>
+            <label class="layui-form-label">菜单编码</label>
             <div class="layui-input-block">
-                <input name="roleCode" placeholder="请输入角色编码" type="text" class="layui-input" maxlength="20"
+                <input name="menuCode" placeholder="请输入菜单编码" type="text" class="layui-input" maxlength="20"
                        lay-verify="required" required/>
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">角色名</label>
+            <label class="layui-form-label">菜单名称</label>
             <div class="layui-input-block">
-                <input name="roleName" placeholder="请输入角色名" type="text" class="layui-input" maxlength="20"
+                <input name="menuName" placeholder="请输入菜单名称" type="text" class="layui-input" maxlength="20"
                        lay-verify="required" required/>
             </div>
         </div>
@@ -53,13 +53,13 @@
         </div>
         <div class="layui-form-item model-form-footer">
             <button class="layui-btn layui-btn-primary close" type="button">取消</button>
-            <button class="layui-btn" lay-filter="role-form-submit" lay-submit>保存</button>
+            <button class="layui-btn" lay-filter="menu-form-submit" lay-submit>保存</button>
         </div>
     </form>
 </script>
 
 <!-- 表格操作列 -->
-<script type="text/html" id="role-table-bar">
+<script type="text/html" id="menu-table-bar">
     <a class="layui-btn  layui-btn-xs" lay-event="edit">修改</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
@@ -75,32 +75,37 @@
 
         //渲染表格
         table.render({
-            elem: '#role-table',
-            url: config.base_server + 'QualityRole/query.do',
+            elem: '#menu-table',
+            url: config.base_server + 'QualityMenu/query.do',
             where: {
                 access_token: config.getToken().access_token
             },
            page: true,
             cols: [[
-                {field: 'roleCode', sort: true, title: '编码'},
-                {field: 'roleName', sort: true, title: '名称'},
-                {field: 'sort', sort: true, title: '排序'},
-                {align: 'center', toolbar: '#role-table-bar', title: '操作'}
+                {field: 'menuCode', sort: true, title: '编码'},
+                {field: 'menuName', sort: true, title: '名称'},
+                {field: 'menuUrl', sort: true, title: 'url链接'},
+                {field: 'path', sort: true, title: '路径'},
+                {field: 'permission', sort: true, title: '权限标识'},
+                {field: 'path', sort: true, title: '路径'},
+                {field: 'menuType', sort: true, title: '类型'},
+                {field: 'menuState', sort: true, title: '状态'},
+                {align: 'center', toolbar: '#menu-table-bar', title: '操作'}
             ]]
         });
 
 
 
         // 添加按钮点击事件
-        $('#role-btn-add').click(function () {
+        $('#menu-btn-add').click(function () {
             showEditModel();
         });
 
         // 表单提交事件
-        form.on('submit(role-form-submit)', function (data) {
+        form.on('submit(menu-form-submit)', function (data) {
             layer.load(2);
             $.ajax({
-                url: config.base_server + 'QualityRole/save.do',
+                url: config.base_server + 'QualityMenu/save.do',
                 data: JSON.stringify(data.field),
                 type: "POST",
                 dataType: 'JSON',
@@ -110,7 +115,7 @@
                     layer.closeAll('loading');
                     if (data.status == 200) {
                         layer.msg(data.message, {icon: 1});
-                        table.reload('role-table');
+                        table.reload('menu-table');
                         layer.closeAll('page');
                     } else {
                         layer.msg(data.message, {icon: 2});
@@ -122,7 +127,7 @@
         });
 
         // 工具条点击事件
-        table.on('tool(role-table)', function (obj) {
+        table.on('tool(menu-table)', function (obj) {
             debugger
             var data = obj.data;
             if (obj.event === 'edit') { //修改
@@ -137,34 +142,34 @@
 
 
         // 搜索按钮点击事件
-        $('#role-btn-search').click(function () {
+        $('#menu-btn-search').click(function () {
 
-            var  roleCode  = $("#search-LIKE-roleCode").val();
-            var  roleName  = $("#search-LIKE-roleName").val();
-            table.reload('role-table', {where: {"search-LIKE-roleCode": roleCode,"search-LIKE-roleName": roleName}});
+            var  menuCode  = $("#search-LIKE-menuCode").val();
+            var  menuName  = $("#search-LIKE-menuName").val();
+            table.reload('menu-table', {where: {"search-LIKE-menuCode": menuCode,"search-LIKE-menuName": menuName}});
         });
 
 
-        $("#role-btn-reset").click(function(){
-            $("#search-LIKE-roleCode").val("");
-            $("#search-LIKE-roleName").val("");
+        $("#menu-btn-reset").click(function(){
+            $("#search-LIKE-menuCode").val("");
+            $("#search-LIKE-menuName").val("");
         })
         // 显示编辑弹窗
         var showEditModel = function (data) {
             layer.open({
                 type: 1,
-                title: data ? '修改角色' : '添加角色',
+                title: data ? '修改菜单' : '添加菜单',
                 area: '450px',
                 offset: '120px',
-                content: $('#role-model').html(),
+                content: $('#menu-model').html(),
                 success: function () {
-                    $('#role-form')[0].reset();
-                    $('#role-form').attr('method', 'POST');
+                    $('#menu-form')[0].reset();
+                    $('#menu-form').attr('method', 'POST');
                     if (data) {
-                        form.val('role-form', data);
-                        $('#role-form').attr('method', 'PUT');
+                        form.val('menu-form', data);
+                        $('#menu-form').attr('method', 'PUT');
                     }
-                    $('#role-form .close').click(function () {
+                    $('#menu-form .close').click(function () {
                         layer.closeAll('page');
                     });
                 }
@@ -176,7 +181,7 @@
             layer.confirm('确定要删除吗？', function (i) {
                 layer.close(i);
                 layer.load(2);
-                admin.req('QualityRole/removeById.do?entityID=' + obj.data.id, {}, function (data) {
+                admin.req('QualityMenu/removeById.do?entityID=' + obj.data.id, {}, function (data) {
                     layer.closeAll('loading');
                     if (data.status == 200) {
                         layer.msg(data.message, {icon: 1});

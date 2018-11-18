@@ -1,16 +1,16 @@
 package com.quality.system.controller;
 
 
+import com.quality.common.dto.PageResult;
 import com.quality.common.exception.BaseException;
 import com.quality.common.util.Servlets;
 import com.quality.common.util.Sort;
 import com.quality.common.util.Tools;
 import com.quality.common.controller.BaseController;
 import com.quality.system.entity.QualityMenu;
+import com.quality.system.entity.QualityRole;
 import com.quality.system.service.IQualityMenuService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -47,21 +47,30 @@ private final Logger logger=LoggerFactory.getLogger(QualityMenuController.class)
 * @return
 */
 @ApiOperation(value = "QualityMenu多条件查询", notes = "多条件查询")
+@ApiImplicitParams({
+        @ApiImplicitParam(name = "page", value = "第几页", required = true, dataType = "Integer"),
+        @ApiImplicitParam(name = "limit", value = "每页多少条", required = true, dataType = "Integer"),
+        @ApiImplicitParam(name = "access_token", value = "令牌", required = true, dataType = "String")
+})
 @RequestMapping(value = "/query.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @ResponseBody
-public Object queryConditionPage(HttpServletRequest request){
-    IPage<QualityMenu> QualityMenuListPage=null;
-    try{
+public PageResult<QualityMenu> queryConditionPage(Integer page, Integer limit,HttpServletRequest request){
+    PageResult<QualityMenu> QualityMenuListPage = null;
+    try {
+        System.out.println("第几页" + page);
+        System.out.println("每页多少条" + limit);
         //把查询条件都写好了
-        Map<String, Object> searchParams=Servlets.getParametersStartingWith(request,"search-");
+        Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search-");
         //如果需要按多个字段排序，请传多个参数,为了反射方便，数据库不使用下划线了
-        Sort sort = new Sort(Sort.DESC,Tools.str2StrArray("crtTime") );
-        QualityMenuListPage=queryContion(searchParams,sort);
-        return super.jsonObjectResult(QualityMenuListPage,"查询成功");
-    }catch(Exception e){
+        Sort sort = new Sort(Sort.DESC, Tools.str2StrArray("crtTime"));
+        QualityMenuListPage = (PageResult<QualityMenu>) queryContion(searchParams, sort);
+        QualityMenuListPage.setMsg("查询成功");
+        return QualityMenuListPage;
+    } catch (Exception e) {
         e.printStackTrace();
-        throw new BaseException("查询失败",500);
+        throw new BaseException("查询失败", 500);
     }
+
 }
 
 @ApiOperation(value = "增加/修改QualityMenu信息",

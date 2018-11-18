@@ -110,6 +110,7 @@ layui.define(['config', 'layer', 'element', 'form'], function (exports) {
         },
         // 封装ajax请求
         req: function (url, data, success, method) {
+            debugger
             if ('put' == method.toLowerCase()) {
                 method = 'POST';
                 data._method = 'PUT';
@@ -150,15 +151,15 @@ layui.define(['config', 'layer', 'element', 'form'], function (exports) {
         },
         // 判断是否有权限
         hasPerm: function (auth) {
-            var user = config.getUser();
-            if (user.authorities) {
-                for (var i = 0; i < user.authorities.length; i++) {
-                    if (auth == user.authorities[i].authority) {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            /*var user = config.getUser();
+             if (user.authorities) {
+             for (var i = 0; i < user.authorities.length; i++) {
+             if (auth == user.authorities[i].authority) {
+             return true;
+             }
+             }
+             }*/
+            return true;
         },
         // 窗口大小改变监听
         onResize: function () {

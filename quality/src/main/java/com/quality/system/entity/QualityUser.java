@@ -4,11 +4,17 @@ import com.quality.common.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.CollectionUtils;
 
+import java.beans.Transient;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <p>
@@ -23,6 +29,7 @@ public class QualityUser extends BaseEntity implements UserDetails, Serializable
 
     private static final long serialVersionUID = 1L;
 
+    @NotBlank
     @ApiModelProperty(value = "所属部门")
     @TableField("orgId")
     private String orgId;
@@ -84,6 +91,8 @@ public class QualityUser extends BaseEntity implements UserDetails, Serializable
     private String roleName;
 
 
+
+
     public String getOrgId() {
         return orgId;
     }
@@ -110,9 +119,31 @@ public class QualityUser extends BaseEntity implements UserDetails, Serializable
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        /**
+        /*   *//**
          * 等权限设计好，这里完善，用于基于表达式的权限安全访问
-         */
+         *//*
+        Collection<GrantedAuthority> collection = new HashSet<>();
+        if (!CollectionUtils.isEmpty(sysRoles)) {
+            sysRoles.parallelStream().forEach(role -> {
+                if (role.getRoleCode().startsWith("ROLE_")) {
+                    collection.add(new SimpleGrantedAuthority(role.getRoleCode()));
+                } else {
+                    collection.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleCode()));
+                }
+            });
+        }
+
+        if (!CollectionUtils.isEmpty(permissions)) {
+            permissions.parallelStream().forEach(per -> {
+                collection.add(new SimpleGrantedAuthority(per));
+            });
+        }
+
+        collection.add(new SimpleGrantedAuthority("ROLE_admin"));
+        collection.add(new SimpleGrantedAuthority("user:add"));
+
+        return collection;
+        */
         return null;
     }
 
@@ -236,6 +267,7 @@ public class QualityUser extends BaseEntity implements UserDetails, Serializable
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
+
 
     @Override
     public String toString() {

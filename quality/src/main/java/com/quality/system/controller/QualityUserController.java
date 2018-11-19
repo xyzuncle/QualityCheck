@@ -6,6 +6,7 @@ import com.quality.common.controller.BaseController;
 import com.quality.common.dto.JsonResult;
 import com.quality.common.dto.PageResult;
 import com.quality.common.exception.BaseException;
+import com.quality.common.util.MD5;
 import com.quality.common.util.Servlets;
 import com.quality.common.util.Sort;
 import com.quality.common.util.Tools;
@@ -74,10 +75,50 @@ public class QualityUserController extends BaseController<QualityUser, IQualityU
             notes = "保存和修改QualityUser信息")
     @RequestMapping(value = "/save.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Object saveOrUpdate(@RequestBody QualityUser QualityUser) {
+    public Object saveOrUpdate(@RequestBody QualityUser qualityUser) {
         boolean result = false;
         try {
-            result = this.defaultDAO.saveOrUpdate(QualityUser);
+            if(!"".equals(qualityUser) || qualityUser!=null){
+
+                //增加判断用户的逻辑
+
+                //ID为空证明新增
+                if("".equals(qualityUser.getId()) || qualityUser.getId()==null){
+
+                   // boolean result1 = this.defaultDAO.getExistUser(qualityUser.getMobilePhone());
+                    boolean result1 = false;
+                    //true标识已经存在
+                    if(result1 == true){
+                        return super.jsonObjectResult(result, "用户已经存才,请更换手机号");
+                    }else {
+                        String password = qualityUser.getPassword();
+                        if(!"".equals(password) && password!=null){
+                            String pd = MD5.encryptPassword(password);
+                            qualityUser.setPassword(pd);
+                        }
+
+                        //增加默认值1正常，用户状态(0:禁用，1:正常)
+                       // qualityUser.setStatus("1");
+
+
+                    }
+
+                }else if(!"".equals(qualityUser.getId()) || qualityUser.getId()!=null){
+                    //证明修改
+                    String password = qualityUser.getPassword();
+                    if(!"".equals(password) && password!=null){
+                        if(password.length()<50 ){
+                            String pd = MD5.encryptPassword(password);
+                            qualityUser.setPassword(pd);
+                            //由于资源卫星老用户的原因,
+                            // 这里需要修改老用户的状态来表明被修改过
+                           // qualityUser.setSatelliteType("0");
+                        }
+
+                    }
+                }
+            }
+            result = this.defaultDAO.saveOrUpdate(qualityUser);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("保存失败", 500);

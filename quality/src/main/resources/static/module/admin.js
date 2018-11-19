@@ -110,7 +110,6 @@ layui.define(['config', 'layer', 'element', 'form'], function (exports) {
         },
         // 封装ajax请求
         req: function (url, data, success, method) {
-            debugger
             if ('put' == method.toLowerCase()) {
                 method = 'POST';
                 data._method = 'PUT';

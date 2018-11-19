@@ -1,5 +1,5 @@
 <div class="layui-card">
-    <div class="layui-card-header">
+    <div class="layui-card-header" >
         <h2 class="header-title">角色管理</h2>
         <span class="layui-breadcrumb pull-right">
           <a href="#!console">首页</a>
@@ -7,17 +7,42 @@
         </span>
     </div>
     <div class="layui-card-body">
-        <div class="layui-form toolbar">
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">编码：</label>
+                    <div class="layui-input-block">
+                        <input id="search-LIKE-roleCode" name="search-LIKE-roleCode" class="layui-input search-input" type="text" placeholder="输入关键字"/>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">名称：</label>
+                    <div class="layui-input-block">
+                        <input id="search-LIKE-roleName" name="search-LIKE-roleName" class="layui-input search-input" type="text" placeholder="输入关键字"/>
+                    </div>
+                </div>
 
-            编码：<input id="search-LIKE-roleCode" class="layui-input search-input" type="text" placeholder="输入关键字"/>&emsp;
-            名称：<input id="search-LIKE-roleName" class="layui-input search-input" type="text" placeholder="输入关键字"/>&emsp;
 
-            <button id="role-btn-search" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
-            <button id="role-btn-reset"  class="layui-btn  icon-btn layui-btn-primary">重置</button>
-            <button id="role-btn-add" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                <div class="layui-inline">
+                    <button class="layui-btn" lay-submit lay-filter="role-form-search">
+                        <i class="layui-icon">&#xe615;</i>搜索
+                    </button>
+                </div>
+                <div class="layui-inline">
+                    <button id="role-btn-reset"  class="layui-btn">
+                        重置
+                    </button>
+                </div>
 
+                <div class="layui-inline">
+                    <button id="role-btn-add" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                </div>
+                <div class="layui-inline">
+                    <button id="role-btn-export" title="导出" class="layui-btn icon-btn" lay-even="LAYTABLE_EXPORT">导出</button>
+                </div>
+
+            </div>
         </div>
-
         <!-- 数据表格 -->
         <table class="layui-table" id="role-table" lay-filter="role-table"></table>
 
@@ -48,7 +73,7 @@
             <label class="layui-form-label">排序</label>
             <div class="layui-input-block">
                 <input name="sort" placeholder="请输入排序" type="text" class="layui-input"
-                       />
+                />
             </div>
         </div>
         <div class="layui-form-item model-form-footer">
@@ -77,11 +102,9 @@
         table.render({
             elem: '#role-table',
             url: config.base_server + 'QualityRole/query.do',
-            where: {
-                access_token: config.getToken().access_token
-            },
-           page: true,
+            page: true,
             cols: [[
+                {type: 'checkbox', fixed: 'left'},
                 {field: 'roleCode', sort: true, title: '编码'},
                 {field: 'roleName', sort: true, title: '名称'},
                 {field: 'sort', sort: true, title: '排序'},
@@ -96,6 +119,22 @@
             showEditModel();
         });
 
+        $('#role-btn-export').click(function (){
+            table.exportFile('role-table', table.data);
+        });
+
+        // 查询表单
+        form.on('submit(role-form-search)', function (data) {
+            debugger
+            var field = data.field;
+
+            //执行重载
+            table.reload('role-table', {
+                where: field
+            });
+            //table.reload('role-table', {where: {"search-LIKE-roleCode": roleCode,"search-LIKE-roleName": roleName}});
+        })
+
         // 表单提交事件
         form.on('submit(role-form-submit)', function (data) {
             layer.load(2);
@@ -106,7 +145,7 @@
                 dataType: 'JSON',
                 contentType:'application/json',
                 success: function (data) {
-                   // alert(JSON.stringify(data))
+                    // alert(JSON.stringify(data))
                     layer.closeAll('loading');
                     if (data.status == 200) {
                         layer.msg(data.message, {icon: 1});
@@ -121,7 +160,7 @@
             return false;
         });
 
-        // 工具条点击事件
+        //监听行工具事件
         table.on('tool(role-table)', function (obj) {
             debugger
             var data = obj.data;
@@ -129,21 +168,20 @@
                 showEditModel(data);
             } else if (obj.event === 'del') { //删除
                 doDelete(obj);
-            } else  if(obj.event === 'getCheckData'){
-
+            } else  if(obj.event === 'LAYTABLE_EXPORT'){
+                alert(1)
 
             }
         });
 
-
         // 搜索按钮点击事件
-        $('#role-btn-search').click(function () {
+        /*    $('#role-btn-search').click(function () {
 
-            var  roleCode  = $("#search-LIKE-roleCode").val();
-            var  roleName  = $("#search-LIKE-roleName").val();
-            table.reload('role-table', {where: {"search-LIKE-roleCode": roleCode,"search-LIKE-roleName": roleName}});
-        });
-
+         var  roleCode  = $("#search-LIKE-roleCode").val();
+         var  roleName  = $("#search-LIKE-roleName").val();
+         table.reload('role-table', {where: {"search-LIKE-roleCode": roleCode,"search-LIKE-roleName": roleName}});
+         });
+         */
 
         $("#role-btn-reset").click(function(){
             $("#search-LIKE-roleCode").val("");

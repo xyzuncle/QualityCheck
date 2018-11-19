@@ -50,7 +50,6 @@ public class QualityRoleController extends BaseController<QualityRole, IQualityR
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "第几页", required = true, dataType = "Integer"),
             @ApiImplicitParam(name = "limit", value = "每页多少条", required = true, dataType = "Integer"),
-            @ApiImplicitParam(name = "access_token", value = "令牌", required = true, dataType = "String")
     })
     @RequestMapping(value = "/query.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody

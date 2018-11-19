@@ -52,7 +52,7 @@ public class QualityUserController extends BaseController<QualityUser, IQualityU
      * @return
      */
     @ApiOperation(value = "QualityUser多条件查询", notes = "多条件查询")
-    @RequestMapping(value = "/query.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/query.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public PageResult<QualityUser> queryConditionPage(HttpServletRequest request) {
         PageResult<QualityUser> QualityUserListPage = null;
@@ -157,7 +157,6 @@ public class QualityUserController extends BaseController<QualityUser, IQualityU
     }
 
     @ApiOperation(value = "获取个人信息")
-    @ApiImplicitParam(name = "access_token", value = "令牌", required = true, dataType = "String")
     @RequestMapping(value = "/userInfo.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public JsonResult userInfo() {

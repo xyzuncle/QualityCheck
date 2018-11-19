@@ -35,19 +35,19 @@ public class BaseController<T,S extends IService<T>> {
 
     public IPage<T> queryContion(Map<String,Object> searchParams, Sort sort) throws Exception {
         Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-        int pageNumber=0;
-        int pageSize=10;
-        if(request.getParameter("pageNumber")==null || "".equals(request.getParameter("pageNumber"))){
-            pageNumber=1;
+        int page=0;
+        int limit=10;
+        if(request.getParameter("page")==null || "".equals(request.getParameter("page"))){
+            page=1;
         }else{
-            pageNumber = Integer.parseInt(request.getParameter("pageNumber"))>1?
-                    Integer.parseInt(request.getParameter("pageNumber")):1;
+            page = Integer.parseInt(request.getParameter("page"))>1?
+                    Integer.parseInt(request.getParameter("page")):1;
 
         }
-        if(request.getParameter("pageSize")==null || "".equals(request.getParameter("pageSize"))){
-            pageSize =10;
+        if(request.getParameter("limit")==null || "".equals(request.getParameter("limit"))){
+            limit =10;
         }else{
-            pageSize = Integer.parseInt(request.getParameter("pageSize"));
+            limit = Integer.parseInt(request.getParameter("limit"));
         }
 
         QueryWrapper<T> spec = DynamicSpecifications.bySearchFilter(filters.values(), entityClass);
@@ -63,31 +63,31 @@ public class BaseController<T,S extends IService<T>> {
             }
         }
         IPage<T> pagelist = null;
-        pagelist = defaultDAO.page(new PageResult<T>(pageNumber,pageSize),spec);
+        pagelist = defaultDAO.page(new PageResult<T>(page,limit),spec);
         return pagelist;
     }
 
     public IPage<T> queryContion(Map<String,Object> searchParams){
         Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-        int pageNumber=0;
-        int pageSize=10;
-        if(request.getParameter("pageNumber")==null || "".equals(request.getParameter("pageNumber"))){
-            pageNumber=0;
+        int page=0;
+        int limit=10;
+        if(request.getParameter("page")==null || "".equals(request.getParameter("page"))){
+            page=0;
         }else{
-            pageNumber = Integer.parseInt(request.getParameter("pageNumber"))>1?
-                    Integer.parseInt(request.getParameter("pageNumber")):1;
+            page = Integer.parseInt(request.getParameter("page"))>1?
+                    Integer.parseInt(request.getParameter("page")):1;
 
         }
-        if(request.getParameter("pageSize")==null || "".equals(request.getParameter("pageSize"))){
-            pageSize =10;
+        if(request.getParameter("limit")==null || "".equals(request.getParameter("limit"))){
+            limit =10;
         }else{
-            pageSize = Integer.parseInt(request.getParameter("pageSize"));
+            limit = Integer.parseInt(request.getParameter("limit"));
         }
 
         QueryWrapper<T> spec = DynamicSpecifications.bySearchFilter(filters.values(), entityClass);
 
         IPage<T> pagelist = null;
-        pagelist = defaultDAO.page(new Page<T>(pageNumber,pageSize),spec);
+        pagelist = defaultDAO.page(new Page<T>(page,limit),spec);
         return pagelist;
     }
 

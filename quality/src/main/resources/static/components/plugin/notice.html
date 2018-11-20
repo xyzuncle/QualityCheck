@@ -1,0 +1,117 @@
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body layui-form text-center" style="padding: 80px 20px;">
+
+            <button id="noticeBtn1" class="layui-btn">成功消息</button>
+
+            <button id="noticeBtn2" class="layui-btn layui-btn-warm">警告消息</button>
+
+            <button id="noticeBtn3" class="layui-btn layui-btn-danger">失败消息</button>
+
+            <button id="noticeBtn4" class="layui-btn layui-btn-normal">通知消息</button>
+
+            <br><br><br>
+
+            位置：
+            <div style="width: 150px;display: inline-block;">
+                <select id="noticePosition">
+                    <option value="topLeft">topLeft</option>
+                    <option value="topRight">topRight</option>
+                    <option value="bottomLeft">bottomLeft</option>
+                    <option value="bottomRight">bottomRight</option>
+                    <option value="topCenter">topCenter</option>
+                    <option value="bottomCenter ">bottomCenter</option>
+                    <option value="center">center</option>
+                </select>
+            </div>&emsp;&emsp;
+            进入动画：
+            <div style="width: 150px;display: inline-block;">
+                <select id="noticeIn">
+                    <option value="bounceInLeft">bounceInLeft</option>
+                    <option value="bounceInRight">bounceInRight</option>
+                    <option value="bounceInUp">bounceInUp</option>
+                    <option value="bounceInDown">bounceInDown</option>
+                    <option value="fadeIn">fadeIn</option>
+                    <option value="fadeInDown">fadeInDown</option>
+                    <option value="fadeInUp">fadeInUp</option>
+                    <option value="fadeInLeft">fadeInLeft</option>
+                    <option value="fadeInRight">fadeInRight</option>
+                    <option value="flipInX">flipInX</option>
+                </select>
+            </div>&emsp;&emsp;
+            退出动画：
+            <div style="width: 150px;display: inline-block;">
+                <select id="noticeOut">
+                    <option value="fadeOut">fadeOut</option>
+                    <option value="fadeOutUp">fadeOutUp</option>
+                    <option value="fadeOutDown">fadeOutDown</option>
+                    <option value="fadeOutLeft">fadeOutLeft</option>
+                    <option value="fadeOutRight">fadeOutRight</option>
+                    <option value="flipOutX">flipOutX</option>
+                </select>
+            </div>
+
+            <br><br><br>
+
+            <button id="noticeBtn5" class="layui-btn layui-btn-normal">显示通知</button>
+
+            <button id="noticeBtn6" class="layui-btn layui-btn-normal">关闭所有</button>
+
+        </div>
+    </div>
+</div>
+
+<!-- js部分 -->
+<script>
+    layui.use(['form', 'notice'], function () {
+        var $ = layui.jquery;
+        var form = layui.form;
+        var notice = layui.notice;
+
+        form.render();
+
+        $('#noticeBtn1').click(function () {
+            notice.success({
+                title: '消息通知',
+                message: '你有新的消息，请注意查收!'
+            });
+        });
+
+        $('#noticeBtn2').click(function () {
+            notice.warning({
+                title: '消息通知',
+                message: '你有新的消息，请注意查收!'
+            });
+        });
+
+        $('#noticeBtn3').click(function () {
+            notice.error({
+                title: '消息通知',
+                message: '你有新的消息，请注意查收!'
+            });
+        });
+
+        $('#noticeBtn4').click(function () {
+            notice.info({
+                title: '消息通知',
+                message: '你有新的消息，请注意查收!'
+            });
+        });
+
+        $('#noticeBtn5').click(function () {
+            notice.info({
+                title: '消息通知',
+                message: '你有新的消息，请注意查收!',
+                position: $('#noticePosition').val(),
+                transitionIn: $('#noticeIn').val(),
+                transitionOut: $('#noticeOut').val()
+            });
+        });
+
+        $('#noticeBtn6').click(function () {
+            notice.destroy();
+        });
+
+    });
+</script>

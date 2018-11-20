@@ -1,126 +1,157 @@
-<div class="layui-card">
-    <div class="layui-card-header">
-        <h2 class="header-title">权限管理</h2>
-        <span class="layui-breadcrumb pull-right">
-          <a href="#!console">首页</a>
-          <a><cite>权限管理</cite></a>
-        </span>
-    </div>
-    <div class="layui-card-body">
-        <div class="layui-form toolbar">
-            查看角色权限：
-            <select id="auth-slt-role" lay-filter="auth-slt-role">
-                <option value="">-请选择角色-</option>
-                <option p-for="roles" p-bind="value:{{roleId}}">{{roleName}}</option>
-            </select>&emsp;
-            <button id="auth-btn-sync" class="layui-btn icon-btn" lay-tips="自动扫描所有接口同步到数据库">
-                <i class="layui-icon">&#xe669;</i>同步
-            </button>
-        </div>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
 
-        <!-- 数据表格 -->
-        <table class="layui-table" id="auth-table" lay-filter="auth-table"></table>
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">搜索：</label>
+                        <div class="layui-input-inline mr0">
+                            <input id="authEdtSearch" class="layui-input" type="text" placeholder="输入关键字"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button id="authBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                        <button id="authBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                    </div>
+                </div>
+            </div>
+
+            <table class="layui-table" id="authTable" lay-filter="authTable"></table>
+
+        </div>
     </div>
+
 </div>
 
-<!-- 表格状态列 -->
-<script type="text/html" id="auth-state">
-    <input type="checkbox" lay-filter="auth-state" value="{{d.authority}}" lay-skin="switch" lay-text="ON|OFF"
-           {{d.checked==1?'checked':''}}/>
+<!-- 表格操作列 -->
+<script type="text/html" id="authTableBar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 
+<!-- js部分 -->
 <script>
-    layui.use(['form', 'table', 'util', 'config', 'admin'], function () {
-        var form = layui.form;
-        var table = layui.table;
-        var config = layui.config;
+    layui.use(['layer', 'table', 'admin', 'config', 'treetable'], function () {
+        var $ = layui.jquery;
         var layer = layui.layer;
-        var util = layui.util;
+        var table = layui.table;
         var admin = layui.admin;
+        var config = layui.config;
+        var treetable = layui.treetable;
 
         // 渲染表格
-        table.render({
-            elem: '#auth-table',
-            url: config.base_server + 'authorities',
-            where: {
-                access_token: config.getToken().access_token
-            },
-            page: false,
-            cols: [[
-                {type: 'numbers'},
-                {field: 'authorityName', sort: true, title: '权限'},
-                {field: 'authority', sort: true, title: '权限标识'},
-                {
-                    field: 'createTime', sort: true, templet: function (d) {
-                        return util.toDateString(d.createTime);
-                    }, title: '创建时间'
-                },
-                {field: 'checked', sort: true, templet: '#auth-state', title: '授权'}
-            ]]
+        function renderAuthTable() {
+            treetable.render({
+                treeColIndex: 1,
+                treeSpid: -1,
+                treeIdName: 'authorityId',
+                treePidName: 'parentId',
+                elem: '#authTable',
+                url: config.base_server + 'authorities.json',
+                cellMinWidth: 100,
+                cols: [[
+                    {type: 'numbers'},
+                    {field: 'authorityName', minWidth: 200, title: '权限名称'},
+                    {field: 'authority', title: '权限标识'},
+                    {field: 'menuUrl', title: '菜单url'},
+                    {field: 'orderNumber', minWidth: 80, align: 'center', title: '排序号'},
+                    {
+                        minWidth: 80, align: 'center', templet: function (d) {
+                            if (d.isMenu == 1) {
+                                return '<span class="layui-badge layui-bg-gray">按钮</span>';
+                            }
+                            if (d.parentId == -1) {
+                                return '<span class="layui-badge layui-bg-blue">目录</span>';
+                            } else {
+                                return '<span class="layui-badge-rim">菜单</span>';
+                            }
+                        }, title: '类型'
+                    },
+                    {templet: '#authTableBar', minWidth: 120, align: 'center', title: '操作'}
+                ]]
+            });
+        }
+
+        renderAuthTable();
+
+        // 添加按钮点击事件
+        $('#authBtnAdd').click(function () {
+            showEditModel();
         });
 
-        // 角色切换事件
-        form.on('select(auth-slt-role)', function (data) {
-            table.reload('auth-table', {where: {roleId: data.value}});
+        // 工具条点击事件
+        table.on('tool(authTable)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'edit') { // 修改
+                showEditModel(data);
+            } else if (layEvent === 'del') { // 删除
+                doDelete(obj.data.authorityId);
+            }
         });
 
-        // 同步按钮点击事件
-        $('#auth-btn-sync').click(function () {
-            layer.confirm('确定进行同步？', {
-                btn: ['确定', '取消'] //按钮
+        // 删除
+        function doDelete(authorityId) {
+            layer.confirm('确定删除此权限吗？', {
+                skin: 'layui-layer-admin'
             }, function () {
                 layer.load(2);
-                $.get(config.base_server + 'v2/api-docs', function (data) {
-                    admin.req('authorities/sync', {
-                        json: JSON.stringify(data)
-                    }, function (data) {
-                        layer.closeAll('loading');
-                        if (200 == data.code) {
-                            layer.msg(data.msg, {icon: 1});
-                            table.reload('auth-table');
-                        } else {
-                            layer.msg(data.msg, {icon: 2});
-                        }
-                    }, 'POST');
-                });
+                admin.req('user_state.json', {
+                    authorityId: authorityId
+                }, function (data) {
+                    layer.closeAll('loading');
+                    if (data.code == 200) {
+                        layer.msg(data.msg, {icon: 1});
+                        renderAuthTable();
+                    } else {
+                        layer.msg(data.msg, {icon: 2});
+                    }
+                }, 'get');
             });
-        });
+        }
 
-        // 获取角色
-        //admin.showLoading('.toolbar');
-        admin.req('role', {}, function (data) {
-            //admin.removeLoading('.toolbar');
-            if (0 == data.code) {
-                $('#auth-slt-role').vm({roles: data.data});
-                form.render('select');
-            } else {
-                layer.msg('获取角色失败', {icon: 2});
-            }
-        }, 'GET');
+        // 显示表单弹窗
+        function showEditModel(data) {
+            admin.putTempData('t_authoritie', data);
+            admin.open({
+                title: data ? '修改权限' : '添加权限',
+                url: 'components/system/authForm.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
+                }
+            });
+        }
 
-        // 监听状态开关操作
-        form.on('switch(auth-state)', function (obj) {
-            var roleId = $('#auth-slt-role').val();
-            if (!roleId) {
-                layer.msg('请选择角色再进行授权操作', {icon: 2});
-                $(obj.elem).prop('checked', !obj.elem.checked);
-                form.render('checkbox');
+        // 搜索按钮点击事件
+        $('#authBtnSearch').click(function () {
+            var keyword = $('#authEdtSearch').val();
+            var $tds = $('#authTable').next('.treeTable').find('.layui-table-body tbody tr td');
+            if (!keyword) {
+                $tds.css('background-color', 'transparent');
+                layer.msg("请输入关键字", {icon: 5});
                 return;
             }
-            layer.load(2);
-            admin.req('authorities/role', {
-                roleId: roleId,
-                authId: obj.value
-            }, function (data) {
-                layer.closeAll('loading');
-                if (data.code == 200) {
-                    layer.msg(data.msg, {icon: 1});
-                } else {
-                    layer.msg(data.msg, {icon: 2});
-                    $(obj.elem).prop('checked', !obj.elem.checked);
-                    form.render('checkbox');
+            var searchCount = 0;
+            $tds.each(function () {
+                $(this).css('background-color', 'transparent');
+                if ($(this).text().indexOf(keyword) >= 0) {
+                    $(this).css('background-color', 'rgba(250,230,160,0.5)');
+                    if (searchCount == 0) {
+                        $('.layui-tab-item.layui-show').stop(true);
+                        $('.layui-tab-item.layui-show').animate({scrollTop: $(this).offset().top - 150}, 500);
+                    }
+                    searchCount++;
                 }
-            }, obj.elem.checked ? 'POST' : 'DELETE');
+            });
+            if (searchCount == 0) {
+                layer.msg("没有匹配结果", {icon: 5});
+            } else {
+                treetable.expandAll('#authTable');
+            }
         });
+
     });
 </script>

@@ -191,6 +191,7 @@
 	</dependencies>
 
 	<build>
+        <finalName>quality</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

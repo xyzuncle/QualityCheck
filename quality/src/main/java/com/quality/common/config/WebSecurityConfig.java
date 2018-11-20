@@ -31,7 +31,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {//1
 
-    private String forwardUrl = "/staitc/home.html";
+    private String forwardUrl = "/staitc/index.html";
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {//1
 				.and()
 				.authorizeRequests()
                     .antMatchers("/images/captcha",
-                            "/login.html","/assets/**","/module/**","/index.html","/swagger-resources/**").permitAll()
+                            "/login.html","/assets/**/**","/module/**","/index.html","/swagger-resources/**","/josn/**").permitAll()
                      //声明方法必须是post方法
                     .antMatchers(HttpMethod.POST,"/loginToken").permitAll()
                     .and().httpBasic().disable()

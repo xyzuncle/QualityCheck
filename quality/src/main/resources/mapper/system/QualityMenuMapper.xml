@@ -15,7 +15,7 @@
         <result column="menuUrl" property="menuUrl" />
         <result column="sort" property="sort" />
         <result column="path" property="path" />
-        <result column="permission" property="permission" />
+        <result column="addPermission" property="addPermission" />
         <result column="menuType" property="menuType" />
         <result column="menuState" property="menuState" />
         <result column="crtUser" property="crtUser" />
@@ -29,7 +29,7 @@
         crtTime,
         updTime,
         deleted,
-        parentId, parentIds, menuCode, menuName, menuUrl, sort, path, permission, menuType, menuState, crtUser, updUser, remarks
+        parentId, parentIds, menuCode, menuName, menuUrl, sort, path, addPermission, menuType, menuState, crtUser, updUser, remarks
     </sql>
 
 </mapper>

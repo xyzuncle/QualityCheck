@@ -1,148 +1,157 @@
-<div class="layui-card">
-    <div class="layui-card-header">
-        <h2 class="header-title">用户管理</h2>
-        <span class="layui-breadcrumb pull-right">
-          <a href="#!console">首页</a>
-          <a><cite>用户管理</cite></a>
-        </span>
-    </div>
-    <div class="layui-card-body">
-        <div class="layui-form toolbar">
-           <!-- 搜索：
-            <select id="user-search-key">
-                <option value="">-请选择-</option>
-                <option value="search-LIKE-userName"></option>
-                <option value="search-LIKE-loginName">登录名</option>
-            </select>&emsp;-->
-            姓名：
-            <input id="search-LIKE-userName" class="layui-input search-input" type="text" placeholder="输入关键字"/>&emsp;
-            登录名：
-            <input id="search-LIKE-loginName" class="layui-input search-input" type="text" placeholder="输入关键字"/>&emsp;
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">用户管理</div>
+        <div class="layui-card-body">
 
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <select id="userSlKey">
+                            <option value="">搜索条件</option>
+                            <option value="user_id">ID</option>
+                            <option value="username">账号</option>
+                            <option value="nick_name">用户名</option>
+                            <option value="phone">手机号</option>
+                        </select>
+                    </div>
+                    <div class="layui-inline">
+                        <input id="userEdtSearch" class="layui-input" type="text" placeholder="输入关键字"/>
+                    </div>
+                    <div class="layui-inline">
+                        <button id="userBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                        <button id="userBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                        <button id="userBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+                    </div>
+                </div>
+            </div>
 
+            <table class="layui-table" id="userTable" lay-filter="userTable"></table>
 
-            <button id="user-btn-search" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
-            <button id="user-btn-add" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
         </div>
-
-        <table class="layui-table" id="user-table" lay-filter="user-table"></table>
     </div>
 </div>
 
-
 <!-- 表格操作列 -->
-<script type="text/html" id="user-table-bar">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+<script type="text/html" id="userTableBar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-xs" lay-event="reset">重置密码</a>
 </script>
 
 <!-- 表格状态列 -->
-<script type="text/html" id="user-tpl-state">
-    <input type="checkbox" lay-filter="user-tpl-state" value="{{d.userId}}" lay-skin="switch" lay-text="正常|锁定"
+<script type="text/html" id="userTableState">
+    <input type="checkbox" lay-filter="userTableState" value="{{d.userId}}" lay-skin="switch" lay-text="正常|锁定"
            {{d.state==0?'checked':''}}/>
 </script>
 
 <script>
-    layui.use(['form', 'table', 'util', 'config', 'admin'], function () {
-        var form = layui.form;
-        var table = layui.table;
-        var config = layui.config;
+    layui.use(['layer', 'table', 'form', 'util', 'config', 'admin'], function () {
+        var $ = layui.jquery;
         var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
         var util = layui.util;
+        var config = layui.config;
         var admin = layui.admin;
 
+        form.render('select');
         // 渲染表格
-        table.render({
-            elem: '#user-table',
+        var ins1 = table.render({
+            elem: '#userTable',
             url: config.base_server + 'QualityUser/query.do',
             method: 'POST',
-         /*   where: {
+           /* where: {
                 access_token: config.getToken().access_token
             },*/
             page: true,
+            cellMinWidth: 100,
             cols: [[
                 {field: 'userName', sort: true, title: '姓名'},
                 {field: 'loginName', sort: true, title: '登录名'},
                 {field: 'phone', sort: true, title: '电话'},
                 {field: 'mobile', sort: true, title: '手机号'},
                 {field: 'email', sort: true, title: '邮箱'},
-                {align: 'center', toolbar: '#user-table-bar', title: '操作'}
+               /* {field: 'state', sort: true, templet: '#userTableState', title: '状态'},*/
+                {align: 'center', toolbar: '#userTableBar', title: '操作', minWidth: 150}
             ]]
         });
 
         // 添加按钮点击事件
-        $('#user-btn-add').click(function () {
+        $('#userBtnAdd').click(function () {
             showEditModel();
         });
 
         // 工具条点击事件
-       table.on('tool(user-table)', function (obj) {
+        table.on('tool(userTable)', function (obj) {
             var data = obj.data;
             var layEvent = obj.event;
-           switch(obj.event){
-               case 'edit':
-                   showEditModel(data);
-                   break;
-               case 'detail':
-                    break;
-               case 'delete':
-                   layer.confirm('是否确定删除该条记录？', function(index){
 
-                       layer.close(index);
-                       //向服务端发送删除指令
-                       admin.req('QualityUser/removeById.do?entityID=' + obj.data.id, {}, function (data) {
-                           if (data.status == 200) {
-                               layer.msg(data.message, {icon: 1});
-                               obj.del(); //删除对应行（tr）的DOM结构
-                           } else {
-                               layer.msg(data.message, {icon: 2});
-                           }
-                       },"DELETE")
-                   });
-                   break;
-           }
-
+            if (layEvent === 'edit') { // 修改
+                showEditModel(data);
+            } else if (layEvent === 'reset') { // 重置密码
+                layer.confirm('确定重置此用户的密码吗？', {
+                    skin: 'layui-layer-admin'
+                }, function (i) {
+                    layer.close(i);
+                    layer.load(2);
+                    admin.req('user_state.json?u=' + obj.data.userId, {}, function (data) {
+                        layer.closeAll('loading');
+                        if (data.code == 200) {
+                            layer.msg(data.msg, {icon: 1});
+                        } else {
+                            layer.msg(data.msg, {icon: 2});
+                        }
+                    }, 'GET');
+                });
+            }
         });
 
-        //显示表单弹窗
-        var showEditModel = function (data) {
-            admin.putTempData('quality_user', data);
-            var title = data ? '修改用户' : '添加用户';
-            admin.popupCenter({
-                title: title,
-                path: 'components/system/user_form.html',
-                finish: function () {
-                    table.reload('user-table', {});
+        // 显示表单弹窗
+        function showEditModel(data) {
+            admin.putTempData('t_user', data);
+            admin.open({
+                title: data ? '修改用户' : '添加用户',
+                url: 'components/system/userForm.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
                 }
             });
         };
 
         // 搜索按钮点击事件
-        $('#user-btn-search').click(function () {
-            debugger
-            var userkey = $('#user-search-key').val();
-            var userName = $('#search-LIKE-userName').val();
-            var loginName = $('#search-LIKE-loginName').val();
-            table.reload('user-table', {where: {"search-LIKE-userName":userName,"search-LIKE-loginName":loginName}});
+        $('#userBtnSearch').click(function () {
+            var key = $('#userSlkey').val();
+            var value = $('#userEdtSearch').val();
+            table.reload('userTable', {where: {searchKey: key, searchValue: value}});
+        });
+
+        // 导出excel
+        $('#userBtnExp').click(function () {
+            var checkRows = table.checkStatus('userTable');
+            if (checkRows.data.length == 0) {
+                layer.msg('请选择要导出的数据', {icon: 2});
+            } else {
+                table.exportFile(ins1.config.id, checkRows.data, 'xls');
+            }
         });
 
         // 修改user状态
-        form.on('switch(user-tpl-state)', function (obj) {
+        form.on('switch(userTableState)', function (obj) {
             layer.load(2);
-            admin.req('user/state', {
+            admin.req('user_state.json', {
                 userId: obj.elem.value,
                 state: obj.elem.checked ? 0 : 1
             }, function (data) {
                 layer.closeAll('loading');
                 if (data.code == 200) {
                     layer.msg(data.msg, {icon: 1});
-                    //table.reload('table-user', {});
+                    // table.reload('table-user', {});
                 } else {
                     layer.msg(data.msg, {icon: 2});
                     $(obj.elem).prop('checked', !obj.elem.checked);
                     form.render('checkbox');
                 }
-            }, 'PUT');
+            }, 'GET');
         });
     });
 </script>

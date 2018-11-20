@@ -1,17 +1,16 @@
+/** EasyWeb spa v3.0.3 data:2018-11-19 */
+
 layui.define(function (exports) {
 
     var config = {
-        base_server: 'http://localhost:8088/', // 接口地址
+        base_server: 'http://localhost:8088/', // 接口地址，实际项目请换成http形式的地址
         tableName: 'easyweb',  // 存储表名
-        autoRender: false,  // 窗口大小改变后是否自动重新渲染表格，解决layui数据表格非响应式的问题
+        pageTabs: true,   // 是否开启多标签
         // 获取缓存的token
         getToken: function () {
-            var t = layui.data(config.tableName).token;
-            if (t) {
-                return JSON.parse(t);
-            }
+            return layui.data(config.tableName).token;
         },
-        // 清除user
+        // 清除token
         removeToken: function () {
             layui.data(config.tableName, {
                 key: 'token',
@@ -22,62 +21,55 @@ layui.define(function (exports) {
         putToken: function (token) {
             layui.data(config.tableName, {
                 key: 'token',
-                value: JSON.stringify(token)
+                value: token
             });
         },
-        // 导航菜单
-        menus: [{
-            name: '主页',
-            icon: 'layui-icon-home',
-            subMenus: [{
-                name: '主页一',
-                url: 'console',
-                path: 'console.html'
-            }]
-        }, {
-            name: '系统管理',
-            icon: 'layui-icon-set',
-            subMenus: [{
-                name: '用户管理',
-                url: 'user',  // 这里url不能带斜杠，因为是用递归循环进行关键字注册，带斜杠会被q.js理解为其他注册模式
-                path: 'system/user.html',
-                auth: 'post:/user/query'
-            }, {
-                name: '角色管理',
-                url: 'role',
-                path: 'system/role.html',
-                auth: 'get:/role'
-            }, {
-                name: '菜单管理',
-                url: 'menu',
-                path: 'system/menu.html',
-                auth: 'get:/menu'
-            }, {
-                name: '权限管理',
-                url: 'authorities',
-                path: 'system/authorities.html',
-                auth: 'get:/authorities'
-            }, {
-                name: '登录日志',
-                url: 'login_record',
-                path: 'system/login_record.html',
-                auth: 'get:/loginRecord'
-            }]
-        }],
         // 当前登录的用户
         getUser: function () {
-            var u = layui.data(config.tableName).login_user;
-            if (u) {
-                return JSON.parse(u);
-            }
+            return layui.data(config.tableName).login_user;
         },
         // 缓存user
         putUser: function (user) {
             layui.data(config.tableName, {
                 key: 'login_user',
-                value: JSON.stringify(user)
+                value: user
             });
+        },
+        // 获取用户所有权限
+        getUserAuths: function () {
+            var authorities = config.getUser().authorities;
+            var auths = [];
+            for (var i = 0; i < authorities.length; i++) {
+                auths.push(authorities[i].authority);
+            }
+            return auths;
+        },
+        // ajax请求的header
+        getAjaxHeaders: function () {
+            var headers = [];
+           /* var token = config.getToken();
+            headers.push({
+                name: 'Authorization',
+                value: 'Bearer ' + token.access_token
+            });*/
+            return headers;
+        },
+        // ajax请求结束后的处理，返回false阻止代码执行
+        ajaxSuccessBefore: function (res) {
+            if (res.code == 401) {
+                config.removeToken();
+                layer.msg('登录过期', {icon: 2, time: 1500}, function () {
+                    location.reload();
+                }, 1000);
+                return false;
+            } else if (res.code == 403) {
+                layer.msg('没有访问权限', {icon: 2});
+            } else if (res.code == 404) {
+                layer.msg('404目标不存在', {icon: 2});
+            }
+            return true;
         }
     };
+
     exports('config', config);
 });

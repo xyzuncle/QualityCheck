@@ -49,9 +49,9 @@ public class QualityMenu extends BaseEntity {
     @TableField("path")
     private String path;
 
-    @ApiModelProperty(value = "权限标识")
-    @TableField("permission")
-    private String permission;
+    @ApiModelProperty(value = "增加权限")
+    @TableField("addPermission")
+    private String addPermission;
 
     @ApiModelProperty(value = "类型")
     @TableField("menuType")
@@ -73,6 +73,13 @@ public class QualityMenu extends BaseEntity {
     @TableField("remarks")
     private String remarks;
 
+    public String getAddPermission() {
+        return addPermission;
+    }
+
+    public void setAddPermission(String addPermission) {
+        this.addPermission = addPermission;
+    }
 
     public String getParentId() {
         return parentId;
@@ -130,13 +137,7 @@ public class QualityMenu extends BaseEntity {
         this.path = path;
     }
 
-    public String getPermission() {
-        return permission;
-    }
 
-    public void setPermission(String permission) {
-        this.permission = permission;
-    }
 
     public Integer getMenuType() {
         return menuType;
@@ -189,7 +190,6 @@ public class QualityMenu extends BaseEntity {
         ", menuUrl=" + menuUrl +
         ", sort=" + sort +
         ", path=" + path +
-        ", permission=" + permission +
         ", menuType=" + menuType +
         ", menuState=" + menuState +
         ", crtUser=" + crtUser +

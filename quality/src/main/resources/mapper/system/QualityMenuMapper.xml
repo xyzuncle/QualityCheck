@@ -10,17 +10,20 @@
     <result column="deleted" property="deleted" />
         <result column="parentId" property="parentId" />
         <result column="parentIds" property="parentIds" />
-        <result column="menuCode" property="menuCode" />
         <result column="menuName" property="menuName" />
         <result column="menuUrl" property="menuUrl" />
+        <result column="menuIcon" property="menuIcon" />
         <result column="sort" property="sort" />
         <result column="path" property="path" />
-        <result column="addPermission" property="addPermission" />
         <result column="menuType" property="menuType" />
         <result column="menuState" property="menuState" />
         <result column="crtUser" property="crtUser" />
         <result column="updUser" property="updUser" />
         <result column="remarks" property="remarks" />
+        <result column="addPermission" property="addPermission" />
+        <result column="editPermission" property="editPermission" />
+        <result column="deletePermission" property="deletePermission" />
+        <result column="queryPermission" property="queryPermission" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -29,7 +32,15 @@
         crtTime,
         updTime,
         deleted,
-        parentId, parentIds, menuCode, menuName, menuUrl, sort, path, addPermission, menuType, menuState, crtUser, updUser, remarks
+        parentId, parentIds, menuName, menuUrl, menuIcon, sort, path, menuType, menuState, crtUser, updUser, remarks, addPermission, editPermission, deletePermission, queryPermission
     </sql>
+
+    <!--根据父ID查询-->
+    <select id="selectListByParentId" resultType="com.quality.system.entity.QualityMenu">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM quality_menu
+        WHERE parentId = #{parentId}
+    </select>
 
 </mapper>

@@ -1,0 +1,190 @@
+<!-- menu表单弹窗 -->
+<form id="menuForm" lay-filter="menuForm" class="layui-form model-form">
+    <input name="id" type="hidden"/>
+    <input name="authorityId" type="hidden"/>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单名称</label>
+        <div class="layui-input-block">
+            <input name="menuName" placeholder="请输入菜单名称" type="text" class="layui-input" maxlength="50"
+                   lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单url</label>
+        <div class="layui-input-block">
+            <input name="menuUrl" placeholder="请输入菜单url" type="text" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单图标</label>
+        <div class="layui-input-block">
+            <input name="menuIcon" placeholder="请输入菜单图标" type="text" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">菜单PATH</label>
+        <div class="layui-input-block">
+            <input name="path" placeholder="请输入菜单path" type="text" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            <input type="radio" name="menuType" value="0" title="目录" checked/>
+            <!--  <input type="radio" name="menuType" value="1" title="按钮"/>-->
+            <input type="radio" name="menuType" value="2" title="菜单"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <!--<input type="checkbox" name="menuState" value="{{d.id}}" lay-skin="switch" lay-text="正常|锁定" lay-filter="menuStateLock" {{ d.id == 0 ? 'checked' : '' }}>-->
+
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序号</label>
+        <div class="layui-input-block">
+            <input name="sort" placeholder="请输入排序号" type="number" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">上级菜单</label>
+        <div class="layui-input-inline">
+            <input type="text" id="selectParentId" name="parentId" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <textarea name="remarks"   class="layui-textarea"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item text-right">
+        <button class="layui-btn layui-btn-primary close" ew-event="closeDialog" type="button">取消</button>
+        <button class="layui-btn" lay-filter="menuFormSubmit" lay-submit>保存</button>
+
+    </div>
+</form>
+
+<script>
+    layui.use(['layer','config', 'admin', 'form', 'formSelects','treeSelect'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var admin = layui.admin;
+        var form = layui.form;
+        var config = layui.config;
+        var formSelects = layui.formSelects;
+        var treeSelect = layui.treeSelect;
+
+        form.render('radio');
+
+        // 回显menu数据
+        var data = admin.getTempData('quality_menu');
+
+        $('#menuForm').attr('method', 'GET');
+        if (data) {
+            form.val('menuForm', data);
+            $('#menuForm').attr('method', 'GET');
+        }
+
+        // 获取所有角色
+        //layer.load(2);
+       /* admin.req('role', {}, function (data) {
+            layer.closeAll('loading');
+            if (0 == data.code) {
+                // 渲染多选下拉框
+                var roleSelectData = new Array();
+                for (var i = 0; i < data.data.length; i++) {
+                    roleSelectData.push({name: data.data[i].roleName, value: data.data[i].roleId});
+                }
+                formSelects.data('roleId', 'local', {arr: roleSelectData});
+
+                // 回显user数据
+                var user = admin.getTempData('t_user');
+                $('#user-form').attr('method', 'POST');
+                if (user) {
+                    form.val('user-form', user);
+                    $('#user-form').attr('method', 'PUT');
+                    var rds = new Array();
+                    for (var i = 0; i < user.roles.length; i++) {
+                        rds.push(user.roles[i].roleId);
+                    }
+                    formSelects.value('roleId', rds);
+                }
+
+            } else {
+                layer.msg('获取角色失败', {icon: 2});
+            }
+        }, 'GET');
+*/
+
+
+        // 表单提交事件
+        form.on('submit(menuFormSubmit)', function (data) {
+            alert(JSON.stringify(data))
+            layer.load(2);
+            $.ajax({
+                url: config.base_server + 'QualityMenu/save.do',
+                data: JSON.stringify(data.field),
+                type: "POST",
+                dataType: 'JSON',
+                contentType:'application/json',
+                success: function (data) {
+                    // alert(JSON.stringify(data))
+                    layer.closeAll('loading');
+                    if (data.status == 200) {
+                        layer.msg(data.message, {icon: 1});
+                        admin.finishPopupCenter();
+                    } else {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                }
+
+            });
+            return false;
+        });
+
+
+
+        treeSelect.render({
+            // 选择器
+            elem: '#selectParentId',
+            // 数据
+            data: config.base_server + 'QualityMenu/getQualityMenuTree.do',
+            // 异步加载方式：get/post，默认get
+            type: 'get',
+            // 占位符
+            placeholder: '请选择上级菜单',
+            // 是否开启搜索功能：true/false，默认false
+            search: true,
+            // 点击回调
+            click: function(d){
+                console.log(d);
+            },
+            // 加载完成后的回调函数
+            success: function (d) {
+                console.log(d);
+               // var treeObj = treeSelect.zTree('selectParentId');
+                //alert(JSON.stringify(treeObj))
+
+
+//                选中节点，根据id筛选
+                //treeSelect.checkNode('selectParentId', "layui-treeSelect-body-1542880087506_5");
+
+//                获取zTree对象，可以调用zTree方法
+//                var treeObj = treeSelect.zTree('tree');
+//                console.log(treeObj);
+
+//                刷新树结构
+//                treeSelect.refresh();
+            }
+        });
+
+
+    });
+</script>

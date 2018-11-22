@@ -56,8 +56,6 @@ public class QualityRoleController extends BaseController<QualityRole, IQualityR
     public PageResult<QualityRole> queryConditionPage(Integer page, Integer limit, HttpServletRequest request) {
         PageResult<QualityRole> QualityUserListPage = null;
         try {
-            System.out.println("第几页" + page);
-            System.out.println("每页多少条" + limit);
             //把查询条件都写好了
             Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search-");
             //如果需要按多个字段排序，请传多个参数,为了反射方便，数据库不使用下划线了

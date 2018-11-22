@@ -7,7 +7,8 @@ layui.config({
     treetable: 'treetable-lay/treetable',
     dropdown: 'dropdown/dropdown',
     notice: 'notice/notice',
-    step: 'step-lay/step'
+    step: 'step-lay/step',
+    treeSelect:'treeSelect/treeSelect'
 }).use(['layer', 'element', 'config', 'index', 'admin', 'laytpl'], function () {
     var $ = layui.jquery;
     var layer = layui.layer;
@@ -46,8 +47,8 @@ layui.config({
     }, 'get');
 
     // 加载侧边栏
-    admin.req('json/menus.json', {}, function (data) {
-        laytpl(sideNav.innerHTML).render(data, function (html) {
+    admin.req('QualityMenu/getQualityMenuTree.do', {}, function (data) {
+    laytpl(sideNav.innerHTML).render(data, function (html) {
             $('.layui-layout-admin .layui-side .layui-nav').html(html);
             element.render('nav');
             admin.activeNav(Q.lash);

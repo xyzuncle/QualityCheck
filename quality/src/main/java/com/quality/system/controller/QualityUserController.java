@@ -14,6 +14,7 @@ import com.quality.system.entity.QualityUser;
 import com.quality.system.service.IQualityUserService;
 import io.swagger.annotations.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
@@ -96,13 +97,9 @@ public class QualityUserController extends BaseController<QualityUser, IQualityU
                             String pd = MD5.encryptPassword(password);
                             qualityUser.setPassword(pd);
                         }
-
                         //增加默认值1正常，用户状态(0:禁用，1:正常)
                        // qualityUser.setStatus("1");
-
-
                     }
-
                 }else if(!"".equals(qualityUser.getId()) || qualityUser.getId()!=null){
                     //证明修改
                     String password = qualityUser.getPassword();
@@ -114,7 +111,6 @@ public class QualityUserController extends BaseController<QualityUser, IQualityU
                             // 这里需要修改老用户的状态来表明被修改过
                            // qualityUser.setSatelliteType("0");
                         }
-
                     }
                 }
             }
@@ -130,6 +126,11 @@ public class QualityUserController extends BaseController<QualityUser, IQualityU
     @RequestMapping(value = "/removeById.do", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public Object deleteQualityUserById(@ApiParam(value = "QualityUserID") @RequestParam(name = "entityID") String entityID) {
+        if (entityID != null && !entityID.equals("")) {
+            if (entityID.equals("1")) {
+                throw new BaseException("超级管理员无法删除", 500);
+            }
+        }
         boolean result = this.defaultDAO.removeById(entityID);
         return super.jsonObjectResult(result, "删除成功");
     }
@@ -211,6 +212,71 @@ public class QualityUserController extends BaseController<QualityUser, IQualityU
         }
         return null;
 
+    }
+
+    @ApiOperation(value = "根据ID修改密码")
+    @RequestMapping(value = "/updatepwd.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Object modifyPwd(@RequestParam("userId") String userId,
+                             @RequestParam("newPsw") String newPsw,
+                             @RequestParam("oldPsw") String oldPsw) {
+
+        boolean result = false;
+        try {
+            result = this.CompliePass(userId, oldPsw);
+            if(result == false){
+                throw new BaseException("原始密码错误", 500);
+            }else{
+                QualityUser user = new QualityUser();
+                user.setId(userId);
+                if(StringUtils.isNotBlank(newPsw)){
+                    String pd = MD5.encryptPassword(newPsw);
+                    user.setPassword(pd);
+                }
+                result = this.defaultDAO.saveOrUpdate(user);
+            }
+
+        }
+        catch (BaseException e){
+            e.printStackTrace();
+            throw new BaseException(e.getMessage(), 500);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new BaseException("修改密码错误", 500);
+        }
+
+        return super.jsonObjectResult(result, "修改密码成功");
+    }
+
+
+    public boolean CompliePass(@RequestParam(name = "userId") String userId,
+                              @RequestParam(name = "oldPass") String oldPass) {
+        try {
+            boolean result = this.defaultDAO.compliePass(userId, oldPass);
+            String message = "";
+            if(result==false){
+                message = "原始密码不正确！";
+            }else{
+                message = "";
+            }
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BaseException("原始密码错误", 500);
+        }
+    }
+
+    @ApiOperation(value = "根据请求清除session")
+    @RequestMapping(value = "/me.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void cleanSession(){
+
+        try {
+            System.out.println("我被执行。。。");
+            throw new BaseException("sdfsdf", 500);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

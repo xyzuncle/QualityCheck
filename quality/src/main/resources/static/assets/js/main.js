@@ -35,8 +35,11 @@ layui.config({
     // 获取用户信息
     admin.req('QualityUser/userInfo.do', {}, function (data) {
         if (200 == data.code) {
-            config.putUser(data.user);
-            $('#huName').text(data.user.loginName);
+            if(data.user){
+                config.putUser(data.user);
+                $('#huName').text(data.user.userName);
+            }
+
         } else {
             layer.msg('获取用户失败', {icon: 2});
         }
@@ -60,7 +63,14 @@ layui.config({
     $('#btnLogout').click(function () {
         layer.confirm('确定退出登录？', function () {
             config.removeToken();
-            location.replace('login.html');
+            $.ajax({
+                url: config.base_server + 'logout',
+                type:"get",
+                success:function(){
+                    location.reload();
+                }
+            })
+
         });
     });
 

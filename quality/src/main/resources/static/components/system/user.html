@@ -5,18 +5,16 @@
 
             <div class="layui-form toolbar">
                 <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <select id="userSlKey">
-                            <option value="">搜索条件</option>
-                            <option value="user_id">ID</option>
-                            <option value="username">账号</option>
-                            <option value="nick_name">用户名</option>
-                            <option value="phone">手机号</option>
-                        </select>
-                    </div>
-                    <div class="layui-inline">
-                        <input id="userEdtSearch" class="layui-input" type="text" placeholder="输入关键字"/>
-                    </div>
+                        <label class="layui-form-label w-auto">登录名</label>
+                        <div class="layui-input-inline">
+                            <input id="loginName" class="layui-input" type="text" placeholder="输入登录名"/>
+                        </div>
+
+                        <label class="layui-form-label w-auto">姓名</label>
+                        <div class="layui-inline">
+                            <input id="userName" class="layui-input" type="text" placeholder="输入姓名"/>
+                        </div>
+
                     <div class="layui-inline">
                         <button id="userBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
                         </button>
@@ -35,6 +33,7 @@
 <!-- 表格操作列 -->
 <script type="text/html" id="userTableBar">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">删除</a>
     <a class="layui-btn layui-btn-xs" lay-event="reset">重置密码</a>
 </script>
 
@@ -66,6 +65,7 @@
             page: true,
             cellMinWidth: 100,
             cols: [[
+                {type: 'checkbox'},
                 {field: 'userName', sort: true, title: '姓名'},
                 {field: 'loginName', sort: true, title: '登录名'},
                 {field: 'phone', sort: true, title: '电话'},
@@ -103,6 +103,34 @@
                         }
                     }, 'GET');
                 });
+
+            }else if(layEvent === 'delete'){
+                layer.confirm('确定删除该条数据吗？', {
+                    skin: 'layui-layer-admin'
+                }, function (i) {
+                    layer.close(i);
+                    layer.load(2);
+                    $.ajax({
+                        url: config.base_server + 'QualityUser/me.do',
+                        data: data.field,
+                        type: 'POST',
+                        dataType: 'JSON',
+                        success: function (data) {
+                            console.log(JSON.stringify(data));
+
+                            layer.msg('登录成功', {icon: 1}, function () {
+                                location.replace('./');
+                            });
+
+                        },
+                        error: function (xhr) {
+                            layer.closeAll('loading');
+                            if (xhr.status == 400) {
+                                layer.msg('账号或密码错误', {icon: 5});
+                            }
+                        }
+                    });
+                });
             }
         });
 
@@ -120,9 +148,9 @@
 
         // 搜索按钮点击事件
         $('#userBtnSearch').click(function () {
-            var key = $('#userSlkey').val();
-            var value = $('#userEdtSearch').val();
-            table.reload('userTable', {where: {searchKey: key, searchValue: value}});
+            var loginName = $('#loginName').val();
+            var userName = $('#userName').val();
+            table.reload('userTable', {where: {"search-LIKE-loginName": loginName, "search-LIKE-userName": userName}});
         });
 
         // 导出excel

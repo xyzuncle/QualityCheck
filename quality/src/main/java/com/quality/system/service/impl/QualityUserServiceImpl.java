@@ -2,6 +2,7 @@ package com.quality.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.quality.common.exception.BaseException;
+import com.quality.common.util.MD5;
 import com.quality.system.entity.QualityUser;
 import com.quality.system.mapper.QualityUserMapper;
 import com.quality.system.service.IQualityUserService;
@@ -47,5 +48,19 @@ public class QualityUserServiceImpl extends ServiceImpl<QualityUserMapper, Quali
         //返回当前唯一的用户
         return user;
 
+    }
+
+    @Override
+    public boolean compliePass(String userId, String pass) {
+        QualityUser QualityUser= this.baseMapper.selectById(userId);
+        String oldPass = QualityUser.getPassword();
+        //考虑到资源卫星老用户的修改密码情况，这里需要做特别处理
+        boolean result = MD5.compilePass(pass, oldPass);
+
+
+
+
+
+        return result;
     }
 }

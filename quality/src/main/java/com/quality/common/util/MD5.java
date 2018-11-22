@@ -39,11 +39,17 @@ public class MD5 {
 		}
 		return str;
 	}
-/*
+
+	/**
+	 * 比较原始密码是否正确
+	 * @param newPass
+	 * @param oldPass
+	 * @return
+	 */
 	public static boolean compilePass(String newPass,String oldPass){
 		boolean result = new BCryptPasswordEncoder().matches(newPass, oldPass);
 		return result;
-	}*/
+	}
 
 
 

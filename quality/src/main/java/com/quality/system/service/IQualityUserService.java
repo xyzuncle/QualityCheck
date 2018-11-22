@@ -13,4 +13,14 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IQualityUserService extends IService<QualityUser>{
 
+    /**
+     * 根据用户ID和新密码，来比较密码是否正确
+     * @param
+     *        userId
+     * @param
+     *        pass
+     * @return
+     */
+    public boolean compliePass(String userId,String pass);
+
 }

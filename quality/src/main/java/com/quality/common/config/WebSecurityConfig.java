@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {//1
 				//.and()
                 .logout()
                   //覆盖默认的logout链接，让制定的链接登录退出
-                  /*  .logoutUrl("")*/
+                    .logoutUrl("/logout")
                       //退出成功后返回的url
                    //.logoutSuccessUrl("")
                      //退出之后记录个日志什么的处理逻辑
@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {//1
 				.and()
 				.authorizeRequests()
                     .antMatchers("/images/captcha",
-                            "/login.html","/assets/**/**","/module/**","/index.html","/swagger-resources/**","/josn/**").permitAll()
+                            "/login.html","/assets/**/**","/module/**","/swagger-resources/**","/josn/**","/logout").permitAll()
                      //声明方法必须是post方法
                     .antMatchers(HttpMethod.POST,"/loginToken").permitAll()
                     .and().httpBasic().disable()

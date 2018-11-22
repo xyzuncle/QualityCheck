@@ -89,7 +89,7 @@ public class QualityMenuController extends BaseController<QualityMenu, IQualityM
     @ApiOperation(value = "根据Id删除QualityMenu信息")
     @RequestMapping(value = "/removeById.do", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Object deleteQualityMenuById(@ApiParam(value = "QualityMenuID") @RequestParam(name = "entityID") String entityID) {
+    public Object deleteQualityMenuById(@ApiParam(value = "QualityMenuID") @RequestParam(name = "entityID") Integer entityID) {
         boolean result =false;
         //删除的ID 是否为父ID
         List<QualityMenu>  pMenuList = this.defaultDAO.selectListByParentId(entityID);

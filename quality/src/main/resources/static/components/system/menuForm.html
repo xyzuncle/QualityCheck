@@ -1,8 +1,6 @@
 <!-- menu表单弹窗 -->
 <form id="menuForm" lay-filter="menuForm" class="layui-form model-form">
     <input name="id" type="hidden"/>
-    <input name="authorityId" type="hidden"/>
-
 
     <div class="layui-form-item">
         <label class="layui-form-label">菜单名称</label>
@@ -53,7 +51,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">上级菜单</label>
         <div class="layui-input-inline">
-            <input type="text" id="selectParentId" name="parentId" autocomplete="off" class="layui-input">
+            <input type="hidden" name="parentId" id="parentId">
+            <input type="text" id="selectParentId" name="showParentId" autocomplete="off" class="layui-input">
         </div>
     </div>
 
@@ -72,12 +71,13 @@
 </form>
 
 <script>
-    layui.use(['layer','config', 'admin', 'form', 'formSelects','treeSelect'], function () {
+    layui.use(['layer','config', 'admin', 'form', 'formSelects','treeSelect','table'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var admin = layui.admin;
         var form = layui.form;
         var config = layui.config;
+        var table = layui.table;
         var formSelects = layui.formSelects;
         var treeSelect = layui.treeSelect;
 
@@ -89,6 +89,10 @@
         $('#menuForm').attr('method', 'GET');
         if (data) {
             form.val('menuForm', data);
+            if(data.parentId){
+                $("#selectParentId").val("写死")
+
+            }
             $('#menuForm').attr('method', 'GET');
         }
 
@@ -126,7 +130,7 @@
 
         // 表单提交事件
         form.on('submit(menuFormSubmit)', function (data) {
-            alert(JSON.stringify(data))
+            //alert(JSON.stringify(data))
             layer.load(2);
             $.ajax({
                 url: config.base_server + 'QualityMenu/save.do',
@@ -139,7 +143,8 @@
                     layer.closeAll('loading');
                     if (data.status == 200) {
                         layer.msg(data.message, {icon: 1});
-                        admin.finishPopupCenter();
+                        table.reload('menuTable', {});
+                        admin.closeDialog('#menuForm');
                     } else {
                         layer.msg(data.message, {icon: 2});
                     }
@@ -164,7 +169,10 @@
             search: true,
             // 点击回调
             click: function(d){
+                //alert(JSON.stringify(d.current.id))
+                //alert(JSON.stringify(d.current.name))
                 console.log(d);
+                $("#parentId").val(d.current.id);
             },
             // 加载完成后的回调函数
             success: function (d) {

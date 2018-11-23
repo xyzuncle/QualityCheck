@@ -1,5 +1,6 @@
 package com.quality.system.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.quality.common.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;

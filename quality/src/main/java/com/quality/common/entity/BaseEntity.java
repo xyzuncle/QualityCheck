@@ -25,7 +25,7 @@ public class BaseEntity {
     private Date crtTime;
 
     @ApiModelProperty(value = "修改时间(自动填充)", required = false)
-    @TableField(value = "updTime", update = "now()", strategy = FieldStrategy.NOT_EMPTY)
+    @TableField(value = "updTime", update = "now()", strategy = FieldStrategy.NOT_EMPTY,fill = FieldFill.UPDATE)
     @JSONField(format = "yyyy-MM-dd")
     private Date updTime;
 

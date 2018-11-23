@@ -85,12 +85,10 @@ public class QualityUserController extends BaseController<QualityUser, IQualityU
 
                 //ID为空证明新增
                 if("".equals(qualityUser.getId()) || qualityUser.getId()==null){
-
-                   // boolean result1 = this.defaultDAO.getExistUser(qualityUser.getMobilePhone());
-                    boolean result1 = false;
+                   boolean result1 = this.defaultDAO.getExistUser(qualityUser.getLoginName());
                     //true标识已经存在
                     if(result1 == true){
-                        return super.jsonObjectResult(result, "用户已经存才,请更换手机号");
+                        throw new BaseException("用户已经存才,请更换登录名",500);
                     }else {
                         String password = qualityUser.getPassword();
                         if(!"".equals(password) && password!=null){
@@ -115,7 +113,11 @@ public class QualityUserController extends BaseController<QualityUser, IQualityU
                 }
             }
             result = this.defaultDAO.saveOrUpdate(qualityUser);
-        } catch (Exception e) {
+        }
+        catch (BaseException e) {
+            e.printStackTrace();
+            throw new BaseException(e.getMessage(), 500);
+        }catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("保存失败", 500);
         }
@@ -154,14 +156,16 @@ public class QualityUserController extends BaseController<QualityUser, IQualityU
     @ResponseBody
     public Object deleteByIds(@ApiParam(value = "多个元素ID") @RequestParam(name = "entityIDS") String entityIDS) {
         boolean result = false;
-        try {
-            String[] str = Tools.str2StrArray(entityIDS);
-            List<String> strArr1 = Arrays.asList(str);
-            result = this.defaultDAO.removeByIds(strArr1);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BaseException("删除失败", 500);
-        }
+            if(StringUtils.isNotBlank(entityIDS)){
+                String[] str = Tools.str2StrArray(entityIDS);
+                List<String> strArr1 = Arrays.asList(str);
+                boolean reslut = strArr1.contains("1");
+                if(reslut == true){
+                    throw new BaseException("管理员不能被删除",500);
+                }else{
+                    result = this.defaultDAO.removeByIds(strArr1);
+                }
+            }
         return super.jsonObjectResult(result, "删除成功");
 
     }
@@ -270,13 +274,37 @@ public class QualityUserController extends BaseController<QualityUser, IQualityU
     @ApiOperation(value = "根据请求清除session")
     @RequestMapping(value = "/me.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void cleanSession(){
+            throw new BaseException("我是自定异常的抛出", 500);
+    }
 
+
+    @ApiOperation(value = "根据ID重置密码")
+    @RequestMapping(value = "/resetPD.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Object resetPD(@RequestParam("userId") String userId,
+                            @RequestParam("newPsw") String newPsw) {
+
+        boolean result = false;
         try {
-            System.out.println("我被执行。。。");
-            throw new BaseException("sdfsdf", 500);
-        } catch (Exception e) {
-            e.printStackTrace();
+                QualityUser user = new QualityUser();
+                user.setId(userId);
+                if(StringUtils.isNotBlank(newPsw)){
+                    String pd = MD5.encryptPassword(newPsw);
+                    user.setPassword(pd);
+                }
+                result = this.defaultDAO.saveOrUpdate(user);
+
         }
+        catch (BaseException e){
+            e.printStackTrace();
+            throw new BaseException(e.getMessage(), 500);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new BaseException("重置密码失败", 500);
+        }
+
+        return super.jsonObjectResult(true, "重置密码成功！");
     }
 
 }

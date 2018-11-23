@@ -33,5 +33,9 @@
         deleted,
         orgId, userName, loginName, password, salt, phone, mobile, email, sort, crtUser, updUser, loginFlag, remarks, orgName, roleName
     </sql>
+    <select id="getExistUser" resultType="java.lang.Integer">
+        select count(1) from quality_user where loginName=#{loginName} and deleted=0
+    </select>
+
 
 </mapper>

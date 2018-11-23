@@ -23,4 +23,11 @@ public interface IQualityUserService extends IService<QualityUser>{
      */
     public boolean compliePass(String userId,String pass);
 
+    /**
+     * 获取重复用户
+     * @param loginName
+     * @return
+     */
+    public boolean getExistUser(String loginName);
+
 }

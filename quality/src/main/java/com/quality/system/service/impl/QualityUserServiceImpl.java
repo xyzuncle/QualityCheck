@@ -52,15 +52,22 @@ public class QualityUserServiceImpl extends ServiceImpl<QualityUserMapper, Quali
 
     @Override
     public boolean compliePass(String userId, String pass) {
+
         QualityUser QualityUser= this.baseMapper.selectById(userId);
         String oldPass = QualityUser.getPassword();
-        //考虑到资源卫星老用户的修改密码情况，这里需要做特别处理
+        //比较原始密码是否正确
         boolean result = MD5.compilePass(pass, oldPass);
-
-
-
-
-
         return result;
+    }
+
+    @Override
+    public boolean getExistUser(String loginName) {
+        Integer  result = this.baseMapper.getExistUser(loginName);
+        if(result>0){
+            return true;
+        }else{
+            return false;
+        }
+
     }
 }

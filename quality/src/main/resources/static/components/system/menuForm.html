@@ -38,7 +38,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">上级菜单</label>
         <div class="layui-input-block">
-            <input type="text" id="selectParentId" lay-filter="selectParentId" name="showParentId" autocomplete="off" class="layui-input">
+            <input type="text" id="selectParentId" lay-filter="selectParentId" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -92,7 +92,11 @@
             $('#menuForm').attr('method', 'GET');
         }else{
             //初始化类型，状态
-
+            data = {};
+            data.menuState='0';
+            data.menuType='1';
+            form.val('menuForm', data);
+           // $('#menuForm').find("input[type='radio'][value='1']").attr("checked",true);
         }
 
         // 获取所有角色
@@ -197,7 +201,10 @@
                 var treeObj = treeSelect.zTree('selectParentId');
                 //alert(JSON.stringify(treeObj))
                 var  parentId = $("#parentId").val();
-                treeSelect.checkNode('selectParentId',parentId);
+                if(parentId){
+                    treeSelect.checkNode('selectParentId',parentId);
+                }
+
 
 
 //                选中节点，根据id筛选

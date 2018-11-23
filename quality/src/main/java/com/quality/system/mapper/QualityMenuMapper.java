@@ -20,4 +20,6 @@ public interface QualityMenuMapper extends BaseMapper<QualityMenu> {
 
     List<QualityMenu>  selectListByParentId(@Param("parentId")Integer parentId);
 
+    List<QualityMenu>  selectListByMenuType(List<String> MenuTypes);
+
 }

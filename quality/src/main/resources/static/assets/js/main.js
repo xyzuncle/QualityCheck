@@ -8,7 +8,8 @@ layui.config({
     dropdown: 'dropdown/dropdown',
     notice: 'notice/notice',
     step: 'step-lay/step',
-    treeSelect:'treeSelect/treeSelect'
+    treeSelect:'treeSelect/treeSelect',
+    iconPicker:'iconPicker/iconPicker'
 }).use(['layer', 'element', 'config', 'index', 'admin', 'laytpl'], function () {
     var $ = layui.jquery;
     var layer = layui.layer;

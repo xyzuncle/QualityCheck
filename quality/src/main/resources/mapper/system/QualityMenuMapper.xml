@@ -20,10 +20,6 @@
         <result column="crtUser" property="crtUser" />
         <result column="updUser" property="updUser" />
         <result column="remarks" property="remarks" />
-        <result column="addPermission" property="addPermission" />
-        <result column="editPermission" property="editPermission" />
-        <result column="deletePermission" property="deletePermission" />
-        <result column="queryPermission" property="queryPermission" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -32,7 +28,7 @@
         crtTime,
         updTime,
         deleted,
-        parentId, parentIds, menuName, menuUrl, menuIcon, sort, path, menuType, menuState, crtUser, updUser, remarks, addPermission, editPermission, deletePermission, queryPermission
+        parentId, parentIds, menuName, menuUrl, menuIcon, sort, path, menuType, menuState, crtUser, updUser, remarks
     </sql>
 
     <!--根据父ID查询-->
@@ -42,5 +38,20 @@
         FROM quality_menu
         WHERE parentId = #{parentId}
     </select>
+
+    <!--根据MenuType查询-->
+    <select id="selectListByMenuType" resultType="com.quality.system.entity.QualityMenu">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM quality_menu
+        WHERE menuType in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and deleted=0 ORDER BY crtTime DESC
+    </select>
+
+
+
 
 </mapper>

@@ -70,16 +70,12 @@
                     {field: 'menuName', sort: true, title: '名称'},
                     {field: 'menuUrl', sort: true, title: 'url链接'},
                     {field: 'path', sort: true, title: '路径'},
-                    {field: 'addPermission', sort: true,width:80, title: '新增'},
-                    {field: 'editPermission', sort: true,width:80, title: '编辑'},
-                    {field: 'deletePermission', sort: true,width:80, title: '删除'},
-                    {field: 'queryPermission', sort: true,width:80, title: '查询'},
                     {
                         field: 'menuType', width:80, align: 'center', templet: function (d) {
-                        if (d.menuType == 1) {
+                        if (d.menuType == 2) {
                             return '<span class="layui-badge layui-bg-gray">按钮</span>';
                         }
-                        if (d.parentId == 0) {
+                        if (d.menuType == 0) {
                             return '<span class="layui-badge layui-bg-blue">目录</span>';
                         } else {
                             return '<span class="layui-badge-rim">菜单</span>';

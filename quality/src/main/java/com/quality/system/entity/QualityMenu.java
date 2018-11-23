@@ -69,22 +69,6 @@ public class QualityMenu extends SuperEntity {
     @TableField("remarks")
     private String remarks;
 
-    @ApiModelProperty(value = "增加权限")
-    @TableField("addPermission")
-    private String addPermission;
-
-    @ApiModelProperty(value = "编辑权限")
-    @TableField("editPermission")
-    private String editPermission;
-
-    @ApiModelProperty(value = "删除权限")
-    @TableField("deletePermission")
-    private String deletePermission;
-
-    @ApiModelProperty(value = "查询权限")
-    @TableField("queryPermission")
-    private String queryPermission;
-
 
     public Integer getParentId() {
         return parentId;
@@ -182,39 +166,6 @@ public class QualityMenu extends SuperEntity {
         this.remarks = remarks;
     }
 
-    public String getAddPermission() {
-        return addPermission;
-    }
-
-    public void setAddPermission(String addPermission) {
-        this.addPermission = addPermission;
-    }
-
-    public String getEditPermission() {
-        return editPermission;
-    }
-
-    public void setEditPermission(String editPermission) {
-        this.editPermission = editPermission;
-    }
-
-    public String getDeletePermission() {
-        return deletePermission;
-    }
-
-    public void setDeletePermission(String deletePermission) {
-        this.deletePermission = deletePermission;
-    }
-
-    public String getQueryPermission() {
-        return queryPermission;
-    }
-
-    public void setQueryPermission(String queryPermission) {
-        this.queryPermission = queryPermission;
-    }
-
-
 
     @Override
     public String toString() {
@@ -231,10 +182,6 @@ public class QualityMenu extends SuperEntity {
         ", crtUser=" + crtUser +
         ", updUser=" + updUser +
         ", remarks=" + remarks +
-        ", addPermission=" + addPermission +
-        ", editPermission=" + editPermission +
-        ", deletePermission=" + deletePermission +
-        ", queryPermission=" + queryPermission +
         "}";
     }
 }

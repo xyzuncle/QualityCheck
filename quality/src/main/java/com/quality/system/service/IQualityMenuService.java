@@ -16,4 +16,6 @@ import java.util.List;
 public interface IQualityMenuService extends IService<QualityMenu> {
 
     List<QualityMenu> selectListByParentId(Integer parentId);
+
+    List<QualityMenu>  selectListByMenuType(List<String> MenuTypes);
 }

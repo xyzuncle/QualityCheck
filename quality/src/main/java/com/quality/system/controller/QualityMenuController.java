@@ -158,8 +158,10 @@ public class QualityMenuController extends BaseController<QualityMenu, IQualityM
     public String getQualityMenuTreeList(HttpServletRequest request) {
         try {
             //把查询条件都写好了
-            Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search-");
-            List<QualityMenu> list = super.queryContionNoPage(searchParams);
+           // Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search-");
+           // List<QualityMenu> list = super.queryContionNoPage(searchParams);
+            List<String> MenuTypes = new ArrayList<String>(){{add("0"); add("1");}};
+            List<QualityMenu>  list = this.defaultDAO.selectListByMenuType(MenuTypes);
 
             List<MenuDto> tree = new ArrayList<MenuDto>();
             list.forEach(item->{

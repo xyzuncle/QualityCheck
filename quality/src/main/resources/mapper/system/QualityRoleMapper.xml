@@ -25,4 +25,25 @@
         roleCode, roleName, sort, crtUser, updUser, remarks
     </sql>
 
+    <!--插入角色关联关系表-->
+    <insert id="insertRoleMenu">
+        INSERT INTO quality_role_menu(roleID,menuId)
+        values
+        <foreach collection ="list" item="roleMenu" index= "index" separator =",">
+             (
+             #{roleMenu.roleID}, #{roleMenu.menuId}
+             )
+         </foreach >
+    </insert>
+
+    <!--插入角色关联关系表-->
+    <select id="selectByRoleId"  parameterType="string" resultType="java.lang.Integer">
+        select menuId  from  quality_role_menu where roleID = #{roleID}
+    </select>
+
+    <delete id="deleteByRoleId" parameterType="string" >
+        DELETE   from  quality_role_menu where roleID = #{roleID}
+    </delete>
+
+
 </mapper>

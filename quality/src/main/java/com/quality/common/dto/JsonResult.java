@@ -34,7 +34,7 @@ public class JsonResult extends HashMap<String, Object> {
     public static JsonResult ok(int code, String message) {
         JsonResult jsonResult = new JsonResult();
         jsonResult.put("code", code);
-        jsonResult.put("msg", message);
+        jsonResult.put("message", message);
         return jsonResult;
     }
 
@@ -71,7 +71,7 @@ public class JsonResult extends HashMap<String, Object> {
      * 设置message
      */
     public JsonResult setMessage(String message) {
-        super.put("msg", message);
+        super.put("message", message);
         return this;
     }
 

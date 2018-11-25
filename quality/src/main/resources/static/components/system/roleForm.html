@@ -1,0 +1,185 @@
+
+<!-- 此扩展能递归渲染一个权限树，点击深层次节点，父级节点中没有被选中的节点会被自动选中，单独点击父节点，子节点会全部 选中/去选中 -->
+<form class="layui-form model-form" id="roleForm" lay-filter="roleForm">
+    <input name="id" type="hidden"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色编码</label>
+        <div class="layui-input-block">
+            <input name="roleCode" placeholder="请输入角色编码" type="text" class="layui-input" maxlength="20"
+                   lay-verify="required" required/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色名</label>
+        <div class="layui-input-block">
+            <input name="roleName" placeholder="请输入角色名" type="text" class="layui-input" maxlength="20"
+                   lay-verify="required" required/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">选择权限</label>
+        <button type="button" class="layui-btn layui-btn-normal  layui-btn-xs" id="checkAll">全选/不选</button>
+        <button type="button" class="layui-btn layui-btn-primary  layui-btn-xs" id="showAll">展开</button>
+        <button type="button" class="layui-btn layui-btn-primary  layui-btn-xs" id="closeAll">隐藏</button>
+
+        <div class="layui-input-block">
+            <div id="LAY-auth-tree-index"></div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <input name="sort" placeholder="请输入排序" type="text" class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-item text-right">
+            <button class="layui-btn layui-btn-primary close" ew-event="closeDialog" type="button">取消</button>
+            <button class="layui-btn" lay-filter="roleFormSubmit" lay-submit>保存</button>
+    </div>
+</form>
+
+
+
+
+<script type="text/javascript">
+
+    layui.use(['authtree', 'form','config', 'layer','admin','table'], function(){
+        var $ = layui.jquery;
+        var authtree = layui.authtree;
+        var form = layui.form;
+        var layer = layui.layer;
+        var config = layui.config;
+        var admin = layui.admin;
+        var table = layui.table;
+        // 回显数据
+        var role = admin.getTempData('quality_role');
+        $('#roleForm').attr('method', 'POST');
+        if (role) {
+            form.val('roleForm', role);
+        }
+
+        // 初始化
+        $.ajax({
+            url: config.base_server + 'QualityMenu/getQualityAllMenuList.do',
+            dataType: 'json',
+            success: function(data){
+                // 支持自定义递归字段、数组权限判断等
+                // 深坑注意：如果API返回的数据是字符串，那么 startPid 的数据类型也需要是字符串
+               // alert(JSON.stringify(data))
+                var trees = authtree.listConvert(data, {
+                    primaryKey: 'id'
+                    ,startPid: 0
+                    ,parentKey: 'pid'
+                    ,nameKey: 'name'
+                    ,valueKey: 'id'
+                    ,checkedKey: data.checkedAlias
+                });
+                // 如果页面中多个树共存，需要注意 layfilter 需要不一样
+                authtree.render('#LAY-auth-tree-index', trees, {
+                    inputname: 'menuids[]',
+                    layfilter: 'lay-check-menu',
+                    // openall: true,
+                    autowidth: true,
+                });
+
+                // PS:使用 form.on() 会引起了事件冒泡延迟的BUG，需要 setTimeout()，并且无法监听全选/全不选
+                // PS:如果开启双击展开配置，form.on()会记录两次点击事件，authtree.on()不会
+                form.on('checkbox(lay-check-menu)', function(data){
+                    // 注意这里：需要等待事件冒泡完成，不然获取叶子节点不准确。
+                    setTimeout(function(){
+                        console.log('监听 form 触发事件数据', data);
+                        // 获取选中的叶子节点
+                        var leaf = authtree.getLeaf('#LAY-auth-tree-index');
+                        console.log('leaf', leaf);
+                        // 获取最新选中
+                        var lastChecked = authtree.getLastChecked('#LAY-auth-tree-index');
+                        console.log('lastChecked', lastChecked);
+                        // 获取最新取消
+                        var lastNotChecked = authtree.getLastNotChecked('#LAY-auth-tree-index');
+                        console.log('lastNotChecked', lastNotChecked);
+                    }, 100);
+                });
+                // 使用 authtree.on() 不会有冒泡延迟
+                authtree.on('change(lay-check-menu)', function(data) {
+                    console.log('监听 authtree 触发事件数据', data);
+                    // 获取所有节点
+                    var all = authtree.getAll('#LAY-auth-tree-index');
+                    console.log('all', all);
+                    // 获取所有已选中节点
+                    var checked = authtree.getChecked('#LAY-auth-tree-index');
+                    console.log('checked', checked);
+                    // 获取所有未选中节点
+                    var notchecked = authtree.getNotChecked('#LAY-auth-tree-index');
+                    console.log('notchecked', notchecked);
+                    // 获取选中的叶子节点
+                    var leaf = authtree.getLeaf('#LAY-auth-tree-index');
+                    console.log('leaf', leaf);
+                    // 获取最新选中
+                    var lastChecked = authtree.getLastChecked('#LAY-auth-tree-index');
+                    console.log('lastChecked', lastChecked);
+                    // 获取最新取消
+                    var lastNotChecked = authtree.getLastNotChecked('#LAY-auth-tree-index');
+                    console.log('lastNotChecked', lastNotChecked);
+                });
+                authtree.on('deptChange(lay-check-menu)', function(data) {
+                    console.log('监听到显示层数改变',data);
+                });
+            },
+            error: function(xml, errstr, err) {
+                layer.alert(errstr+'，获取样例数据失败，请检查是否部署在本地服务器中！');
+            }
+        });
+
+
+        // 表单提交事件
+        form.on('submit(roleFormSubmit)', function (data) {
+            var menuids = authtree.getChecked('#LAY-auth-tree-index');
+            data.field.menuids = menuids;
+           // alert(JSON.stringify(data.field))
+            layer.load(2);
+            $.ajax({
+                url: config.base_server + 'QualityRole/save.do',
+                data: JSON.stringify(data.field),
+                type: "POST",
+                dataType: 'JSON',
+                contentType:'application/json',
+                success: function (data) {
+
+                    layer.closeAll('loading');
+                    if (data.status == 200) {
+                        layer.msg(data.message, {icon: 1});
+                        table.reload("roleTable",{});
+                        admin.closeDialog("#roleForm");
+                    } else {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                }
+
+            });
+            return false;
+        });
+
+        // 全选
+        $("#checkAll").click(function(){
+            var origin = $('#LAY-auth-tree-index');
+            var  checked = origin.find('input[type="checkbox"]:not(:checked)').prop('checked');
+            if(checked==undefined) {
+                authtree.uncheckAll('#LAY-auth-tree-index');
+            }else{
+                authtree.checkAll('#LAY-auth-tree-index');
+            }
+        })
+
+        // 显示 隐藏
+        $("#showAll").click(function(){
+            authtree.showAll('#LAY-auth-tree-index');
+        })
+
+        $("#closeAll").click(function(){
+            authtree.closeAll('#LAY-auth-tree-index');
+        })
+    });
+</script>
+

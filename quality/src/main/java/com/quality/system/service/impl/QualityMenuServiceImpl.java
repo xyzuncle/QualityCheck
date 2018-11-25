@@ -29,5 +29,10 @@ public class QualityMenuServiceImpl extends ServiceImpl<QualityMenuMapper, Quali
         return this.baseMapper.selectListByMenuType(MenuTypes);
     }
 
+    @Override
+    public int selectByMenuId(Integer id) {
+        return this.baseMapper.selectByMenuId(id);
+    }
+
 
 }

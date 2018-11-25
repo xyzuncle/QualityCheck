@@ -22,4 +22,6 @@ public interface QualityMenuMapper extends BaseMapper<QualityMenu> {
 
     List<QualityMenu>  selectListByMenuType(List<String> MenuTypes);
 
+    int selectByMenuId(Integer id);
+
 }

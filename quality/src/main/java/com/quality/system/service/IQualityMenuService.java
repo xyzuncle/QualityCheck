@@ -18,4 +18,6 @@ public interface IQualityMenuService extends IService<QualityMenu> {
     List<QualityMenu> selectListByParentId(Integer parentId);
 
     List<QualityMenu>  selectListByMenuType(List<String> MenuTypes);
+
+    int selectByMenuId(Integer id);
 }

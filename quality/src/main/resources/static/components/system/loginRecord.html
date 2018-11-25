@@ -5,21 +5,22 @@
 
             <div class="layui-form toolbar">
                 <div class="layui-form-item">
-                    <div class="layui-inline">
+                   <!-- <div class="layui-inline">
                         <label class="layui-form-label w-auto">账号：</label>
                         <div class="layui-input-inline mr0">
                             <input id="lrEdtAccount" class="layui-input" type="text" placeholder="请输入账号"/>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="layui-inline">
                         <label class="layui-form-label w-auto">日期：</label>
-                        <div class="layui-input-inline mr0">
-                            <input id="lrEdtDate" class="layui-input date-icon" type="text" placeholder="请选择日期范围"/>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input date-icon" id="crtTime" placeholder="查询日期范围">
                         </div>
                     </div>
                     <div class="layui-inline">
                         <button id="lrBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
                         </button>
+                        <button id="lrBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe640;</i>批量删除</button>
                         <button id="lrBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
                     </div>
                 </div>
@@ -31,42 +32,42 @@
     </div>
 </div>
 <script>
-    layui.use(['layer', 'laydate', 'table', 'util', 'config'], function () {
+    layui.use(['layer', 'laydate', 'table', 'util', 'config','admin'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var table = layui.table;
         var util = layui.util;
         var laydate = layui.laydate;
         var config = layui.config;
+        var admin = layui.admin;
 
         //渲染表格
         var ins1 = table.render({
             elem: '#logTable',
-            url: config.base_server + 'login_record.json',
-            where: {
-                access_token: config.getToken().access_token
-            },
+            url: config.base_server + 'QualityLogger/query.do',
             page: true,
             cellMinWidth: 100,
             cols: [[
                 {type: 'checkbox'},
-                {field: 'username', sort: true, title: '账号'},
-                {field: 'nickName', sort: true, title: '用户名'},
-                {field: 'ipAddress', sort: true, title: 'IP'},
-                {field: 'device', sort: true, title: '设备'},
-                {field: 'osName', sort: true, title: '设备类型'},
-                {field: 'browserType', sort: true, title: '浏览器'},
+                {field: 'remoteAddr', sort: true, title: '请求地址'},
+                {field: 'method', sort: true, title: '请求方式'},
+                {field: 'beanName', sort: true, title: '请求类'},
+                {field: 'requestUri', sort: true, title: '请求路径'},
+                {field: 'signature', sort: true, title: '请求类方法'},
+                {field: 'args', sort: true, title: '请求类方法参数'},
+                {field: 'requestTime', sort: true, title: '响应时间'},
+                {field: 'result', sort: true, title: '结果'},
                 {
-                    field: 'createTime', sort: true, templet: function (d) {
-                        return util.toDateString(d.createTime);
-                    }, title: '登录时间'
+                    field: 'crtTime', sort: true, templet: function (d) {
+                        return util.toDateString(d.crtTime);
+                    }, title: '创建时间'
                 }
             ]]
         });
 
         //时间范围
         laydate.render({
-            elem: '#lrEdtDate',
+            elem: '#crtTime',
             type: 'date',
             range: true,
             theme: 'molv'
@@ -74,13 +75,12 @@
 
         //搜索按钮点击事件
         $('#lrBtnSearch').click(function () {
-            var searchDate = $('#lrEdtDate').val().split(' - ');
-            var searchAccount = $('#lrEdtAccount').val();
+            var searchDate = $('#crtTime').val().split(' - ');
             table.reload('logTable', {
                 where: {
-                    startDate: searchDate[0],
-                    endDate: searchDate[1],
-                    account: searchAccount
+                    "search-GE-crtTime": searchDate[0],
+                    "search-LT-crtTime": searchDate[1]
+
                 }
             });
         });
@@ -94,6 +94,33 @@
                 table.exportFile(ins1.config.id, checkRows.data, 'xls');
             }
         });
+
+        //批量删除
+        $("#lrBtnRM").click(function(){
+            var checkRows = table.checkStatus('logTable');
+            if (checkRows.data.length == 0) {
+                layer.msg('请选择要删除的数据', {icon: 2});
+            }else{
+                var ids="";
+                checkRows.data.forEach(function(item,index,array){
+                    ids+=item.id+",";
+                })
+                if(ids){
+                    ids = ids.slice(0,-1);
+                }
+                admin.req("QualityLogger/removeMore.do",{
+                    entityIDS: ids
+                },function(data){
+                    if (data.status == 200) {
+                        layer.msg(data.message, {icon: 1});
+                        table.reload('logTable', {});
+                    } else if(data.status == 500) {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                },'delete')
+            }
+
+        })
 
     });
 </script>

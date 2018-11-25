@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.List;
+
 /**
  * <p>
  * 角色表
@@ -42,6 +44,8 @@ public class QualityRole extends BaseEntity {
     @TableField("remarks")
     private String remarks;
 
+    @TableField(exist = false)
+    private List<Integer> menuids;
 
     public String getRoleCode() {
         return roleCode;
@@ -89,6 +93,14 @@ public class QualityRole extends BaseEntity {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public List<Integer> getMenuids() {
+        return menuids;
+    }
+
+    public void setMenuids(List<Integer> menuids) {
+        this.menuids = menuids;
     }
 
     @Override

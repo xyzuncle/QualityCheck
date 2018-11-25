@@ -30,10 +30,7 @@
         //渲染表格
         table.render({
             elem: '#logr-table',
-            url: config.base_server + 'loginRecord',
-            where: {
-                access_token: config.getToken().access_token
-            },
+            url: config.base_server + 'json/login_record.json',
             page: true,
             cols: [[
                 {type: 'numbers'},

@@ -9,17 +9,17 @@ import com.quality.common.util.Tools;
 import com.quality.common.controller.BaseController;
 import com.quality.system.entity.QualityRole;
 import com.quality.system.entity.QualityUser;
+import com.quality.system.entity.RoleMenu;
 import com.quality.system.service.IQualityRoleService;
 import io.swagger.annotations.*;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -73,10 +73,41 @@ public class QualityRoleController extends BaseController<QualityRole, IQualityR
             notes = "保存和修改QualityRole信息")
     @RequestMapping(value = "/save.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Object saveOrUpdate(@RequestBody QualityRole QualityRole) {
+    public Object saveOrUpdate(@RequestBody QualityRole QualityRole, HttpServletRequest request) {
         boolean result = false;
         try {
-            result = this.defaultDAO.saveOrUpdate(QualityRole);
+            List<RoleMenu> list = new ArrayList<>();
+            List<Integer> menuids = QualityRole.getMenuids();
+            String roleId = QualityRole.getId();
+            if(StringUtils.isBlank(roleId)){
+                String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+                QualityRole.setId(uuid);
+                menuids.forEach(menu->{
+                    RoleMenu roleMenu = new RoleMenu();
+                    roleMenu.setMenuId(menu);
+                    roleMenu.setRoleID(uuid);
+                    list.add(roleMenu);
+                });
+
+                result = this.defaultDAO.save(QualityRole);
+            }else{
+
+                menuids.forEach(menu->{
+                    RoleMenu roleMenu = new RoleMenu();
+                    roleMenu.setMenuId(menu);
+                    roleMenu.setRoleID(roleId);
+                    list.add(roleMenu);
+                });
+                result = this.defaultDAO.updateById(QualityRole);
+
+                List<Integer>  mids= this.defaultDAO.selectByRoleId(roleId);
+                if(mids.size()>0){
+                    this.defaultDAO.deleteByRoleId(roleId);
+                }
+            }
+
+            this.defaultDAO.insertRoleMenu(list);
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("保存失败", 500);

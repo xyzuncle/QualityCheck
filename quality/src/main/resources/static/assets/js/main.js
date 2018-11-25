@@ -9,7 +9,8 @@ layui.config({
     notice: 'notice/notice',
     step: 'step-lay/step',
     treeSelect:'treeSelect/treeSelect',
-    iconPicker:'iconPicker/iconPicker'
+    iconPicker:'iconPicker/iconPicker',
+    authtree:'authtree/authtree'
 }).use(['layer', 'element', 'config', 'index', 'admin', 'laytpl'], function () {
     var $ = layui.jquery;
     var layer = layui.layer;

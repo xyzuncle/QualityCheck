@@ -3,6 +3,7 @@ package com.quality.system.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.quality.common.dto.JsonResult;
 import com.quality.common.dto.PageResult;
 import com.quality.common.exception.BaseException;
 import com.quality.common.util.Servlets;
@@ -78,6 +79,13 @@ public class QualityMenuController extends BaseController<QualityMenu, IQualityM
     public Object saveOrUpdate(@RequestBody QualityMenu QualityMenu) {
         boolean result = false;
         try {
+            Integer parentId =  QualityMenu.getParentId();
+            if (parentId == 0){
+                QualityMenu.setParentIds(parentId+"");
+            }else{
+                QualityMenu  pMenu = this.defaultDAO.getById(parentId);
+                QualityMenu.setParentIds(pMenu.getParentIds().concat("-").concat(parentId+""));
+            }
             result = this.defaultDAO.saveOrUpdate(QualityMenu);
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,18 +99,24 @@ public class QualityMenuController extends BaseController<QualityMenu, IQualityM
     @ResponseBody
     public Object deleteQualityMenuById(@ApiParam(value = "QualityMenuID") @RequestParam(name = "entityID") Integer entityID) {
         boolean result =false;
-        //删除的ID 是否为父ID
-        List<QualityMenu>  pMenuList = this.defaultDAO.selectListByParentId(entityID);
-        if(pMenuList.size() > 0){
-            List<Integer> ids = new ArrayList<>();
-            pMenuList.forEach(item->{
-                ids.add(item.getId());
-            });
-            result = this.defaultDAO.removeByIds(ids);
+        int count = this.defaultDAO.selectByMenuId(entityID);
+        if(count>0){
+            return JsonResult.error("解除相关的引用");
+        }else{
+            //删除的ID 是否为父ID
+            List<QualityMenu>  pMenuList = this.defaultDAO.selectListByParentId(entityID);
+            if(pMenuList.size() > 0){
+                List<Integer> ids = new ArrayList<>();
+                pMenuList.forEach(item->{
+                    ids.add(item.getId());
+                });
+                result = this.defaultDAO.removeByIds(ids);
+            }
+
+            result = this.defaultDAO.removeById(entityID);
+            return super.jsonObjectResult(result, "删除成功");
         }
 
-        result = this.defaultDAO.removeById(entityID);
-        return super.jsonObjectResult(result, "删除成功");
     }
 
 
@@ -162,7 +176,6 @@ public class QualityMenuController extends BaseController<QualityMenu, IQualityM
            // List<QualityMenu> list = super.queryContionNoPage(searchParams);
             List<String> MenuTypes = new ArrayList<String>(){{add("0"); add("1");}};
             List<QualityMenu>  list = this.defaultDAO.selectListByMenuType(MenuTypes);
-
             List<MenuDto> tree = new ArrayList<MenuDto>();
             list.forEach(item->{
                 MenuDto dto = new MenuDto();
@@ -176,7 +189,6 @@ public class QualityMenuController extends BaseController<QualityMenu, IQualityM
             });
 
             List<MenuDto>  treeList = listToTree(tree);
-
             return  JSON.toJSONString(treeList).toString();
             //return super.jsonObjectResult(list, "查询成功");
         } catch (Exception e) {
@@ -210,6 +222,31 @@ public class QualityMenuController extends BaseController<QualityMenu, IQualityM
         return tree;
     }
 
+
+    @ApiOperation(value = "查询所有菜单")
+    @RequestMapping(value = "/getQualityAllMenuList.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public String getQualityAllMenuList(HttpServletRequest request) {
+        try {
+            Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search-");
+            List<QualityMenu> list = super.queryContionNoPage(searchParams);
+
+            List<MenuDto> tree = new ArrayList<MenuDto>();
+            list.forEach(item->{
+                MenuDto dto = new MenuDto();
+                dto.setPid(item.getParentId());
+                dto.setId(item.getId());
+                dto.setName(item.getMenuName());
+                tree.add(dto);
+            });
+
+            return  JSON.toJSONString(tree).toString();
+            //return super.jsonObjectResult(list, "查询成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BaseException("查询失败", 500);
+        }
+    }
 
 }
 

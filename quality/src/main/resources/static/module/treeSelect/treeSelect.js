@@ -68,64 +68,64 @@ layui.define(['form', 'jquery'], function (exports) { //提示：模块也可以
           }
         },
     //default setting of core
-        _setting = {
-          treeId: "",
-          treeObj: null,
-          view: {
-            addDiyDom: null,
-            autoCancelSelected: true,
-            dblClickExpand: true,
-            expandSpeed: "fast",
-            fontCss: {},
-            nameIsHTML: false,
-            selectedMulti: true,
-            showIcon: true,
-            showLine: true,
-            showTitle: true,
-            txtSelectedEnable: false
-          },
-          data: {
-            key: {
-              isParent: "isParent",
-              children: "children",
-              name: "name",
-              title: "",
-              url: "url",
-              icon: "icon"
-            },
-            simpleData: {
-              enable: false,
-              idKey: "id",
-              pIdKey: "pId",
-              rootPId: null
-            },
-            keep: {
-              parent: false,
-              leaf: false
-            }
-          },
-          async: {
-            enable: false,
-            contentType: "application/x-www-form-urlencoded",
-            type: "post",
-            dataType: "text",
-            headers: {},
-            xhrFields: {},
-            url: "",
-            autoParam: [],
-            otherParam: [],
-            dataFilter: null
-          },
-          callback: {
-            beforeAsync: null,
-            beforeClick: null,
-            beforeDblClick: null,
-            beforeRightClick: null,
-            beforeMouseDown: null,
-            beforeMouseUp: null,
-            beforeExpand: null,
-            beforeCollapse: null,
-            beforeRemove: null,
+    _setting = {
+      treeId: "",
+      treeObj: null,
+      view: {
+        addDiyDom: null,
+        autoCancelSelected: true,
+        dblClickExpand: true,
+        expandSpeed: "fast",
+        fontCss: {},
+        nameIsHTML: false,
+        selectedMulti: true,
+        showIcon: true,
+        showLine: true,
+        showTitle: true,
+        txtSelectedEnable: false
+      },
+      data: {
+        key: {
+          isParent: "pid",
+          children: "subMenus",
+          name: "name",
+          title: "",
+          url: null,
+          icon: "icon"
+        },
+        simpleData: {
+          enable: false,
+          idKey: "id",
+          pIdKey: "pId",
+          rootPId: null
+        },
+        keep: {
+          parent: false,
+          leaf: false
+        }
+      },
+      async: {
+        enable: false,
+        contentType: "application/x-www-form-urlencoded",
+        type: "post",
+        dataType: "text",
+        headers: {},
+        xhrFields: {},
+        url: "",
+        autoParam: [],
+        otherParam: [],
+        dataFilter: null
+      },
+      callback: {
+        beforeAsync: null,
+        beforeClick: null,
+        beforeDblClick: null,
+        beforeRightClick: null,
+        beforeMouseDown: null,
+        beforeMouseUp: null,
+        beforeExpand: null,
+        beforeCollapse: null,
+        beforeRemove: null,
 
             onAsyncError: null,
             onAsyncSuccess: null,

@@ -2,6 +2,10 @@ package com.quality.system.mapper;
 
 import com.quality.system.entity.QualityRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.quality.system.entity.RoleMenu;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface QualityRoleMapper extends BaseMapper<QualityRole> {
 
+    int insertRoleMenu(List<RoleMenu> list);
+
+    List<Integer> selectByRoleId(@Param("roleID") String roleID);
+
+    void  deleteByRoleId(@Param("roleID") String roleID);
 }

@@ -61,7 +61,7 @@ layui.define(['layer', 'config'], function (exports) {
         // 封装layer.open
         open: function (param) {
             if (!param.area) {
-                param.area = (param.type == 2) ? ['360px', '300px'] : '360px';
+                param.area = (param.type == 2) ? ['360px', '300px'] : '500px';
             }
             if (!param.skin) {
                 param.skin = 'layui-layer-admin';

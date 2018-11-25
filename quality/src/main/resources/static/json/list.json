@@ -1,0 +1,19 @@
+{
+  "code": 0,
+  "msg": "获取成功",
+  "data": {
+    "list": [
+      { "id": 1, "menuName": "用户管理",  "parentId": 0 },
+      { "id": 2, "menuName": "用户组管理", "parentId": 0 },
+      { "id": 3, "menuName": "角色管理",  "parentId": 2 },
+      { "id": 4, "menuName": "添加角色",  "parentId": 3 },
+      { "id": 5, "menuName": "角色列表",  "parentId": 3 },
+      { "id": 6, "menuName": "管理员管理",  "parentId": 0 },
+      { "id": 7, "menuName": "添加管理员",  "parentId": 6 },
+      { "id": 8, "menuName": "管理员列表", "parentId": 6 },
+      { "id": 9, "menuName": "管理员列表", "parentId": 4 },
+      { "id": 10, "menuName": "管理员列表", "parentId": 4 }
+    ],
+    "checkedAlias": [ "1"]
+  }
+}

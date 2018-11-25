@@ -2,6 +2,9 @@ package com.quality.system.service;
 
 import com.quality.system.entity.QualityRole;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.quality.system.entity.RoleMenu;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IQualityRoleService extends IService<QualityRole> {
 
+    int insertRoleMenu(List<RoleMenu> list);
+
+    List<Integer> selectByRoleId(String roleID);
+
+    int deleteByRoleId(String roleID);
 }

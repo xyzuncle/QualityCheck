@@ -52,6 +52,10 @@
     </select>
 
 
+    <!--插入角色关联关系表-->
+    <select id="selectByMenuId"  parameterType="integer" resultType="java.lang.Integer">
+        select  count(1)  from  quality_role_menu where menuId = #{menuId}
+    </select>
 
 
 </mapper>

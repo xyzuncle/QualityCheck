@@ -6,6 +6,7 @@ package com.quality.system.controller;
 import com.quality.common.aop.WebLogAction;
 
 import com.quality.common.controller.BaseController;
+import com.quality.common.dto.PageResult;
 import com.quality.system.entity.QualityLogger;
 import com.quality.system.service.IQualityLoggerService;
 import io.swagger.annotations.Api;
@@ -53,18 +54,20 @@ private final Logger logger=LoggerFactory.getLogger(QualityLoggerController.clas
 @ApiOperation(value = "QualityLogger多条件查询", notes = "多条件查询")
 @RequestMapping(value = "/query.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @ResponseBody
-public Object queryConditionPage(HttpServletRequest request){
-    IPage<QualityLogger> QualityLoggerListPage=null;
-    try{
+public PageResult<QualityLogger> queryConditionPage(HttpServletRequest request){
+
+    PageResult<QualityLogger> QualityLoggerListPage = null;
+    try {
         //把查询条件都写好了
-        Map<String, Object> searchParams=Servlets.getParametersStartingWith(request,"search-");
+        Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search-");
         //如果需要按多个字段排序，请传多个参数,为了反射方便，数据库不使用下划线了
-        Sort sort = new Sort(Sort.DESC,Tools.str2StrArray("crtTime") );
-        QualityLoggerListPage=queryContion(searchParams,sort);
-        return super.jsonObjectResult(QualityLoggerListPage,"查询成功");
-    }catch(Exception e){
+        Sort sort = new Sort(Sort.DESC, Tools.str2StrArray("crtTime"));
+        QualityLoggerListPage = (PageResult<QualityLogger>) queryContion(searchParams, sort);
+        QualityLoggerListPage.setMsg("查询成功");
+        return QualityLoggerListPage;
+    } catch (Exception e) {
         e.printStackTrace();
-        throw new BaseException("查询失败",500);
+        throw new BaseException("查询失败", 500);
     }
 }
 

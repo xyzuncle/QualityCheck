@@ -150,9 +150,26 @@
 
         // 显示编辑弹窗
         function showEditModel(data) {
-            admin.putTempData('quality_role', data);
+            debugger
+            if(data){
+                $.ajax({
+                    url: config.base_server + 'QualityRole/queryById.do?id='+data.id+'',
+                    type: "GET",
+                    dataType: 'JSON',
+                    contentType:'application/json',
+                    async:false,
+                    success: function (data) {
+                        if (data.status == 200) {
+                            admin.putTempData('quality_role',data.data);
+                        } else {
+                            layer.msg('获取角色信息失败', {icon: 2});
+                        }
+                    }
+                });
+            }else{
+                admin.putTempData('quality_role',data);
+            }
             admin.open({
-
                 title: data ? '修改角色' : '添加角色',
                 url: 'components/system/roleForm.html',
                 success: function (layero, index) {

@@ -56,7 +56,9 @@
         // 回显数据
         var role = admin.getTempData('quality_role');
         $('#roleForm').attr('method', 'POST');
+        var menuids = new Array();
         if (role) {
+            menuids = role.menuids
             form.val('roleForm', role);
         }
 
@@ -68,6 +70,7 @@
                 // 支持自定义递归字段、数组权限判断等
                 // 深坑注意：如果API返回的数据是字符串，那么 startPid 的数据类型也需要是字符串
                // alert(JSON.stringify(data))
+                data.checkedAlias = menuids;
                 var trees = authtree.listConvert(data, {
                     primaryKey: 'id'
                     ,startPid: 0

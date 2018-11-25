@@ -130,6 +130,8 @@ public class QualityRoleController extends BaseController<QualityRole, IQualityR
     public Object queryById(@ApiParam(value = "QualityRole唯一标识") @RequestParam(name = "id") String id) {
         try {
             QualityRole QualityRole = this.defaultDAO.getById(id);
+            List<Integer> mids = this.defaultDAO.selectByRoleId(id);
+            QualityRole.setMenuids(mids);
             return super.jsonObjectResult(QualityRole, "查询成功");
         } catch (Exception e) {
             e.printStackTrace();

@@ -62,6 +62,7 @@ public class QualityRoleController extends BaseController<QualityRole, IQualityR
             Sort sort = new Sort(Sort.DESC, Tools.str2StrArray("crtTime"));
             QualityUserListPage = (PageResult<QualityRole>) queryContion(searchParams, sort);
             QualityUserListPage.setMsg("查询成功");
+            QualityUserListPage.setCode(200);
             return QualityUserListPage;
         } catch (Exception e) {
             e.printStackTrace();

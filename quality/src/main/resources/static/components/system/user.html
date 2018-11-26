@@ -39,7 +39,8 @@
 <!-- 表格操作列 -->
 <script type="text/html" id="userTableBar">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">删除</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="role">分配角色</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
     <a class="layui-btn layui-btn-xs" lay-event="reset">重置密码</a>
 </script>
 
@@ -75,11 +76,11 @@
                 {type: 'checkbox'},
                 {field: 'id',hide:true},
                 {field: 'userName', sort: false, title: '姓名',width:100},
-                {field: 'loginName', sort: false, title: '登录名'},
+                {field: 'loginName', sort: false, title: '登录名',width:100},
                 {field: 'phone', sort: false, title: '电话',width:100},
                 {field: 'mobile', sort: false, title: '手机号',width:120},
                 {field: 'email', sort: false, title: '邮箱'},
-                {field: 'crtTime', sort: true, title: '创建时间',templet:"<div>{{layui.util.toDateString(d.crtTime, 'yyyy-MM-dd')}}</div>"},
+                {field: 'crtTime', sort: true, title: '创建时间',templet:"<div>{{layui.util.toDateString(d.crtTime, 'yyyy-MM-dd')}}</div>",width:120},
                /* {field: 'state', sort: true, templet: '#userTableState', title: '状态'},*/
                 {align: 'center', toolbar: '#userTableBar', title: '操作', minWidth: 150}
             ]]
@@ -99,7 +100,10 @@
                 showEditModel(data);
             } else if (layEvent === 'reset') { // 重置密码
                 showPassModel(data);
-            }else if(layEvent === 'delete'){
+            }else if(layEvent ==='role'){ //分配角色
+                showRoleModel(data);
+            }
+            else if(layEvent === 'delete'){
                 layer.confirm('确定删除该条数据吗？', {
                     skin: 'layui-layer-admin'
                 }, function (i) {
@@ -148,6 +152,18 @@
             admin.open({
                 title: '重置密码',
                 url: 'components/system/resetpassword.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
+                }
+            });
+        };
+
+        // 显示分配角色窗口
+        function showRoleModel(data) {
+            admin.putTempData('quality_user', data);
+            admin.open({
+                title: '分配角色',
+                url: 'components/system/user_role.html',
                 success: function (layero, index) {
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
                 }

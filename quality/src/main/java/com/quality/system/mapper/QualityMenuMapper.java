@@ -24,4 +24,6 @@ public interface QualityMenuMapper extends BaseMapper<QualityMenu> {
 
     int selectByMenuId(Integer id);
 
+    List<QualityMenu> selectListByRoleId(@Param("roleID")String roleID);
+
 }

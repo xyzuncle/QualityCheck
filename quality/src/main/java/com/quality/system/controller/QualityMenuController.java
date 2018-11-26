@@ -12,11 +12,14 @@ import com.quality.common.util.Tools;
 import com.quality.common.controller.BaseController;
 import com.quality.system.entity.MenuDto;
 import com.quality.system.entity.QualityMenu;
+import com.quality.system.entity.QualityUser;
 import com.quality.system.service.IQualityMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.slf4j.Logger;
@@ -166,16 +169,21 @@ public class QualityMenuController extends BaseController<QualityMenu, IQualityM
     }
 
 
-    @ApiOperation(value = "查询所有菜单")
+    @ApiOperation(value = "根据角色查询所有菜单")
     @RequestMapping(value = "/getQualityMenuTree.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String getQualityMenuTreeList(HttpServletRequest request) {
         try {
-            //把查询条件都写好了
-           // Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search-");
-           // List<QualityMenu> list = super.queryContionNoPage(searchParams);
+
+            //查询当前用户
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            QualityUser user = (QualityUser)authentication.getPrincipal();
+            //用户对应的角色
+            //角色对应的菜单
+            List<QualityMenu>  list = this.defaultDAO.selectListByRoleId(user.getRoleId());
+
             List<String> MenuTypes = new ArrayList<String>(){{add("0"); add("1");}};
-            List<QualityMenu>  list = this.defaultDAO.selectListByMenuType(MenuTypes);
+            //List<QualityMenu>  list = this.defaultDAO.selectListByMenuType(MenuTypes);
             List<MenuDto> tree = new ArrayList<MenuDto>();
             list.forEach(item->{
                 MenuDto dto = new MenuDto();

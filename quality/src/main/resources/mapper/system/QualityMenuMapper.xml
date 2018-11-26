@@ -57,5 +57,17 @@
         select  count(1)  from  quality_role_menu where menuId = #{menuId}
     </select>
 
+    <!--根据MenuType查询-->
+    <select id="selectListByRoleId" resultType="com.quality.system.entity.QualityMenu">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM quality_menu
+        WHERE menuType in (0,1)
+        <if test="roleID != null">
+            and  id in (select rm.menuId from quality_role_menu rm where rm.roleID=#{roleID})
+        </if>
+        and deleted=0 ORDER BY sort,crtTime asc
+    </select>
+
 
 </mapper>

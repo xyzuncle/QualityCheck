@@ -20,4 +20,6 @@ public interface IQualityMenuService extends IService<QualityMenu> {
     List<QualityMenu>  selectListByMenuType(List<String> MenuTypes);
 
     int selectByMenuId(Integer id);
+
+    List<QualityMenu> selectListByRoleId(String roleID);
 }

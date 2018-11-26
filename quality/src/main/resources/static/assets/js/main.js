@@ -58,7 +58,7 @@ layui.config({
         // 注册路由
         index.regRouter(data);
         Q.init({
-            index: 'console'
+            index: 'welcome'
         });
     }, 'get');
 

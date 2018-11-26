@@ -6,6 +6,16 @@ package com.quality.common.exception;
 public class BaseException extends RuntimeException {
     private int status = 200;
 
+    private String code;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public int getStatus() {
         return status;
     }
@@ -15,6 +25,12 @@ public class BaseException extends RuntimeException {
     }
 
     public BaseException() {
+    }
+
+    public BaseException(String message, String code) {
+        super(message);
+        this.code = code;
+        this.status = status;
     }
 
     public BaseException(String message, int status) {

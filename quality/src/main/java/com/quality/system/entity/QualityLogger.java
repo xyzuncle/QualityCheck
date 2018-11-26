@@ -42,8 +42,31 @@ public class QualityLogger extends BaseEntity {
     @TableField("remarks")
     private String remarks;
 
+    @ApiModelProperty(value = "方法名称")
+    @TableField("methodName")
+    public String  methodName; //方法名字
+
+    @TableField("operationType")
+    public String operationType; //操作类型
+
     @TableField(exist = false)
     private long requestTime;
+
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
+
+    public String getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
+    }
 
     public String getUserName() {
         return userName;

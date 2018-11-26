@@ -128,7 +128,6 @@ public class QualityUserController extends BaseController<QualityUser, IQualityU
     @ApiOperation(value = "根据Id删除QualityUser信息")
     @RequestMapping(value = "/removeById.do", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    @WebLogAction(name="用户管理",desc = "删除")
     public Object deleteQualityUserById(@ApiParam(value = "QualityUserID") @RequestParam(name = "entityID") String entityID) {
         if (entityID != null && !entityID.equals("")) {
             if (entityID.equals("1")) {

@@ -52,8 +52,10 @@
                 {field: 'userName', sort: true, title: '姓名'},
                 {field: 'loginName', sort: true, title: '用户名'},
                 {field: 'ipAddress', sort: true, title: 'IP'},
-                {field: 'operation', sort: true, title: '操作'},
-                {field: 'optTime', sort: true, title: '操作时间'},
+                {field: 'operation', sort: true, title: '描述'},
+                {field: 'operationType', sort: true, title: '操作类型'},
+                {field: 'methodName', sort: true, title: '操作行为'},
+
                 {
                     field: 'crtTime', sort: true, templet: function (d) {
                         return util.toDateString(d.crtTime);

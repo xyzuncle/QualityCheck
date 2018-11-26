@@ -1,140 +1,115 @@
 package com.quality.common.aop;
 
-import com.alibaba.fastjson.JSON;
+
 import com.quality.system.entity.QualityLogger;
 import com.quality.system.entity.QualityUser;
-import com.quality.system.service.IQualityLoggerService;
+import com.quality.system.service.impl.QualityLoggerServiceImpl;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.HandlerMapping;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
-import java.util.Map;
 
 /**
- * Created by sunzw on 2018/11/13.
+ * Created by xyz on 2017/7/17.
  */
+
 @Aspect
 @Component
 public class WebLogAspect {
 
-    private static Logger logger = LoggerFactory.getLogger(WebLogAspect.class);
+    @Resource
+    private QualityLoggerServiceImpl logService;
 
-    private ThreadLocal<QualityLogger> tlocal = new ThreadLocal<QualityLogger>();
-
-    @Autowired
-    private IQualityLoggerService  logService;
-
+    //Service层切点,切点是自定义的annotation
     @Pointcut("@annotation(com.quality.common.aop.WebLogAction)")
-    public void webRequestLog() {}
+    public void SysLogAspect() {
 
-    @Before("webRequestLog()")
+    }
+
+    /**AspectJ支持5种类型的通知注解：
+
+     -@Before 前置通知，在目标方法执行之前执行
+     -@After：后置通知：在目标方法执行之后执行，无论是否发生异常
+     -@AfterReturning:返回通知，在目标方法返回结果之后执行
+     -@AfterThrowing：异常通知，在目标方法抛出异常之后通知。
+     -@Around 环绕通知，围绕着目标方法执行。
+
+     */
+
+    @Before("SysLogAspect()")
     public void doBefore(JoinPoint joinPoint) {
         try {
+            logService.save(getMthodRemark(joinPoint));
+        } catch (Exception e) {
+            //记录本地异常日志
+            //logger.error("异常信息:{}", e.getMessage());
+        }
+    }
 
-            long beginTime = System.currentTimeMillis();
-            // 接收到请求，记录请求内容
-           ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            HttpServletRequest request = attributes.getRequest();
-         /*    String beanName = joinPoint.getSignature().getDeclaringTypeName();
-            String method = request.getMethod();*/
-            String remoteAddr = getIpAddr(request);
+    public static QualityLogger getMthodRemark(JoinPoint joinPoint) throws Exception {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        //通过security 获取当前登录用户
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        QualityLogger aspectEntity = new QualityLogger();
+        QualityUser user = (QualityUser)authentication.getPrincipal();
+        aspectEntity.setLoginName(user.getLoginName());//登陆用户名
+        aspectEntity.setUserName(user.getUserName()); //用户名
+        aspectEntity.setIpAddress(getRemortIP(request));//ip地址
+       // aspectEntity.setBrowser(request.getHeader("User-Agent"));//浏览器
+        String targetName = joinPoint.getTarget().getClass().getName();
+        String methodName = joinPoint.getSignature().getName();
+        Object[] arguments = joinPoint.getArgs();   //获得参数列表
+        StringBuffer parameters = new StringBuffer();
+        for (int i = 0; i < arguments.length; i++) {
+            parameters.append((i + 1) + ":" + (arguments[i]) + " ");
+        }
+        aspectEntity.setMethodName(methodName);//方法名
+        //aspectEntity.setArguments(parameters == null ? "" : String.valueOf(parameters));//参数列表
+        Class targetClass = Class.forName(targetName);
+        Method[] methods = targetClass.getMethods();
 
-            Signature signature = joinPoint.getSignature();
-            MethodSignature methodSignature = (MethodSignature)signature;
-            Method targetMethod = methodSignature.getMethod();
-            Class clazz = targetMethod.getClass();
-            WebLogAction logAction = (WebLogAction)clazz.getAnnotation(WebLogAction.class);
-            QualityLogger optLog = new QualityLogger();
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null) {
-                Object object = authentication.getPrincipal();
-                if (object != null) {
-                    QualityUser curUser = (QualityUser) object;
-                    optLog.setLoginName(curUser.getLoginName());
-                    optLog.setUserName(curUser.getUserName());
+        for (Method method : methods) {
+            if (method.getName().equals(methodName)) {
+                Class[] clazzs = method.getParameterTypes();
+                if (clazzs.length == arguments.length) {
+                    WebLogAction methodCache = method.getAnnotation(WebLogAction.class);
+                    aspectEntity.setOperation(methodCache.operation());//从注解上获取的操作内容
+                    aspectEntity.setOperationType(methodCache.operation_type());//操作类型
+                    aspectEntity.setMethodName(methodCache.moduleName());//模块名
+                    break;
                 }
             }
-            optLog.setIpAddress(remoteAddr);
-            optLog.setRequestTime(beginTime);
-            //optLog.setOperation(logAction.name()+"—"+logAction.desc());
-            tlocal.set(optLog);
-
-        } catch (Exception e) {
-            logger.error("***操作请求日志记录失败doBefore()***", e);
         }
+        return aspectEntity;
     }
 
-
-    @AfterReturning(returning = "result", pointcut = "webRequestLog()")
-    public void doAfterReturning(Object result) {
-        try {
-            // 处理完请求，返回内容
-            QualityLogger optLog = tlocal.get();
-            long beginTime = optLog.getRequestTime();
-            long requestTime = (System.currentTimeMillis() - beginTime) / 1000;
-            optLog.setOptTime(Long.toString(requestTime)+"s");
-            logService.save(optLog);
-        } catch (Exception e) {
-            logger.error("***操作请求日志记录失败doAfterReturning()***", e);
+    public static String getRemortIP(HttpServletRequest request) throws Exception {
+        String ip = request.getHeader("x-forwarded-for");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
         }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
     }
 
-
-    /**
-     * 获取登录用户远程主机ip地址
-     *
-     * @param request
-     * @return
-     */
-     public  String getIpAddr(HttpServletRequest request) {
-         String ip = request.getHeader("x-forwarded-for");
-         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                 ip = request.getHeader("Proxy-Client-IP");
-             }
-         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                 ip = request.getHeader("WL-Proxy-Client-IP");
-             }
-         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                 ip = request.getHeader("HTTP_CLIENT_IP");
-             }
-         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                 ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-             }
-         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-                 ip = request.getRemoteAddr();
-             }
-         return ip;
-     }
-
-    /**
-     * 请求参数拼装
-     *
-     * @param paramsArray
-     * @return
-     */
-    private String argsArrayToString(Object[] paramsArray) {
-        String params = "";
-        if (paramsArray != null && paramsArray.length > 0) {
-            for (int i = 0; i < paramsArray.length; i++) {
-                Object jsonObj = JSON.toJSON(paramsArray[i]);
-                params += jsonObj.toString() + " ";
-            }
-        }
-        return params.trim();
-    }
 }

@@ -2,6 +2,7 @@ package com.quality.common.handler;
 
 
 import com.alibaba.fastjson.JSON;
+import com.quality.common.aop.WebLogAction;
 import com.quality.common.dto.LoginResult;
 import com.quality.common.dto.ObjectRestResponse;
 import com.quality.system.entity.QualityUser;
@@ -39,6 +40,7 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
 
 
     @Override
+    @WebLogAction(moduleName = "登录验证",operation = "通过首页登录",operation_type = "登录")
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws ServletException, IOException {
 

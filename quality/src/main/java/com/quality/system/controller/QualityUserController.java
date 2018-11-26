@@ -12,6 +12,7 @@ import com.quality.common.util.Servlets;
 import com.quality.common.util.Sort;
 import com.quality.common.util.Tools;
 import com.quality.system.entity.QualityUser;
+import com.quality.system.entity.QualityUserRole;
 import com.quality.system.service.IQualityUserService;
 import io.swagger.annotations.*;
 
@@ -307,6 +308,61 @@ public class QualityUserController extends BaseController<QualityUser, IQualityU
 
         return super.jsonObjectResult(true, "重置密码成功！");
     }
+
+    /**
+     * 保存用户角色关系
+     * @param userId
+     * @param roleId
+     * @return
+     */
+    @ApiOperation(value = "保存用户角色关系")
+    @RequestMapping(value = "/saveUserRole.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Object saveUserRole(@RequestParam("userId") String userId,
+                          @RequestParam("roleId") String roleId,
+                               @RequestParam("roleName") String roleName) {
+        boolean result = false;
+        try {
+            result = this.defaultDAO.saveUserRole(userId, roleId,roleName);
+        } catch (BaseException e) {
+            e.printStackTrace();
+            throw new BaseException(e.getMessage(), 500);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BaseException("保存失败", 500);
+        }
+
+       return super.jsonObjectResult(result, "保存成功！");
+    }
+
+    /**
+     * 删除用户角色关系
+     * @param userId
+     * @return
+     */
+    @ApiOperation(value = "删除用户角色关系")
+    @RequestMapping(value = "/delUserRole.do", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Object saveUserRole(@RequestParam("userId") String userId) {
+
+        boolean result = false;
+        try {
+            QualityUserRole qualityUserRole = new QualityUserRole();
+
+            result = this.defaultDAO.deleteUserRole(userId);
+
+        } catch (BaseException e) {
+            e.printStackTrace();
+            throw new BaseException(e.getMessage(), 500);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BaseException("删除失败", 500);
+        }
+
+        return super.jsonObjectResult(result, "删除成功！");
+    }
+
+
 
 }
 

@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * <p>
@@ -69,5 +70,35 @@ public class QualityUserServiceImpl extends ServiceImpl<QualityUserMapper, Quali
             return false;
         }
 
+    }
+
+    @Override
+    @Transactional
+    public boolean saveUserRole(String userId, String roleId,String roleName) {
+        //更新用户表的内容
+        QualityUser user = new QualityUser();
+        user.setId(userId);
+        user.setRoleName(roleName);
+        user.setRoleId(roleId);
+        this.baseMapper.updateById(user);
+
+        //先根据ID删除角色关系，在插入
+        this.baseMapper.deleteUserRole(userId);
+        int result =  this.baseMapper.saveUserRole(userId, roleId);
+        if(result>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteUserRole(String userId) {
+        int result = this.baseMapper.deleteUserRole(userId);
+        if(result>0){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

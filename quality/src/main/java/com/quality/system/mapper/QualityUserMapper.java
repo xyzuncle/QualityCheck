@@ -3,6 +3,7 @@ package com.quality.system.mapper;
 import com.quality.system.entity.QualityUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * <p>
@@ -15,5 +16,9 @@ import org.apache.ibatis.annotations.Param;
 public interface QualityUserMapper extends BaseMapper<QualityUser> {
 
     Integer getExistUser(@Param("loginName") String loginName);
+
+    int saveUserRole(@Param("userId") String userId, @Param("roleId") String roleId);
+
+    int deleteUserRole(@Param("userId") String userId);
 
 }

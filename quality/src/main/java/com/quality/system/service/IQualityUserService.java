@@ -2,6 +2,7 @@ package com.quality.system.service;
 
 import com.quality.system.entity.QualityUser;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -29,5 +30,18 @@ public interface IQualityUserService extends IService<QualityUser>{
      * @return
      */
     public boolean getExistUser(String loginName);
+
+    /**
+     * 新增用户角色关系
+     * @param userId
+     * @param roleId
+     */
+    boolean saveUserRole(String userId, String roleId,String roleName);
+
+    /**
+     * 删除用户角色关系
+     * @param userId
+     */
+    boolean deleteUserRole(String userId);
 
 }

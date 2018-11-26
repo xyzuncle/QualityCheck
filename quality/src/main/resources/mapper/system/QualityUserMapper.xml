@@ -23,6 +23,7 @@
         <result column="remarks" property="remarks" />
         <result column="orgName" property="orgName" />
         <result column="roleName" property="roleName" />
+        <result column="roleId" property="roleId"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -33,9 +34,24 @@
         deleted,
         orgId, userName, loginName, password, salt, phone, mobile, email, sort, crtUser, updUser, loginFlag, remarks, orgName, roleName
     </sql>
+    <insert id="saveUserRole">
+        insert into quality_user_role value (#{userId},#{roleId})
+    </insert>
+
+    <!--保存用户角色关系-->
+
+
+    <!--根据用户ID 清楚角色关系-->
+    <delete id="deleteUserRole">
+        delete from quality_user_role where userId=#{userId}
+    </delete>
+
+
     <select id="getExistUser" resultType="java.lang.Integer">
         select count(1) from quality_user where loginName=#{loginName} and deleted=0
     </select>
+
+
 
 
 </mapper>

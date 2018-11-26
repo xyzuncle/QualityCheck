@@ -91,8 +91,17 @@ public class QualityUser extends BaseEntity implements UserDetails, Serializable
     @TableField("roleName")
     private String roleName;
 
+    @ApiModelProperty(value = "角色名称")
+    @TableField("roleId")
+    private String roleId;
 
+    public String getRoleId() {
+        return roleId;
+    }
 
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
 
     public String getOrgId() {
         return orgId;

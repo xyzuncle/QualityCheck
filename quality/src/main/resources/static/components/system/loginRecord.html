@@ -48,15 +48,12 @@
             page: true,
             cellMinWidth: 100,
             cols: [[
-                {type: 'checkbox'},
-                {field: 'remoteAddr', sort: true, title: '请求地址'},
-                {field: 'method', sort: true, title: '请求方式'},
-                {field: 'beanName', sort: true, title: '请求类'},
-                {field: 'requestUri', sort: true, title: '请求路径'},
-                {field: 'signature', sort: true, title: '请求类方法'},
-                {field: 'args', sort: true, title: '请求类方法参数'},
-                {field: 'requestTime', sort: true, title: '响应时间'},
-                {field: 'result', sort: true, title: '结果'},
+                {type: 'numbers'},
+                {field: 'userName', sort: true, title: '姓名'},
+                {field: 'loginName', sort: true, title: '用户名'},
+                {field: 'ipAddress', sort: true, title: 'IP'},
+                {field: 'operation', sort: true, title: '操作'},
+                {field: 'optTime', sort: true, title: '操作时间'},
                 {
                     field: 'crtTime', sort: true, templet: function (d) {
                         return util.toDateString(d.crtTime);

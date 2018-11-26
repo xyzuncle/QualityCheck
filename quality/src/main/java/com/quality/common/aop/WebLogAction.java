@@ -8,5 +8,7 @@ import java.lang.annotation.Documented;
 @Documented
 public @interface WebLogAction {
 
-    String name();
+    String name() default "功能";
+
+    String desc() default "操作";
 }

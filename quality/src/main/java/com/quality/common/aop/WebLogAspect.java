@@ -2,21 +2,27 @@ package com.quality.common.aop;
 
 import com.alibaba.fastjson.JSON;
 import com.quality.system.entity.QualityLogger;
+import com.quality.system.entity.QualityUser;
 import com.quality.system.service.IQualityLoggerService;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.HandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
@@ -41,37 +47,31 @@ public class WebLogAspect {
         try {
 
             long beginTime = System.currentTimeMillis();
-
             // 接收到请求，记录请求内容
-            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+           ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             HttpServletRequest request = attributes.getRequest();
-            String beanName = joinPoint.getSignature().getDeclaringTypeName();
-            String methodName = joinPoint.getSignature().getName();
-            String uri = request.getRequestURI();
+         /*    String beanName = joinPoint.getSignature().getDeclaringTypeName();
+            String method = request.getMethod();*/
             String remoteAddr = getIpAddr(request);
 
-            String method = request.getMethod();
-            String params = "";
-            if ("POST".equals(method)) {
-                Object[] paramsArray = joinPoint.getArgs();
-                params = argsArrayToString(paramsArray);
-            } else {
-                Map<?, ?> paramsMap = (Map<?, ?>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-                params = paramsMap.toString();
-            }
-
-            logger.debug("uri=" + uri + "; beanName=" + beanName + "; remoteAddr=" + remoteAddr + ""
-                    + "; methodName=" + methodName + "; params=" + params);
-
+            Signature signature = joinPoint.getSignature();
+            MethodSignature methodSignature = (MethodSignature)signature;
+            Method targetMethod = methodSignature.getMethod();
+            Class clazz = targetMethod.getClass();
+            WebLogAction logAction = (WebLogAction)clazz.getAnnotation(WebLogAction.class);
             QualityLogger optLog = new QualityLogger();
-
-            optLog.setBeanName(beanName);
-            //optLog.setCrtUser("");
-            optLog.setRequestUri(uri);
-            optLog.setSignature(methodName);
-            optLog.setArgs(params != null ? params.toString() : "");
-            optLog.setRemoteAddr(remoteAddr);
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null) {
+                Object object = authentication.getPrincipal();
+                if (object != null) {
+                    QualityUser curUser = (QualityUser) object;
+                    optLog.setLoginName(curUser.getLoginName());
+                    optLog.setUserName(curUser.getUserName());
+                }
+            }
+            optLog.setIpAddress(remoteAddr);
             optLog.setRequestTime(beginTime);
+            //optLog.setOperation(logAction.name()+"—"+logAction.desc());
             tlocal.set(optLog);
 
         } catch (Exception e) {
@@ -85,15 +85,9 @@ public class WebLogAspect {
         try {
             // 处理完请求，返回内容
             QualityLogger optLog = tlocal.get();
-            optLog.setResult(result.toString());
             long beginTime = optLog.getRequestTime();
             long requestTime = (System.currentTimeMillis() - beginTime) / 1000;
-            optLog.setRequestTime(requestTime);
-
-            System.out.println("请求耗时：" + optLog.getRequestTime()+ "   **  " + optLog.getArgs() + " ** "
-                    + optLog.getSignature());
-            System.out.println("RESPONSE : " + result);
-
+            optLog.setOptTime(Long.toString(requestTime)+"s");
             logService.save(optLog);
         } catch (Exception e) {
             logger.error("***操作请求日志记录失败doAfterReturning()***", e);
@@ -107,19 +101,25 @@ public class WebLogAspect {
      * @param request
      * @return
      */
-    private String getIpAddr(HttpServletRequest request) {
-        String ip = request.getHeader("x-forwarded-for");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
-        }
-        return ip;
-    }
+     public  String getIpAddr(HttpServletRequest request) {
+         String ip = request.getHeader("x-forwarded-for");
+         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                 ip = request.getHeader("Proxy-Client-IP");
+             }
+         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                 ip = request.getHeader("WL-Proxy-Client-IP");
+             }
+         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                 ip = request.getHeader("HTTP_CLIENT_IP");
+             }
+         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                 ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+             }
+         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                 ip = request.getRemoteAddr();
+             }
+         return ip;
+     }
 
     /**
      * 请求参数拼装

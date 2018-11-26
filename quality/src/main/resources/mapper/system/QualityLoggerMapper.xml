@@ -8,15 +8,11 @@
     <result column="crtTime" property="crtTime" />
     <result column="updTime" property="updTime" />
     <result column="deleted" property="deleted" />
-        <result column="remoteAddr" property="remoteAddr" />
-        <result column="method" property="method" />
-        <result column="beanName" property="beanName" />
-        <result column="requestUri" property="requestUri" />
-        <result column="signature" property="signature" />
-        <result column="args" property="args" />
-        <result column="requestTime" property="requestTime" />
-        <result column="result" property="result" />
-        <result column="crtUser" property="crtUser" />
+        <result column="userName" property="userName" />
+        <result column="loginName" property="loginName" />
+        <result column="ipAddress" property="ipAddress" />
+        <result column="operation" property="operation" />
+        <result column="optTime" property="optTime" />
         <result column="remarks" property="remarks" />
     </resultMap>
 
@@ -26,7 +22,7 @@
         crtTime,
         updTime,
         deleted,
-        remoteAddr, method, beanName, requestUri, signature, args, requestTime, result, crtUser, remarks
+        userName, loginName, ipAddress, operation, optTime, remarks
     </sql>
 
 </mapper>

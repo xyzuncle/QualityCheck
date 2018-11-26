@@ -1,135 +1,88 @@
 package com.quality.system.entity;
 
-
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.quality.common.entity.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
  * <p>
- * 
+ * 日志表
  * </p>
  *
  * @author yerui
- * @since 2018-11-13
+ * @since 2018-11-26
  */
 @ApiModel(value="QualityLogger对象", description="日志表")
 public class QualityLogger extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "请求地址")
-    @TableField("remoteAddr")
-    private String remoteAddr;
+    @ApiModelProperty(value = "姓名")
+    @TableField("userName")
+    private String userName;
 
-    @ApiModelProperty(value = "请求方式")
-    @TableField("method")
-    private String method;
+    @ApiModelProperty(value = "登录名")
+    @TableField("loginName")
+    private String loginName;
 
-    @ApiModelProperty(value = "请求类")
-    @TableField("beanName")
-    private String beanName;
+    @ApiModelProperty(value = "IP地址")
+    @TableField("ipAddress")
+    private String ipAddress;
 
-    @ApiModelProperty(value = "请求路径")
-    @TableField("requestUri")
-    private String requestUri;
+    @ApiModelProperty(value = "操作")
+    @TableField("operation")
+    private String operation;
 
-    @ApiModelProperty(value = "请求类方法")
-    @TableField("signature")
-    private String signature;
-
-    @ApiModelProperty(value = "请求类方法参数")
-    @TableField("args")
-    private String args;
-
-    @ApiModelProperty(value = "响应时间")
-    @TableField("requestTime")
-    private Long requestTime;
-
-    @ApiModelProperty(value = "结果")
-    @TableField("result")
-    private String result;
-
-    @ApiModelProperty(value = "创建者")
-    @TableField("crtUser")
-    private String crtUser;
+    @ApiModelProperty(value = "操作时间")
+    @TableField("optTime")
+    private String optTime;
 
     @ApiModelProperty(value = "备注")
     @TableField("remarks")
     private String remarks;
 
+    @TableField(exist = false)
+    private long requestTime;
 
-    public String getRemoteAddr() {
-        return remoteAddr;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setRemoteAddr(String remoteAddr) {
-        this.remoteAddr = remoteAddr;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getMethod() {
-        return method;
+    public String getLoginName() {
+        return loginName;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
     }
 
-    public String getBeanName() {
-        return beanName;
+    public String getIpAddress() {
+        return ipAddress;
     }
 
-    public void setBeanName(String beanName) {
-        this.beanName = beanName;
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
-    public String getRequestUri() {
-        return requestUri;
+    public String getOperation() {
+        return operation;
     }
 
-    public void setRequestUri(String requestUri) {
-        this.requestUri = requestUri;
+    public void setOperation(String operation) {
+        this.operation = operation;
     }
 
-    public String getSignature() {
-        return signature;
+    public String getOptTime() {
+        return optTime;
     }
 
-    public void setSignature(String signature) {
-        this.signature = signature;
-    }
-
-    public String getArgs() {
-        return args;
-    }
-
-    public void setArgs(String args) {
-        this.args = args;
-    }
-
-    public Long getRequestTime() {
-        return requestTime;
-    }
-
-    public void setRequestTime(Long requestTime) {
-        this.requestTime = requestTime;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public String getCrtUser() {
-        return crtUser;
-    }
-
-    public void setCrtUser(String crtUser) {
-        this.crtUser = crtUser;
+    public void setOptTime(String optTime) {
+        this.optTime = optTime;
     }
 
     public String getRemarks() {
@@ -140,18 +93,22 @@ public class QualityLogger extends BaseEntity {
         this.remarks = remarks;
     }
 
+    public long getRequestTime() {
+        return requestTime;
+    }
+
+    public void setRequestTime(long requestTime) {
+        this.requestTime = requestTime;
+    }
+
     @Override
     public String toString() {
         return "QualityLogger{" +
-        "remoteAddr=" + remoteAddr +
-        ", method=" + method +
-        ", beanName=" + beanName +
-        ", requestUri=" + requestUri +
-        ", signature=" + signature +
-        ", args=" + args +
-        ", requestTime=" + requestTime +
-        ", result=" + result +
-        ", crtUser=" + crtUser +
+        "userName=" + userName +
+        ", loginName=" + loginName +
+        ", ipAddress=" + ipAddress +
+        ", operation=" + operation +
+        ", optTime=" + optTime +
         ", remarks=" + remarks +
         "}";
     }

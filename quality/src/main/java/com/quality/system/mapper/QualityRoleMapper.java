@@ -21,5 +21,5 @@ public interface QualityRoleMapper extends BaseMapper<QualityRole> {
 
     List<Integer> selectByRoleId(@Param("roleID") String roleID);
 
-    void  deleteByRoleId(@Param("roleID") String roleID);
+    int  deleteByRoleId(@Param("roleID") String roleID);
 }

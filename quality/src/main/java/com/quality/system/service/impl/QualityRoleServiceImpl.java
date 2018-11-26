@@ -32,6 +32,6 @@ public class QualityRoleServiceImpl extends ServiceImpl<QualityRoleMapper, Quali
 
     @Override
     public int deleteByRoleId(String roleID) {
-        return this.deleteByRoleId(roleID);
+        return this.baseMapper.deleteByRoleId(roleID);
     }
 }

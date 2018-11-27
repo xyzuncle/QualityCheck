@@ -48,6 +48,19 @@ layui.config({
         }
     }, 'get');
 
+
+    // 获取当前用户的菜单权限
+    admin.req('QualityMenu/getQualityMenuBtn.do', {}, function (data) {
+        if (200 == data.status) {
+            if(data.data){
+                config.putAuthorities(data.data);
+            }
+        } else {
+            layer.msg('获取当前用户菜单权限失败', {icon: 2});
+        }
+    }, 'get');
+
+
     // 加载侧边栏
     admin.req('QualityMenu/getQualityMenuTree.do', {}, function (data) {
     laytpl(sideNav.innerHTML).render(data, function (html) {

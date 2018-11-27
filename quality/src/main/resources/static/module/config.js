@@ -37,13 +37,29 @@ layui.define(function (exports) {
         },
         // 获取用户所有权限
         getUserAuths: function () {
-            var authorities = config.getUser().authorities;
-            var auths = [];
+            debugger
+            var authorities = config.getAuthorities();
+            var auths = {};
+            auths.permissionkey=authorities;
+            /*  var auths = [];
             for (var i = 0; i < authorities.length; i++) {
-                auths.push(authorities[i].authority);
-            }
+                auths.push(authorities[i]);
+            }*/
             return auths;
         },
+
+        // 缓存user权限按钮
+        putAuthorities: function (data) {
+            layui.data(config.tableName, {
+                key: 'authorities',
+                value: data
+            });
+        },
+        // 缓存user权限按钮
+        getAuthorities: function (data) {
+            return layui.data(config.tableName).authorities;
+        },
+
         // ajax请求的header
         getAjaxHeaders: function () {
             var headers = [];

@@ -21,5 +21,5 @@ public interface IQualityMenuService extends IService<QualityMenu> {
 
     int selectByMenuId(Integer id);
 
-    List<QualityMenu> selectListByRoleId(String roleID);
+    List<QualityMenu> selectListByRoleId(List<String> MenuTypes,String roleID);
 }

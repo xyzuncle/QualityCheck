@@ -180,9 +180,10 @@ public class QualityMenuController extends BaseController<QualityMenu, IQualityM
             QualityUser user = (QualityUser)authentication.getPrincipal();
             //用户对应的角色
             //角色对应的菜单
-            List<QualityMenu>  list = this.defaultDAO.selectListByRoleId(user.getRoleId());
-
             List<String> MenuTypes = new ArrayList<String>(){{add("0"); add("1");}};
+            List<QualityMenu>  list = this.defaultDAO.selectListByRoleId(MenuTypes,user.getRoleId());
+
+
             //List<QualityMenu>  list = this.defaultDAO.selectListByMenuType(MenuTypes);
             List<MenuDto> tree = new ArrayList<MenuDto>();
             list.forEach(item->{
@@ -255,6 +256,36 @@ public class QualityMenuController extends BaseController<QualityMenu, IQualityM
             throw new BaseException("查询失败", 500);
         }
     }
+
+
+    @ApiOperation(value = "根据角色查询所有按钮")
+    @RequestMapping(value = "/getQualityMenuBtn.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Object getQualityMenuBtnList(HttpServletRequest request) {
+        try {
+
+            //查询当前用户
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            QualityUser user = (QualityUser)authentication.getPrincipal();
+            //用户对应的角色
+            //角色对应的菜单
+            List<String> MenuTypes = new ArrayList<String>(){{add("2");}};
+            List<QualityMenu>  list = this.defaultDAO.selectListByRoleId(MenuTypes,user.getRoleId());
+
+            //List<QualityMenu>  list = this.defaultDAO.selectListByMenuType(MenuTypes);
+
+            List<String> permissions = new ArrayList<>();
+            list.forEach(item->{
+                permissions.add(item.getPermission());
+            });
+
+            return super.jsonObjectResult(permissions, "查询成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BaseException("查询失败", 500);
+        }
+    }
+
 
 }
 

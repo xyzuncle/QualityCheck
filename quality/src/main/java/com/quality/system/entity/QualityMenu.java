@@ -69,6 +69,9 @@ public class QualityMenu extends SuperEntity {
     @TableField("remarks")
     private String remarks;
 
+    @ApiModelProperty(value = "权限标识")
+    @TableField("permission")
+    private String permission;
 
     public Integer getParentId() {
         return parentId;
@@ -167,6 +170,14 @@ public class QualityMenu extends SuperEntity {
     }
 
 
+    public String getPermission() {
+        return permission;
+    }
+
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
     @Override
     public String toString() {
         return "QualityMenu{" +
@@ -175,6 +186,7 @@ public class QualityMenu extends SuperEntity {
         ", menuName=" + menuName +
         ", menuUrl=" + menuUrl +
         ", menuIcon=" + menuIcon +
+        ", permission=" + permission +
         ", sort=" + sort +
         ", path=" + path +
         ", menuType=" + menuType +

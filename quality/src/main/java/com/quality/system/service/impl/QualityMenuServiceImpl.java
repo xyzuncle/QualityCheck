@@ -35,8 +35,8 @@ public class QualityMenuServiceImpl extends ServiceImpl<QualityMenuMapper, Quali
     }
 
     @Override
-    public List<QualityMenu> selectListByRoleId(String roleID) {
-        return this.baseMapper.selectListByRoleId(roleID);
+    public List<QualityMenu> selectListByRoleId(List<String> MenuTypes,String roleID) {
+        return this.baseMapper.selectListByRoleId(MenuTypes,roleID);
     }
 
 

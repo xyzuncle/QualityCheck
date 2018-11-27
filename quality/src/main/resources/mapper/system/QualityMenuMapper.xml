@@ -13,6 +13,7 @@
         <result column="menuName" property="menuName" />
         <result column="menuUrl" property="menuUrl" />
         <result column="menuIcon" property="menuIcon" />
+        <result column="permission" property="permission" />
         <result column="sort" property="sort" />
         <result column="path" property="path" />
         <result column="menuType" property="menuType" />
@@ -28,7 +29,7 @@
         crtTime,
         updTime,
         deleted,
-        parentId, parentIds, menuName, menuUrl, menuIcon, sort, path, menuType, menuState, crtUser, updUser, remarks
+        parentId, parentIds, menuName, menuUrl, menuIcon,permission, sort, path, menuType, menuState, crtUser, updUser, remarks
     </sql>
 
     <!--根据父ID查询-->
@@ -62,7 +63,10 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM quality_menu
-        WHERE menuType in (0,1)
+        WHERE menuType in
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
         <if test="roleID != null">
             and  id in (select rm.menuId from quality_role_menu rm where rm.roleID=#{roleID})
         </if>

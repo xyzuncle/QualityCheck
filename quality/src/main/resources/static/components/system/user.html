@@ -59,21 +59,24 @@
 <script id="userSearch" type="text/html">
 
     {{#  layui.each(d.permissionkey, function(index, value){ }}
-        {{# if(value=="user:view"){ }}
-          <button id="userBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
-        {{# } }}
-        {{# if(value=="user:add"){ }}
-        <button id="userBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
-        {{# } }}
-        {{# if(value=="user:deleteAll"){ }}
-        <button id="userBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
-        {{# } }}
-        {{# if(value=="user:export"){ }}
-        <button id="userBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
-        {{# } }}
+    {{# if(value=="user:view"){ }}
+    <button id="userBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+    {{# } }}
+    {{# if(value=="user:add"){ }}
+    <button id="userBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+    {{# } }}
+    {{# if(value=="user:deleteAll"){ }}
+    <button id="userBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
+    {{# } }}
+    {{# if(value=="user:export"){ }}
+    <button id="userBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+    {{# } }}
+
+
     {{# }); }}
 
 </script>
+
 
 <script>
     layui.use(['layer', 'table', 'form', 'util', 'config', 'admin','util','laydate','laytpl'], function () {
@@ -87,25 +90,19 @@
         var laydate = layui.laydate;
         var laytpl = layui.laytpl;
 
-        var btndata =config.getUserAuths(),
-            getTpl = userSearch.innerHTML,
-            userSearchDiv = document.getElementById('userSearchDiv');
-
-        laytpl(getTpl).render(btndata, function(html){
-            userSearchDiv.innerHTML = html;
+        var btndata =config.getUserAuths();
+        laytpl(userSearch.innerHTML).render(btndata, function(html){
+           $("#userSearchDiv").html(html);
         });
 
 
 
-        form.render('btndata');
+        form.render('select');
         // 渲染表格
         var ins1 = table.render({
             elem: '#userTable',
             url: config.base_server + 'QualityUser/query.do',
             method: 'POST',
-           /* where: {
-                access_token: config.getToken().access_token
-            },*/
             page: true,
             cellMinWidth: 100,
             cols: [[

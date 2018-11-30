@@ -65,7 +65,7 @@ public class QualityMenuController extends BaseController<QualityMenu, IQualityM
             //把查询条件都写好了
             Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search-");
             //如果需要按多个字段排序，请传多个参数,为了反射方便，数据库不使用下划线了
-            Sort sort = new Sort(Sort.DESC, Tools.str2StrArray("crtTime"));
+            Sort sort = new Sort(Sort.ASC, Tools.str2StrArray("sort","crtTime"));
             QualityMenuListPage = (PageResult<QualityMenu>) queryContion(searchParams, sort);
             QualityMenuListPage.setMsg("查询成功");
             return QualityMenuListPage;

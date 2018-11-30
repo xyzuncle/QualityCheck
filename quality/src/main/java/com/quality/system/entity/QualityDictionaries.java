@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author yerui
- * @since 2018-11-26
+ * @since 2018-11-28
  */
 @ApiModel(value="QualityDictionaries对象", description="字典表")
 public class QualityDictionaries extends BaseEntity {
@@ -19,12 +19,16 @@ public class QualityDictionaries extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "名称")
-    @TableField("name")
-    private String name;
+    @TableField("dictName")
+    private String dictName;
 
     @ApiModelProperty(value = "值")
-    @TableField("value")
-    private String value;
+    @TableField("dictValue")
+    private String dictValue;
+
+    @ApiModelProperty(value = "类型")
+    @TableField("dictType")
+    private String dictType;
 
     @ApiModelProperty(value = "父级编号")
     @TableField("parentId")
@@ -39,20 +43,28 @@ public class QualityDictionaries extends BaseEntity {
     private String remark;
 
 
-    public String getName() {
-        return name;
+    public String getDictName() {
+        return dictName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDictName(String dictName) {
+        this.dictName = dictName;
     }
 
-    public String getValue() {
-        return value;
+    public String getDictValue() {
+        return dictValue;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setDictValue(String dictValue) {
+        this.dictValue = dictValue;
+    }
+
+    public String getDictType() {
+        return dictType;
+    }
+
+    public void setDictType(String dictType) {
+        this.dictType = dictType;
     }
 
     public String getParentId() {
@@ -82,8 +94,9 @@ public class QualityDictionaries extends BaseEntity {
     @Override
     public String toString() {
         return "QualityDictionaries{" +
-        "name=" + name +
-        ", value=" + value +
+        "dictName=" + dictName +
+        ", dictValue=" + dictValue +
+        ", dictType=" + dictType +
         ", parentId=" + parentId +
         ", sort=" + sort +
         ", remark=" + remark +

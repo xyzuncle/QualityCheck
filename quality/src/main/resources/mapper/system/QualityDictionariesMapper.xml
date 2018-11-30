@@ -8,8 +8,9 @@
     <result column="deleted" property="deleted" />
     <result column="crtTime" property="crtTime" />
     <result column="updTime" property="updTime" />
-        <result column="name" property="name" />
-        <result column="value" property="value" />
+        <result column="dictName" property="dictName" />
+        <result column="dictValue" property="dictValue" />
+        <result column="dictType" property="dictType" />
         <result column="parentId" property="parentId" />
         <result column="sort" property="sort" />
         <result column="remark" property="remark" />
@@ -21,7 +22,7 @@
         deleted,
         crtTime,
         updTime,
-        name, value, parentId, sort, remark
+        dictName, dictValue, dictType, parentId, sort, remark
     </sql>
 
 </mapper>

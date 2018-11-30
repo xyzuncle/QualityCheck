@@ -49,7 +49,7 @@
         <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
             #{item}
         </foreach>
-        and deleted=0 ORDER BY crtTime DESC
+        and deleted=0 ORDER BY sort asc
     </select>
 
 
@@ -70,7 +70,7 @@
         <if test="roleID != null">
             and  id in (select rm.menuId from quality_role_menu rm where rm.roleID=#{roleID})
         </if>
-        and deleted=0 ORDER BY sort,crtTime asc
+        and deleted=0 ORDER BY sort  asc
     </select>
 
 

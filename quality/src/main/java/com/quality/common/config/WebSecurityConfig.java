@@ -62,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {//1
                       //退出成功后返回的url
                    //.logoutSuccessUrl("")
                      //退出之后记录个日志什么的处理逻辑
-                   // .logoutSuccessHandler()
+                    .logoutSuccessHandler(loginOutHandler())
                 //退出的时候，删除cookies，制定cookies的names
                     //.deleteCookies("JSESSIONID")
 				.and()

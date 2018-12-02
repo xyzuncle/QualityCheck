@@ -1,6 +1,5 @@
 package com.quality;
 
-import com.quality.activiti.service.IWorkflowService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -9,6 +8,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sunzw on 2018/11/29.
@@ -22,10 +24,18 @@ public class ActivitiTest {
     @Autowired
     private TaskService taskService;
 
+
     @Test
     public void TestStartProcess() {
         System.out.println("Start.........");
-        ProcessInstance pi = runtimeService.startProcessInstanceByKey("leaveBill", "1");
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("inputUser", "John Doe");
+
+        //ProcessInstance pi = runtimeService.startProcessInstanceByKey("LeaveBill", "2");
+        ProcessInstance pi = runtimeService.startProcessInstanceByKey("LeaveBill", variables);
         System.out.println("流程启动成功，流程id:"+pi.getId());
     }
+
+
+
 }

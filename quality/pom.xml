@@ -214,10 +214,16 @@
 
 		<!--工作流引擎-->
 		<dependency>
-			<groupId>org.activiti</groupId>
-			<artifactId>activiti-spring-boot-starter-basic</artifactId>
-			<version>5.21.0</version>
-		</dependency>
+		<groupId>org.activiti</groupId>
+		<artifactId>activiti-spring-boot-starter-basic</artifactId>
+		<version>5.22.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.mybatis</groupId>
+					<artifactId>mybatis</artifactId>
+				</exclusion>
+			</exclusions>
+	</dependency>
 
     </dependencies>
 

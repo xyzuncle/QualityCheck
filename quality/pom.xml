@@ -213,17 +213,23 @@
 		</dependency>
 
 		<!--工作流引擎-->
-		<dependency>
+	<!--	<dependency>
 		<groupId>org.activiti</groupId>
 		<artifactId>activiti-spring-boot-starter-basic</artifactId>
-		<version>5.22.0</version>
+		<version>RELEASE</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.mybatis</groupId>
 					<artifactId>mybatis</artifactId>
 				</exclusion>
 			</exclusions>
-	</dependency>
+	</dependency>-->
+
+		<dependency>
+			<groupId>org.flowable</groupId>
+			<artifactId>flowable-spring-boot-starter</artifactId>
+			<version>6.3.0</version>
+		</dependency>
 
     </dependencies>
 

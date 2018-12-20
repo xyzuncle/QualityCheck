@@ -1,9 +1,10 @@
 package com.quality;
 
 
-import org.flowable.spring.boot.SecurityAutoConfiguration;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class QualityApplication {

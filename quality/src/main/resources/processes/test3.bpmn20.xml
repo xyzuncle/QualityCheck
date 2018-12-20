@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:flowable="http://flowable.org/bpmn"
+             typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef">
+  <!--排他网关-->
+  <process id="myProcess_2" isClosed="false" isExecutable="true" processType="None">
+
+    <startEvent id="_2" name="开始"/>
+    <sequenceFlow sourceRef="_2" targetRef="_3"/>
+
+    <userTask flowable:exclusive="true" id="_3" name="报销流程" flowable:assignee="${assigenName}"/>
+    <sequenceFlow sourceRef="_3" targetRef="_4"/>
+
+    <!--默认实现流-->
+    <exclusiveGateway id="_4" name="排他网关" default="flow1"/>
+
+    <sequenceFlow id="flow1" sourceRef="_4" targetRef="caiwu" name="默认报销流程"/>
+
+
+    <sequenceFlow id="flow2" sourceRef="_4" targetRef="bumen" name="大于100小于500">
+        <conditionExpression xsi:type="tFormalExpression">
+          <![CDATA[${price>=100 && price <500}]]>
+        </conditionExpression>
+    </sequenceFlow>
+
+    <sequenceFlow id="flow3" sourceRef="_4" targetRef="zongjingli" name="大于500小于1000">
+      <conditionExpression xsi:type="tFormalExpression">
+        <![CDATA[${price>=500 && price<1000}]]>
+      </conditionExpression>
+    </sequenceFlow>
+
+    <userTask flowable:exclusive="true" id="bumen" name="审批部门经理" flowable:assignee="${bumen}" />
+    <sequenceFlow sourceRef="bumen" targetRef="end"/>
+    <userTask flowable:exclusive="true" id="caiwu" name="财务" flowable:assignee="${caiwu}"/>
+    <sequenceFlow sourceRef="caiwu" targetRef="end"/>
+    <userTask flowable:exclusive="true" id="zongjingli" name="审批总经理" flowable:assignee="${zongjingli}"/>
+    <sequenceFlow sourceRef="zongjingli" targetRef="end"/>
+
+
+    <endEvent id="end" name="结束"/>
+
+
+
+  </process>
+
+
+</definitions>

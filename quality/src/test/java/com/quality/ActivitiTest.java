@@ -39,10 +39,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static javafx.scene.input.KeyCode.H;
 
@@ -788,5 +785,14 @@ public class ActivitiTest {
         String taskId="62505";
         String userId="分享牛8";
         taskService.claim(taskId,userId);
+    }
+
+
+    @Test
+    public void test(){
+        //延迟两秒激活任务
+        Date date = new Date(new Date().getTime()+2*1000);
+        //这个方式是根据时间激活，默认激活后挂起
+        repositoryService.createDeployment().activateProcessDefinitionsOn(date);
     }
 }

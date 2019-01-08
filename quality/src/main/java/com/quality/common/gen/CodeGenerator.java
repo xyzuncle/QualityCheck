@@ -19,8 +19,8 @@ import java.util.Scanner;
 
 public class CodeGenerator {
     //更新阿里云的数据库密码
-    private static String URL="jdbc:mysql://39.105.201.114:3306/quality?characterEncoding=utf8&useSSL=true";
-
+   // private static String URL="jdbc:mysql://39.105.201.114:3306/quality?characterEncoding=utf8&useSSL=true";
+    private static String Local_URL="jdbc:mysql://localhost:3306/quality?characterEncoding=utf8&useSSL=true";
     /**
      * <p>
      * 读取控制台内容
@@ -46,8 +46,8 @@ public class CodeGenerator {
 
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        //String projectPath = "D:\\workspace\\idea_workspace\\qc_workspace\\QualityCheck\\quality";
-        String projectPath = "D:\\IDEA\\QualityCheck\\quality";
+        String projectPath = "D:\\workspace\\idea_workspace\\qc_workspace\\QualityCheck\\quality";
+        //String projectPath = "D:\\IDEA\\QualityCheck\\quality";
         gc.setOutputDir(projectPath + "/src/main/java");
         gc.setAuthor("yerui");
         //允许重写
@@ -65,12 +65,13 @@ public class CodeGenerator {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl(URL);
+        dsc.setUrl(Local_URL);
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
         //数据库密码，阿里云数据库密码
-        dsc.setPassword("7731ea5491bc");
+        //dsc.setPassword("7731ea5491bc");
+        dsc.setPassword("123456");
         mpg.setDataSource(dsc);
 
         // 包配置

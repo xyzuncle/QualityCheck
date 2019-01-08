@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quality.system.mapper.QualityFlowMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quality.system.entity.QualityFlow">
+    <result column="id" property="id" />
+        <result column="processId" property="processId" />
+        <result column="taskId" property="taskId" />
+        <result column="taskName" property="taskName" />
+        <result column="taskExpression" property="taskExpression" />
+        <result column="taskValue" property="taskValue" />
+        <result column="type" property="type" />
+        <result column="seqName" property="seqName" />
+        <result column="seqId" property="seqId" />
+        <result column="seqExpression" property="seqExpression" />
+        <result column="seqValue" property="seqValue" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        processId, taskId, taskName, taskExpression, taskValue, type, seqName, seqId, seqExpression, seqValue
+    </sql>
+
+</mapper>

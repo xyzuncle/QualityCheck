@@ -1,6 +1,8 @@
 package com.quality;
 
 import com.quality.common.config.CustomProcessGenerator;
+import com.quality.system.entity.QualityFlow;
+import com.quality.system.service.impl.QualityFlowServiceImpl;
 import org.apache.commons.io.FileUtils;
 import org.flowable.bpmn.model.*;
 import org.flowable.bpmn.model.Process;
@@ -62,6 +64,9 @@ public class FormTest {
 
     @Autowired
     CustomProcessGenerator customProcessGenerator;
+
+    @Autowired
+    QualityFlowServiceImpl qualityFlowService;
 
 
     @Test
@@ -454,6 +459,7 @@ public class FormTest {
             System.out.println(outgoingFlows.get(0).getConditionExpression());
         });*/
 
+        //获取所有流水的id,name 与表达式
       /*  sequenceFlowList.stream().forEach(e->{
             if(e.getConditionExpression()!=null){
                 System.out.println(e.getId());
@@ -465,7 +471,39 @@ public class FormTest {
             }
         });*/
 
+    }
 
+    /**
+     * 这个方式是为了测试赋值
+     */
+    @Test
+    public void putBmpmModel(){
+        //假设我根据一个流程ID得到了BPMN对象
+        String processDfId = "changyi:2:7f8893b6-0f78-11e9-abc8-001e64f20cfb";
+        BpmnModel bpmnModel=  repositoryService.getBpmnModel(processDfId);
+        //这个process指的是整个流程文件，也就是XML文件
+        Process  process = bpmnModel.getProcesses().get(0);
+        List<UserTask> userTasks =  process.findFlowElementsOfType(UserTask.class);
+        List<ExclusiveGateway>  gatewayList =  process.findFlowElementsOfType(ExclusiveGateway.class);
+        List<SequenceFlow> sequenceFlowList = process.findFlowElementsOfType(SequenceFlow.class);
+
+        userTasks.stream().forEach(e->{
+            //循环这次请求，得到所有的任务，并保存在表里
+            QualityFlow qualityFlow = new QualityFlow();
+            //保存流程定义ID
+            qualityFlow.setProcessId(processDfId);
+            qualityFlow.setTaskId(e.getId());
+            qualityFlow.setTaskName(e.getName());
+            qualityFlow.setType("1");
+            qualityFlow.setTaskExpression(e.getAssignee());
+            //这里不同前端获取，而是自己设置一个值
+           // qualityFlow.setTaskValue();
+
+            System.out.println(e.getId());
+            System.out.println(e.getName());
+            System.out.println(e.getAssignee());
+            System.out.println("##################");
+        });
 
     }
 

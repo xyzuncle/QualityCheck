@@ -15,6 +15,9 @@
         <result column="seqId" property="seqId" />
         <result column="seqExpression" property="seqExpression" />
         <result column="seqValue" property="seqValue" />
+        <result column="crtTime" property="crtTime"></result>
+        <result column="updTime" property="updTime"></result>
+        <result column="deleted" property="deleted"></result>
     </resultMap>
 
     <!-- 通用查询结果列 -->

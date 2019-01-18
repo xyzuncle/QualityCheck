@@ -1,12 +1,12 @@
-/** EasyWeb spa v3.0.3 data:2018-11-19 */
+/** EasyWeb spa v3.0.6 data:2018-12-24 */
 
-layui.define(['layer', 'config'], function (exports) {
+layui.define(['layer', 'config', 'layRouter'], function (exports) {
     var $ = layui.jquery;
     var layer = layui.layer;
     var config = layui.config;
+    var layRouter = layui.layRouter;
 
     var admin = {
-        isRefresh: false,
         // 设置侧栏折叠
         flexible: function (expand) {
             var isExapnd = $('.layui-layout-admin').hasClass('admin-nav-mini');
@@ -28,7 +28,7 @@ layui.define(['layer', 'config'], function (exports) {
             $('.layui-layout-admin .layui-side .layui-nav .layui-nav-item').removeClass('layui-this');
             if (url && url != '') {
                 $('.layui-layout-admin .layui-side .layui-nav .layui-nav-item').removeClass('layui-nav-itemed');
-                var $a = $('.layui-layout-admin .layui-side .layui-nav a[href="#!' + url + '"]');
+                var $a = $('.layui-layout-admin .layui-side .layui-nav a[href="#' + url + '"]');
                 $a.parent().addClass('layui-this');  // 选中当前
                 $a.parent('dd').parents('.layui-nav-child').parent().addClass('layui-nav-itemed');  // 展开所有父级
             }
@@ -61,7 +61,7 @@ layui.define(['layer', 'config'], function (exports) {
         // 封装layer.open
         open: function (param) {
             if (!param.area) {
-                param.area = (param.type == 2) ? ['360px', '300px'] : '500px';
+                param.area = (param.type == 2) ? ['360px', '300px'] : '360px';
             }
             if (!param.skin) {
                 param.skin = 'layui-layer-admin';
@@ -160,7 +160,7 @@ layui.define(['layer', 'config'], function (exports) {
         },
         // 显示加载动画
         showLoading: function (elem) {
-            $(elem).append('<div class="page-loading"><div class="rubik-loader"></div></div>');
+            $(elem).append('<div class="page-loading" style="z-index: 998;"><div class="rubik-loader"></div></div>');
         },
         // 移除加载动画
         removeLoading: function (elem) {
@@ -183,7 +183,7 @@ layui.define(['layer', 'config'], function (exports) {
             var $tabTitle = $('.layui-layout-admin .layui-body .layui-tab .layui-tab-title');
             var left = $tabTitle.scrollLeft();
             if ('left' === d) {
-                $tabTitle.scrollLeft(left - 120);
+                $tabTitle.animate({'scrollLeft': left - 120}, 100);
             } else if ('auto' === d) {
                 var autoLeft = 0;
                 $tabTitle.children("li").each(function () {
@@ -193,15 +193,14 @@ layui.define(['layer', 'config'], function (exports) {
                         autoLeft += $(this).outerWidth();
                     }
                 });
-                $tabTitle.scrollLeft(autoLeft - 47);
+                $tabTitle.animate({'scrollLeft': autoLeft - 47}, 100);
             } else {
-                $tabTitle.scrollLeft(left + 120);
+                $tabTitle.animate({'scrollLeft': left + 120}, 100);
             }
         },
         // 刷新当前tab
         refresh: function () {
-            admin.isRefresh = true;
-            Q.refresh();
+            layRouter.refresh();
         },
         // 关闭选项卡操作菜单
         closeTabOperNav: function () {
@@ -435,7 +434,8 @@ layui.define(['layer', 'config'], function (exports) {
 
     // 解决从手机屏幕跟电脑屏幕切换表格宽度自适应
     $(window).on('resize', function () {
-        if (isResize && $('.layui-table-view').length > 0) {
+        /* && $('.layui-table-view').length > 0*/
+        if (isResize) {
             setTimeout(function () {
                 isResize = false;
                 $(window).resize();

@@ -1,17 +1,26 @@
 <style>
-    .layui-form-item {
+    #advForm .layui-form-item {
         margin-bottom: 0;
         margin-top: 20px;
     }
 
-    .layui-form-item .layui-inline {
+    #advForm .layui-form-item .layui-inline {
         margin-bottom: 25px;
         margin-right: 0;
     }
 </style>
 
+<!-- 关闭Tab时顶部标题 -->
+<div class="layui-body-header">
+    <span class="layui-body-header-title">复杂表单</span>
+    <span class="layui-breadcrumb pull-right">
+        <a href="#/">首页</a>
+        <a><cite>复杂表单</cite></a>
+    </span>
+</div>
+
 <!-- 正文开始 -->
-<div class="layui-fluid">
+<div class="layui-fluid" id="advForm">
     <div class="layui-card">
         <div class="layui-card-header">仓库信息</div>
         <div class="layui-card-body">
@@ -151,13 +160,14 @@
 
 <!-- js部分 -->
 <script>
-    layui.use(['layer', 'form', 'table', 'util', 'laydate'], function () {
+    layui.use(['layer', 'form', 'table', 'util', 'laydate', 'config'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
         var table = layui.table;
         var util = layui.util;
         var laydate = layui.laydate;
+        var config = layui.config;
 
         form.render();
 
@@ -200,7 +210,11 @@
                 var name = $that.attr('name');
                 var val = $that.val();
                 if (!val) {
-                    $('.layui-tab-item.layui-show').animate({
+                    var wrapperDOM = '.layui-body>.layui-fluid';
+                    if (config.pageTabs) {
+                        wrapperDOM = '.layui-tab-item.layui-show';
+                    }
+                    $(wrapperDOM).animate({
                         scrollTop: $that.offset().top - 150
                     }, 300, function () {
                         layer.tips('必填项不能为空', $that, {

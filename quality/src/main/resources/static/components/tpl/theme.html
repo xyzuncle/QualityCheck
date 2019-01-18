@@ -140,13 +140,17 @@
             <div class="set-item-ctrl" style="margin-right: 15px;">
                 <input id="setFooter" lay-filter="setFooter" type="checkbox" lay-skin="switch" lay-text="开启|关闭">
             </div>
+            <label class="set-item-label" style="width: auto;">多标签：</label>
+            <div class="set-item-ctrl">
+                <input id="setTab" lay-filter="setTab" type="checkbox" lay-skin="switch" lay-text="开启|关闭">
+            </div>
         </div>
     </div>
 
 </div>
 
 <script>
-    layui.use(['layer', 'config','form'], function () {
+    layui.use(['layer', 'config', 'form'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var config = layui.config;
@@ -181,12 +185,20 @@
             var checked = data.elem.checked;
             layui.data(config.tableName, {key: 'openFooter', value: checked});
             if (checked) {
-                top.layui.jquery('.layui-layout-admin .layui-footer').css('display', 'block');
-                top.layui.jquery('.layui-layout-admin .layui-body').css('bottom', '44px');
+                $('body.layui-layout-body').removeClass('close-footer');
             } else {
-                top.layui.jquery('.layui-layout-admin .layui-footer').css('display', 'none');
-                top.layui.jquery('.layui-layout-admin .layui-body').css('bottom', '0');
+                $('body.layui-layout-body').addClass('close-footer');
             }
+        });
+
+        // 关闭/开启多标签
+        var openTab = layui.data(config.tableName).openTab;
+        $('#setTab').prop('checked', openTab == undefined ? config.pageTabs : openTab);
+        form.render('checkbox');
+        form.on('switch(setTab)', function (data) {
+            var checked = data.elem.checked;
+            layui.data(config.tableName, {key: 'openTab', value: checked});
+            location.reload();
         });
 
     });

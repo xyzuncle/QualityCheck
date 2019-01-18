@@ -49,6 +49,22 @@
         display: inline-block;
         font-size: 60px;
     }
+
+    .note-item-del {
+        position: absolute;
+        right: 3px;
+        top: 3px;
+        display: none;
+        color: #FF5722;
+    }
+
+    .note-item-del.show {
+        display: inline-block;
+    }
+
+    .note-item-del .layui-icon {
+        font-size: 22px;
+    }
 </style>
 
 <div class="layui-card-header">本地便签</div>
@@ -141,6 +157,7 @@
                 var str = '<div class="note-item" data-id="' + item.id + '">';
                 str += '<div class="note-item-content">' + item.content + '</div>';
                 str += '<div class="note-item-time">' + item.time + '</div>';
+                str += '<span class="note-item-del"><i class="layui-icon layui-icon-close-fill"></i></span>';
                 str += '</div>';
                 $('.note-wrapper').prepend(str);
             }
@@ -155,6 +172,25 @@
             $('.note-item').click(function () {
                 var position = parseInt($(this).attr('data-id'));
                 showNote(dataList[position]);
+            });
+
+            // 鼠标经过显示删除按钮
+            $('.note-item').mouseenter(function () {
+                $(this).find('.note-item-del').addClass('show');
+            });
+            $('.note-item').mouseleave(function () {
+                $(this).find('.note-item-del').removeClass('show');
+            });
+
+            // 点击删除
+            $('.note-item-del').click(function () {
+                var position = parseInt($(this).parent().attr('data-id'));
+                dataList.splice(position, 1);
+                for (var i = 0; i < dataList.length; i++) {
+                    dataList[i].id = i;
+                }
+                putDataList();
+                renderList();
             });
         }
 

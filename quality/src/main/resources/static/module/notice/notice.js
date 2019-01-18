@@ -8,7 +8,6 @@
 layui.define(['jquery'], function (exports) {
     var $ = layui.jquery;
 
-
     var PLUGIN_NAME = 'iziToast';
     var iziToast = {};
     var supports = !!document.querySelector; // Feature test
@@ -47,7 +46,8 @@ layui.define(['jquery'], function (exports) {
         onOpen: function () {
         },
         onClose: function () {
-        }
+        },
+        useAppend: false
     };
 
     //
@@ -622,7 +622,8 @@ layui.define(['jquery'], function (exports) {
                 $wrapper.classList.add(position);
                 document.body.appendChild($wrapper);
             }
-            if (settings.position == "topLeft" || settings.position == "topCenter" || settings.position == "topRight") {
+            if ((settings.position == "topLeft" || settings.position == "topCenter" || settings.position == "topRight") && !settings.useAppend) {
+
                 $wrapper.insertBefore($toastCapsule, $wrapper.firstChild);
             } else {
                 $wrapper.appendChild($toastCapsule);
@@ -708,6 +709,30 @@ layui.define(['jquery'], function (exports) {
             });
         }
     };
+
+    iziToast.msg = function (msg, options) {
+        var icons = ['ico-msgOk', 'ico-msgError', 'ico-msgWran', 'ico-msgLoad'];
+        options.icon = icons[options.icon - 1];
+        var theme = {
+            title: '',
+            message: msg,
+            position: 'topCenter',
+            transitionIn: 'fadeInDown',
+            transitionOut: 'fadeOutUp',
+            progressBar: false,
+            animateInside: false,
+            close: false,
+            class: 'msg',
+            timeout: 3000,
+            useAppend: true
+        };
+
+        var settings = extend(config, options || {});
+        settings = extend(theme, settings || {});
+
+        this.show(settings);
+    };
+
 
     layui.link(layui.cache.base + 'notice/notice.css');
 

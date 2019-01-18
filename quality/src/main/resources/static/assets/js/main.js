@@ -1,4 +1,4 @@
-/** EasyWeb spa v3.0.3 data:2018-11-19 */
+/** EasyWeb spa v3.0.4 data:2018-12-04 */
 
 layui.config({
     base: 'module/'
@@ -8,10 +8,13 @@ layui.config({
     dropdown: 'dropdown/dropdown',
     notice: 'notice/notice',
     step: 'step-lay/step',
+    dtree: 'dtree/dtree',
+    citypicker: 'city-picker/city-picker',
+    tableSelect: 'tableSelect/tableSelect',
     treeSelect:'treeSelect/treeSelect',
     iconPicker:'iconPicker/iconPicker',
     authtree:'authtree/authtree'
-}).use(['layer', 'element', 'config', 'index', 'admin', 'laytpl'], function () {
+}).use(['layer', 'element', 'config', 'index', 'admin', 'laytpl','layRouter'], function () {
     var $ = layui.jquery;
     var layer = layui.layer;
     var element = layui.element;
@@ -19,30 +22,18 @@ layui.config({
     var index = layui.index;
     var admin = layui.admin;
     var laytpl = layui.laytpl;
+    var layRouter = layui.layRouter;
 
-   /* // 检查是否登录
-    if (!config.getToken()) {
-        return location.replace('login.html');
+    // 检查是否登录
+   /* if (!config.getToken()) {
+        return location.replace('components/login/login.html');
     }*/
-
-    // 多标签加载主页
-    if (config.pageTabs) {
-        element.tabAdd('admin-pagetabs', {
-            title: '<i class="layui-icon layui-icon-home"></i>',
-            content: '<div id="console"></div>',
-            id: 'console'
-        });
-        $('#console').load('components/console/console.html');
-    }
 
     // 获取用户信息
     admin.req('QualityUser/userInfo.do', {}, function (data) {
         if (200 == data.code) {
-            if(data.user){
-                config.putUser(data.user);
-                $('#huName').text(data.user.userName);
-            }
-
+            config.putUser(data.user);
+            $('#huName').text(data.user.userName);
         } else {
             layer.msg('获取用户失败', {icon: 2});
         }
@@ -63,21 +54,22 @@ layui.config({
 
     // 加载侧边栏
     admin.req('QualityMenu/getQualityMenuTree.do', {}, function (data) {
-    laytpl(sideNav.innerHTML).render(data, function (html) {
+        laytpl(sideNav.innerHTML).render(data, function (html) {
             $('.layui-layout-admin .layui-side .layui-nav').html(html);
             element.render('nav');
-            admin.activeNav(Q.lash);
         });
-        // 注册路由
-        index.regRouter(data);
-        Q.init({
-            index: 'welcome'
+        index.regRouter(data);  // 注册路由
+        index.loadHome({  // 加载主页
+            url: '#/console/welcome',
+            name: '<i class="layui-icon layui-icon-home"></i>'
         });
     }, 'get');
 
     // 退出登录
     $('#btnLogout').click(function () {
-        layer.confirm('确定退出登录？', function () {
+        layer.confirm('确定退出登录？', {
+            skin: 'layui-layer-admin'
+        }, function () {
             config.removeToken();
             $.ajax({
                 url: config.base_server + 'logout',
@@ -86,7 +78,6 @@ layui.config({
                     location.reload();
                 }
             })
-
         });
     });
 
@@ -100,7 +91,9 @@ layui.config({
 
     // 个人信息
     $('#setInfo').click(function () {
-
+        //单页面注册路由
+        var data ={title:"个人信息",url:"#/template/user-info"}
+        index.openNewTab(data)
     });
 
     // 消息
@@ -115,6 +108,19 @@ layui.config({
     // 移除loading动画
     setTimeout(function () {
         $('.page-loading').remove();
+        // 提示
+      /*  if (!config.pageTabs) {
+            layer.confirm('SPA版本默认关闭多标签功能，你可以在设置界面开启', {
+                skin: 'layui-layer-admin',
+                area: '280px',
+                title: '温馨提示',
+                shade: 0,
+                btn: ['打开设置', '知道了']
+            }, function (i) {
+                layer.close(i);
+                $('a[ew-event="theme"]').trigger('click');
+            });
+        }*/
     }, 500);
 });
 

@@ -44,6 +44,8 @@ body {
 .login-body .login-captcha {
     width: 100%;
     cursor: pointer;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
 }
 
 .login-body .login-other > * {

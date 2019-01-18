@@ -1,4 +1,4 @@
-/** EasyWeb spa v3.0.3 data:2018-11-19 */
+/** EasyWeb spa v3.0.6 data:2018-12-24 */
 
 html {
     background-color: #f2f2f2;
@@ -120,6 +120,7 @@ html {
     top: 50px;
     transition: left .3s;
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .layui-fluid {
@@ -156,6 +157,15 @@ html {
     color: #333;
 }
 
+/** 关闭底部 */
+.close-footer .layui-layout-admin .layui-footer {
+    display: none;
+}
+
+.close-footer .layui-layout-admin .layui-body {
+    bottom: 0;
+}
+
 /** 底部样式结束 */
 
 /** 侧边栏样式 */
@@ -190,6 +200,41 @@ html {
 
 .layui-layout-admin .layui-side .layui-nav .layui-nav-more {
     right: 15px;
+}
+
+.layui-nav.arrow2 .layui-nav-more {
+    font-family: layui-icon !important;
+    font-size: 12px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+    width: auto;
+    height: auto;
+    line-height: normal;
+    border: none;
+    top: 23px;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    transition: all .1s;
+    -webkit-transition: all .1s;
+}
+
+.layui-nav.arrow2 .layui-nav-child .layui-nav-more {
+    top: 13px;
+}
+
+.layui-nav.arrow2 .layui-nav-more:before {
+    content: "\e61a";
+}
+
+.layui-nav.arrow2 .layui-nav-itemed > a > .layui-nav-more {
+    transform: rotate(-180deg);
+    -ms-transform: rotate(-180deg);
+    -moz-transform: rotate(-180deg);
+    -webkit-transform: rotate(-180deg);
+    -o-transform: rotate(-180deg);
 }
 
 .layui-layout-admin .layui-side .layui-nav .layui-nav-item .layui-nav-child a {
@@ -473,6 +518,15 @@ html {
     overflow: hidden;
     border-right: 1px solid #eeeeee;
     vertical-align: top;
+    padding: 0 30px 0 15px;
+}
+
+.layui-layout-admin .layui-body > .layui-tab > .layui-tab-title li:first-child {
+    padding: 0 15px;
+}
+
+.layui-layout-admin .layui-body > .layui-tab > .layui-tab-title li cite {
+    font-style: normal;
 }
 
 .layui-layout-admin .layui-body > .layui-tab > .layui-tab-title .layui-tab-bar {
@@ -499,6 +553,9 @@ html {
     line-height: 16px;
     /* border-radius: 50%;*/
     font-size: 12px;
+    position: absolute;
+    top: 12px;
+    right: 8px;
 }
 
 .layui-layout-admin .layui-body > .layui-tab > .layui-tab-title li:first-child .layui-tab-close {
@@ -697,11 +754,34 @@ html {
     font-size: 16px;
     background-color: #fff;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 1000;
 }
 
 .layui-body-header-title {
     border-left: 4px solid #009688;
     padding-left: 6px;
+}
+
+.layui-body-header + div {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 45px;
+    bottom: 0;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tab-open .layui-body-header {
+    display: none;
+}
+
+.tab-open .layui-body-header + div {
+    position: static;
+    top: 0;
 }
 
 /** 表格上方工具栏样式 */
@@ -714,7 +794,7 @@ html {
     margin-bottom: 0;
 }
 
-.layui-table-view {
+.toolbar + table + .layui-table-view {
     margin: 0;
 }
 
@@ -845,42 +925,25 @@ html {
 
 /** 滚动条样式美化 */
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-::-webkit-scrollbar-button {
-    display: none;
-}
-
-::-webkit-scrollbar-button:vertical {
-    display: block;
-    height: 1px;
+    width: 8px;
+    height: 8px;
+    background-color: #F5F5F5;
 }
 
 ::-webkit-scrollbar-track {
-    background-color: #505050;
-}
-
-::-webkit-scrollbar-track-piece {
-    background-color: #F1F1F1;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
 }
 
 ::-webkit-scrollbar-thumb {
-    margin-right: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
     background-color: #A6A6A6;
 }
 
 ::-webkit-scrollbar-thumb:hover {
     background-color: #7f7f7f;
-}
-
-::-webkit-scrollbar-corner {
-    background-color: #505050;
-}
-
-::-webkit-scrollbar-resizer {
-    background-color: #F1F1F1;
 }
 
 @media screen and (max-width: 750px) {
@@ -890,7 +953,192 @@ html {
     }
 }
 
+.mini-bar::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+.layui-nav-item.admin-nav-hover > .layui-nav-child::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+}
+
 /** 下拉菜单默认隐藏 */
 .dropdown-menu {
     display: none;
+}
+
+/** 基于layui nav的下拉菜单 */
+
+.nav-btn {
+    position: static;
+    display: inline-flex;
+    padding: 0;
+    background: none;
+    vertical-align: inherit;
+}
+
+.nav-btn .layui-nav-bar {
+    display: none;
+}
+
+.nav-btn .layui-nav-item {
+    line-height: 38px;
+    border-left: 1px solid rgba(255, 255, 255, .5);
+    background-color: #009688;
+}
+
+.nav-btn .layui-nav-item > a:hover {
+    background: rgba(255, 255, 255, .2);
+}
+
+.nav-btn .layui-nav-item:first-child {
+    border-left: none;
+    border-bottom-left-radius: 2px;
+    border-top-left-radius: 2px;
+}
+
+.nav-btn .layui-nav-item:nth-last-child(2) {
+    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+.nav-btn a {
+    cursor: pointer;
+}
+
+.nav-btn .layui-nav-item > a {
+    padding: 0 22px 0 10px;
+    color: #fff;
+}
+
+.nav-btn .layui-nav-item .layui-icon {
+    font-size: 16px;
+}
+
+.nav-btn .layui-nav-item.text-center > a {
+    padding: 0 10px 0 10px;
+}
+
+.nav-btn .layui-nav-more {
+    right: 8px;
+    border-color: #fff transparent transparent;
+}
+
+.nav-btn .layui-nav-mored {
+    border-color: transparent transparent #fff;
+}
+
+.nav-btn .layui-nav-child {
+    top: 43px;
+    padding: 2px 0;
+}
+
+.nav-btn .layui-nav-child hr {
+    margin: 2px 0;
+}
+
+.layui-nav-child.align-top {
+    top: auto;
+    bottom: 43px;
+}
+
+.layui-nav-child.align-right {
+    right: 0;
+    left: auto;
+}
+
+.nav-btn-lg .layui-nav-item {
+    line-height: 44px;
+}
+
+.nav-btn-lg .layui-nav-child {
+    top: 49px;
+}
+
+.nav-btn-lg .layui-nav-child.align-top {
+    top: auto;
+    bottom: 49px;
+}
+
+.nav-btn-sm .layui-nav-item {
+    line-height: 30px;
+}
+
+.nav-btn-sm .layui-nav-child {
+    top: 35px;
+}
+
+.nav-btn-sm .layui-nav-child.align-top {
+    top: auto;
+    bottom: 35px;
+}
+
+.nav-btn-xs .layui-nav-item {
+    line-height: 22px;
+}
+
+.nav-btn-xs .layui-nav-child {
+    top: 27px;
+}
+
+.nav-btn-xs .layui-nav-child.align-top {
+    top: auto;
+    bottom: 27px;
+}
+
+.nav-btn-sm .layui-nav-item > a {
+    font-size: 12px;
+    padding: 0 14px 0 8px;
+}
+
+.nav-btn.nav-btn-sm .layui-nav-more {
+    right: 5px;
+    border-width: 4px;
+    margin-top: -2px;
+}
+
+.nav-btn.nav-btn-sm .layui-nav-mored {
+    margin-top: -6px;
+}
+
+.nav-btn.nav-btn-sm .layui-nav-item.text-center > a {
+    padding: 0 8px 0 8px;
+}
+
+.nav-btn-xs .layui-nav-item > a {
+    font-size: 12px;
+    padding: 0 13px 0 5px;
+}
+
+.nav-btn.nav-btn-xs .layui-nav-more {
+    right: 4px;
+    border-width: 4px;
+    margin-top: -2px;
+}
+
+.nav-btn.nav-btn-xs .layui-nav-mored {
+    margin-top: -6px;
+}
+
+.nav-btn.nav-btn-xs .layui-nav-item.text-center > a {
+    padding: 0 5px 0 5px;
+}
+
+.nav-btn-lg .layui-nav-item > a {
+    font-size: 16px;
+    padding: 0 25px 0 13px;
+}
+
+.nav-btn.nav-btn-lg .layui-nav-more {
+    right: 10px;
+}
+
+.nav-btn.nav-btn-lg .layui-nav-item.text-center > a {
+    padding: 0 13px 0 13px;
+}
+
+/** dtree选中颜色重写 */
+.dtree-theme-item-this {
+    background-color: #eeeeee !important;
 }

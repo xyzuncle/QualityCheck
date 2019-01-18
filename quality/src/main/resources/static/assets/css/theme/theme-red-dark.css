@@ -9,13 +9,13 @@
 
 /** logo部分样式 */
 .layui-layout-admin .layui-header .layui-logo {
-    background-color: #AA3130;
+    background-color: #e63e3e;
     color: #eee;
 }
 
 /** header样式 */
 .layui-layout-admin .layui-header {
-    background-color: #AA3130;
+    background-color: #e63e3e;
 }
 
 .layui-layout-admin .layui-header a {
@@ -41,7 +41,7 @@
 
 /** 侧边栏样式 */
 .layui-layout-admin .layui-side {
-    background-color: #801a1a !important;
+    background-color: #28333E !important;
 }
 
 .layui-nav-tree .layui-nav-child dd.layui-this, .layui-nav-tree .layui-nav-child dd.layui-this a, .layui-nav-tree .layui-this, .layui-nav-tree .layui-this > a, .layui-nav-tree .layui-this > a:hover {
@@ -162,7 +162,7 @@
 
 /** PC端折叠鼠标经过样式 */
 .layui-layout-admin.admin-nav-mini .layui-side .layui-nav .layui-nav-item.admin-nav-hover > .layui-nav-child {
-    background: #801a1a !important;
+    background: #28333E !important;
 }
 
 /** 移动设备样式 */

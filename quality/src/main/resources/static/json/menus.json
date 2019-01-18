@@ -6,18 +6,15 @@
     "subMenus": [
       {
         "name": "控制台",
-        "url": "#!console",
-        "path": "console/console.html"
+        "url": "#/console/console1"
       },
       {
         "name": "分析页",
-        "url": "#!console2",
-        "path": "console/console2.html"
+        "url": "#/console/console2"
       },
       {
         "name": "欢迎页",
-        "url": "#!welcome",
-        "path": "console/welcome.html"
+        "url": "#/console/welcome"
       }
     ]
   },
@@ -28,28 +25,19 @@
     "subMenus": [
       {
         "name": "用户管理",
-        "url": "#!user",
-        "path": "system/user.html"
+        "url": "#/system/user"
       },
       {
         "name": "角色管理",
-        "url": "#!role",
-        "path": "system/role.html"
+        "url": "#/system/role"
       },
       {
         "name": "权限管理",
-        "url": "#!authorities",
-        "path": "system/authorities.html"
+        "url": "#/system/authorities"
       },
       {
         "name": "登录日志",
-        "url": "#!loginRecord",
-        "path": "system/loginRecord.html"
-      },
-      {
-        "name": "菜单管理",
-        "url": "#!menu",
-        "path": "system/menu.html"
+        "url": "#/system/loginRecord"
       }
     ]
   },
@@ -64,18 +52,15 @@
         "subMenus": [
           {
             "name": "基础表单",
-            "url": "#!form-basic",
-            "path": "template/form/form-basic.html"
+            "url": "#/template/form/form-basic"
           },
           {
             "name": "复杂表单",
-            "url": "#!form-advance",
-            "path": "template/form/form-advance.html"
+            "url": "#/template/form/form-advance"
           },
           {
             "name": "分步表单",
-            "url": "#!form-step",
-            "path": "template/form/form-step.html"
+            "url": "#/template/form/form-step"
           }
         ]
       },
@@ -85,18 +70,23 @@
         "subMenus": [
           {
             "name": "数据表格",
-            "url": "#!table-basic",
-            "path": "template/table/table-basic.html"
+            "url": "#/template/table/table-basic"
           },
           {
             "name": "复杂查询",
-            "url": "#!table-advance",
-            "path": "template/table/table-advance.html"
+            "url": "#/template/table/table-advance"
           },
           {
             "name": "树形表格",
-            "url": "#!table-tree",
-            "path": "template/table/table-tree.html"
+            "url": "#/template/table/table-tree"
+          },
+          {
+            "name": "左树右表",
+            "url": "#/template/table/table-ltrt"
+          },
+          {
+            "name": "表格缩略图",
+            "url": "#/template/table/table-img"
           }
         ]
       },
@@ -106,25 +96,51 @@
         "subMenus": [
           {
             "name": "500",
-            "url": "#!error-500",
-            "path": "template/error/error-500.html"
+            "url": "#/template/error/error-500"
           },
           {
             "name": "404",
-            "url": "#!error-404",
-            "path": "template/error/error-404.html"
+            "url": "#/template/error/error-404"
           },
           {
             "name": "403",
-            "url": "#!error-403",
-            "path": "template/error/error-403.html"
+            "url": "#/template/error/error-403"
           }
         ]
       },
       {
+        "name": "登录页",
+        "url": "javascript:;",
+        "subMenus": [
+          {
+            "name": "登录一",
+            "url": "./components/login/login.html"
+          },
+          {
+            "name": "登录二",
+            "url": "./components/login/login2.html"
+          },
+          {
+            "name": "登录三",
+            "url": "./components/login/login3.html"
+          }
+        ]
+      },
+      {
+        "name": "个人中心",
+        "url": "#/template/user-info"
+      },
+      {
+        "name": "文件管理",
+        "url": "#/template/file/fileMain"
+      },
+      {
         "name": "空白页",
-        "url": "#!empty",
-        "path": "other/empty.html"
+        "url": "#/other/empty"
+      },
+      {
+        "name": "路由传参",
+        "url": "#/other/routerDemo"
       }
     ]
   },
@@ -135,18 +151,19 @@
     "subMenus": [
       {
         "name": "下拉菜单",
-        "url": "#!dropdown",
-        "path": "plugin/dropdown.html"
+        "url": "#/plugin/dropdown"
       },
       {
         "name": "消息通知",
-        "url": "#!notice",
-        "path": "plugin/notice.html"
+        "url": "#/plugin/notice"
       },
       {
         "name": "admin风格弹窗",
-        "url": "#!admin-dialog",
-        "path": "plugin/dialog.html"
+        "url": "#/plugin/dialog"
+      },
+      {
+        "name": "更多扩展",
+        "url": "#/plugin/other"
       }
     ]
   },
@@ -157,23 +174,19 @@
     "subMenus": [
       {
         "name": "组件演示",
-        "url": "#!layui-demo",
-        "path": "https://www.layui.com/demo/button.html"
+        "url": "#/other/iframe/id=laydemo"
       },
       {
         "name": "layui文档",
-        "url": "#!layui-doc",
-        "path": "https://www.layui.com/doc/element/button.html#use"
+        "url": "#/other/iframe/id=layui"
       },
       {
         "name": "layer弹窗组件",
-        "url": "#!layui-layer",
-        "path": "https://layer.layui.com/"
+        "url": "#/other/iframe/id=layer"
       },
       {
         "name": "laydate日期组件",
-        "url": "#!layui-laydate",
-        "path": "https://www.layui.com/laydate/"
+        "url": "#/other/iframe/id=laydate"
       }
     ]
   },
@@ -212,8 +225,7 @@
                   },
                   {
                     "name": "百度一下",
-                    "url": "#!baidu2",
-                    "path": "https://baidu.com"
+                    "url": "#/other/iframe/id=baidu2"
                   }
                 ]
               }
@@ -225,8 +237,7 @@
   },
   {
     "name": "一级菜单",
-    "url": "#!baidu",
     "icon": "layui-icon-unlink",
-    "path": "https://baidu.com"
+    "url": "#/other/iframe/id=baidu"
   }
 ]

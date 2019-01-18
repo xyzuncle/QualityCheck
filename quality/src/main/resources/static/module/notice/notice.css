@@ -21,11 +21,30 @@
     font-family: 'Lato', arial;
     font-size: 14px;
     padding: 8px 50px 9px 0;
-    background: #eee;
+    background: #fff;
     border-color: #eee;
     min-height: 54px;
     width: 100%;
     pointer-events: all;
+}
+
+.iziToast.msg {
+    border-radius: 4px;
+    -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: #fff;
+    min-height: auto;
+    padding: 0;
+    padding-right: 6px !important;
+}
+
+.iziToast.msg:after {
+    box-shadow: none;
+}
+
+.iziToast.msg > .iziToast-body {
+    padding-left: 28px !important;
+    margin-left: 10px;
 }
 
 .iziToast > .iziToast-progressbar {
@@ -179,17 +198,55 @@
     height: 24px;
 }
 
-.iziToast > .iziToast-body > strong {
+.iziToast > .iziToast-body > .iziToast-icon.ico-msgOk {
+    background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNTQ1NTUwODEyMDgyIiBjbGFzcz0iaWNvbiIgc3R5bGU9IiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjM1OTgiIGRhdGEtc3BtLWFuY2hvci1pZD0iYTMxM3guNzc4MTA2OS4wLmkxIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PC9zdHlsZT48L2RlZnM+PHBhdGggZD0iTTUxMiA2NEMyNjQuOCA2NCA2NCAyNjQuOCA2NCA1MTJzMjAwLjggNDQ4IDQ0OCA0NDggNDQ4LTIwMC44IDQ0OC00NDhTNzU5LjIgNjQgNTEyIDY0ek00MjggNzE4LjRsLTQ1LjYgNDUuNi00NS42LTQ1LjYtMTE2LTExNy42IDQ1LjYtNDUuNkwzODMuMiA2NzJsMzY3LjItMzY3LjIgNDUuNiA0NS42LTM2OCAzNjh6IiBwLWlkPSIzNTk5IiBmaWxsPSIjNTJDNDFBIiBkYXRhLXNwbS1hbmNob3ItaWQ9ImEzMTN4Ljc3ODEwNjkuMC5pMCIgY2xhc3M9IiI+PC9wYXRoPjwvc3ZnPg==') no-repeat 50% 50%;
+    background-size: 80%;
+    width: 24px;
+    height: 24px;
+}
+
+.iziToast > .iziToast-body > .iziToast-icon.ico-msgError {
+    background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNTQ1NTUxOTk1OTYyIiBjbGFzcz0iaWNvbiIgc3R5bGU9IiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjM3NTMiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+PGRlZnM+PHN0eWxlIHR5cGU9InRleHQvY3NzIj48L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNNTEyIDY0QzI2NC44IDY0IDY0IDI2NC44IDY0IDUxMnMyMDAuOCA0NDggNDQ4IDQ0OCA0NDgtMjAwLjggNDQ4LTQ0OFM3NTkuMiA2NCA1MTIgNjR6IG0yMzguNCA2NDEuNmwtNDUuNiA0NS42TDUxMiA1NTcuNiAzMTguNCA3NTAuNGwtNDUuNi00NS42TDQ2Ny4yIDUxMiAyNzMuNiAzMTguNGw0NS42LTQ1LjZMNTEyIDQ2Ny4ybDE5My42LTE5My42IDQ1LjYgNDUuNkw1NTcuNiA1MTJsMTkyLjggMTkzLjZ6IiBwLWlkPSIzNzU0IiBmaWxsPSIjRjUyMjJEIj48L3BhdGg+PC9zdmc+') no-repeat 50% 50%;
+    background-size: 80%;
+    width: 24px;
+    height: 24px;
+}
+
+.iziToast > .iziToast-body > .iziToast-icon.ico-msgWran {
+    background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNTQ1NTUyMDcyNDM0IiBjbGFzcz0iaWNvbiIgc3R5bGU9IiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjM5NTAiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+PGRlZnM+PHN0eWxlIHR5cGU9InRleHQvY3NzIj48L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNNTEyIDY0QzI2NC44IDY0IDY0IDI2NC44IDY0IDUxMnMyMDAuOCA0NDggNDQ4IDQ0OCA0NDgtMjAwLjggNDQ4LTQ0OFM3NTkuMiA2NCA1MTIgNjR6IG0zMiA3MDRoLTY0di02NGg2NHY2NHogbS02NC0xMjhWMjU2aDY0djM4NGgtNjR6IiBwLWlkPSIzOTUxIiBmaWxsPSIjRkFBRDE0Ij48L3BhdGg+PC9zdmc+') no-repeat 50% 50%;
+    background-size: 80%;
+    width: 24px;
+    height: 24px;
+}
+
+.iziToast > .iziToast-body > .iziToast-icon.ico-msgLoad {
+    background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNTQ1NTUyMzAyOTE3IiBjbGFzcz0iaWNvbiIgc3R5bGU9IiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjQyNDAiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCI+PGRlZnM+PHN0eWxlIHR5cGU9InRleHQvY3NzIj48L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNNTEyIDY0YzI0Ny4yIDAgNDQ4IDIwMC44IDQ0OCA0NDhoLTY0YzAtMjEyLTE3Mi0zODQtMzg0LTM4NFY2NHogbTAgODMyYy0yMTIgMC0zODQtMTcyLTM4NC0zODRINjRjMCAyNDcuMiAyMDAuOCA0NDggNDQ4IDQ0OHYtNjR6IiBwLWlkPSI0MjQxIiBmaWxsPSIjMUU5RkZGIj48L3BhdGg+PC9zdmc+') no-repeat 50% 50%;
+    background-size: 80%;
+    width: 24px;
+    height: 24px;
+    animation: rotating 1.2s linear infinite
+}
+
+@keyframes rotating {
+    from {
+        transform: rotate(0)
+    }
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+.iziToast strong {
     padding: 0 10px 0 0;
     margin: 10px 0 -10px 0;
     line-height: 16px;
     font-size: 14px;
     float: left;
-    color: #fff;
+    color: #0d1a26;
 }
 
-.iziToast > .iziToast-body > p {
-    color: rgba(255, 255, 255, 0.8);
+.iziToast p {
+    color: #314659;
     padding: 0;
     margin: 10px 0;
     font-size: 14px;
@@ -230,12 +287,12 @@
     border-color: #565c70;
 }
 
-.iziToast.iziToast-color-dark strong {
+.iziToast.iziToast-color-red strong, .iziToast.iziToast-color-yellow strong, .iziToast.iziToast-color-blue strong, .iziToast.iziToast-color-green strong, .iziToast.iziToast-color-dark strong {
     color: #fff;
 }
 
-.iziToast.iziToast-color-dark p {
-    color: rgba(255, 255, 255, 0.7);
+.iziToast.iziToast-color-red p, .iziToast.iziToast-color-yellow p, .iziToast.iziToast-color-blue p, .iziToast.iziToast-color-green p, .iziToast.iziToast-color-dark p {
+    color: rgba(255, 255, 255, 0.8);
     font-weight: 300;
 }
 
@@ -275,7 +332,7 @@
 
 .iziToast-wrapper {
     position: fixed;
-    z-index: 999;
+    z-index: 99999;
     width: 100%;
     pointer-events: none;
     display: flex;

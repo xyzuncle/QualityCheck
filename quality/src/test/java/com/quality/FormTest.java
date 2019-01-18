@@ -1,5 +1,6 @@
 package com.quality;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.quality.common.config.CustomProcessGenerator;
 import com.quality.system.entity.QualityFlow;
 import com.quality.system.service.impl.QualityFlowServiceImpl;
@@ -13,6 +14,7 @@ import org.flowable.engine.form.StartFormData;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.DeploymentBuilder;
 
+import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.idm.api.IdmIdentityService;
 import org.flowable.idm.api.IdmManagementService;
 import org.flowable.image.ProcessDiagramGenerator;
@@ -33,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = QualityApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -479,7 +482,7 @@ public class FormTest {
     @Test
     public void putBmpmModel(){
         //假设我根据一个流程ID得到了BPMN对象
-        String processDfId = "changyi:2:7f8893b6-0f78-11e9-abc8-001e64f20cfb";
+        String processDfId = "changyi:3:d10317ba-14f3-11e9-88f3-001e64f20cfb";
         BpmnModel bpmnModel=  repositoryService.getBpmnModel(processDfId);
         //这个process指的是整个流程文件，也就是XML文件
         Process  process = bpmnModel.getProcesses().get(0);
@@ -487,6 +490,16 @@ public class FormTest {
         List<ExclusiveGateway>  gatewayList =  process.findFlowElementsOfType(ExclusiveGateway.class);
         List<SequenceFlow> sequenceFlowList = process.findFlowElementsOfType(SequenceFlow.class);
 
+        //分别对应的申请人，审核人，复核人
+
+        Map<String, String> nameMap = new HashMap<>();
+        nameMap.put("apply","赵六");
+        nameMap.put("check","李四");
+        nameMap.put("review","王五");
+
+        List<QualityFlow> qualityFlowList = new ArrayList<>();
+        //同时sequenFlow的表达式的值，用于控制流向表示也可以在合理赋值，
+        //类型是2
         userTasks.stream().forEach(e->{
             //循环这次请求，得到所有的任务，并保存在表里
             QualityFlow qualityFlow = new QualityFlow();
@@ -497,13 +510,71 @@ public class FormTest {
             qualityFlow.setType("1");
             qualityFlow.setTaskExpression(e.getAssignee());
             //这里不同前端获取，而是自己设置一个值
-           // qualityFlow.setTaskValue();
+            qualityFlow.setTaskValue(nameMap.get(e.getId()));
 
-            System.out.println(e.getId());
-            System.out.println(e.getName());
-            System.out.println(e.getAssignee());
-            System.out.println("##################");
+            qualityFlowList.add(qualityFlow);
+
         });
+
+
+        //一个流程不会有重复的数据，所有要考虑更新问题,先查询出来
+
+        QueryWrapper<QualityFlow> qw = new QueryWrapper<>();
+        qw.eq("processId", processDfId);
+        List<QualityFlow> qualityFlows = qualityFlowService.list(qw);
+        if(qualityFlows!=null && qualityFlowList.size()>0){
+            //因为我这里没有ID，我想做个ID写了个map,实际从表单得到ID
+            //如果有数据证明更新
+            Map<String,String> resultMap = qualityFlows.stream()
+                    .collect(Collectors.toMap(QualityFlow::getTaskId,QualityFlow::getId));
+
+            qualityFlowList.stream().forEach(e->{
+                e.setId(resultMap.get(e.getTaskId()));
+            });
+            //我测试类没表单，所以也就没哟ID，我自己循环模仿表单
+            qualityFlowService.updateBatchById(qualityFlowList);
+
+        }else{
+            qualityFlowService.saveBatch(qualityFlowList);
+        }
+
+    }
+
+
+    /**
+     * 测试一个流程多个实例和 外置表单之间的关系
+     * 1：先测试一个表单 多个实例
+     */
+    @Test
+    public void testStartUserTask(){
+        //1点击一个页面发起流程
+        //2携带流程编号
+        //表单
+        String processDfId = "changyi:4:fd0a65ca-14f9-11e9-960c-001e64f20cfb";
+        QualityFlow qualityFlow = new QualityFlow();
+        qualityFlow.setProcessId(processDfId);
+
+        //模仿表单保存
+        qualityFlowService.save(qualityFlow);
+
+        //获取ID
+        String id = qualityFlow.getId();
+
+        //
+        Map<String, Object> map = new HashMap<>();
+        map.put("foemkeyId", id);
+        map.put("applyPerson", "张玉卓");
+        //测试启动流程实例
+        ProcessInstance pi = runtimeService.startProcessInstanceById(processDfId,map);
+        System.out.println("流程定义ID====="+pi.getProcessDefinitionId());
+        System.out.println("流程执行ID====="+pi.getId());
+
+        //反向更新表单，
+        qualityFlow.setSeqValue(pi.getId());
+        qualityFlowService.updateById(qualityFlow);
+
+
+
 
     }
 

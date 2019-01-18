@@ -6,13 +6,13 @@
             <div class="layui-form toolbar">
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <label class="layui-form-label w-auto">登录名</label>
-                        <div class="layui-input-inline">
-                            <input id="loginName" class="layui-input" type="text" placeholder="输入登录名"/>
-                        </div>
                         <label class="layui-form-label w-auto">姓名</label>
                         <div class="layui-input-inline">
                             <input id="userName" class="layui-input" type="text" placeholder="输入姓名"/>
+                        </div>
+                        <label class="layui-form-label w-auto">登录名</label>
+                        <div class="layui-input-inline">
+                            <input id="loginName" class="layui-input" type="text" placeholder="输入登录名"/>
                         </div>
                         <label class="layui-form-label" w-auto>日期范围</label>
                         <div class="layui-input-inline">
@@ -40,13 +40,10 @@
 
 <!-- 表格操作列 -->
 <script type="text/html" id="userTableBar">
-
         <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
         <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="role">分配角色</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
         <a class="layui-btn layui-btn-xs" lay-event="reset">重置密码</a>
-
-
 </script>
 
 <!-- 表格状态列 -->
@@ -91,11 +88,10 @@
         var laytpl = layui.laytpl;
 
         var btndata =config.getUserAuths();
+
         laytpl(userSearch.innerHTML).render(btndata, function(html){
            $("#userSearchDiv").html(html);
         });
-
-
 
         form.render('select');
         // 渲染表格
@@ -204,7 +200,7 @@
         };
 
         // 搜索按钮点击事件
-        $('#userBtnSearch').click(function () {
+        $('#userBtnSearch').bind("click",function() {
             var loginName = $('#loginName').val();
             var userName = $('#userName').val();
             var timeValue = $("#crtTime").val().split(" - ");
@@ -215,7 +211,7 @@
                     "search-LIKE-userName": userName,
                     "search-GE-crtTime":begin,
                     "search-LT-crtTime":end,
-                    }});
+                }});
         });
 
         //批量删除

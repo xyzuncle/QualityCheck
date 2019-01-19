@@ -27,7 +27,7 @@ var Q = function (W, D, HTML, hash, view, arg, _arg, i, index, Regex, key, Q) {
 
         if (Q.pop)
             Q.pop.apply(W, arg);
-
+        debugger
         Q.lash = view = arg.shift();
 
         HTML.setAttribute('view', view);

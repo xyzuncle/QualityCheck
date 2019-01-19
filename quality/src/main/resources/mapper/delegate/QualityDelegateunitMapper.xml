@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quality.delegate.mapper.QualityDelegateunitMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quality.delegate.entity.QualityDelegateunit">
+    <result column="id" property="id" />
+    <result column="crtTime" property="crtTime" />
+    <result column="updTime" property="updTime" />
+    <result column="deleted" property="deleted" />
+        <result column="unitName" property="unitName" />
+        <result column="address" property="address" />
+        <result column="zipCode" property="zipCode" />
+        <result column="linkMan" property="linkMan" />
+        <result column="phone" property="phone" />
+        <result column="mobile" property="mobile" />
+        <result column="fax" property="fax" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        crtTime,
+        updTime,
+        deleted,
+        unitName, address, zipCode, linkMan, phone, mobile, fax
+    </sql>
+
+</mapper>

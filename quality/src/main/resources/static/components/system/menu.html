@@ -10,13 +10,14 @@
                             <input id="menuEdtSearch" class="layui-input" type="text" placeholder="输入关键字"/>
                         </div>
                     </div>
-                    <div class="layui-inline">
+                    <div class="layui-inline" id="menuSearchDiv"></div>
+                    <!--<div class="layui-inline">
                         <button id="menuBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
                         </button>
                         <button id="menuBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
                         <button class="layui-btn" id="menuTreeAdvBtnExpand">全部展开</button>
                         <button class="layui-btn" id="menuTreeAdvBtnFold">全部折叠</button>
-                    </div>
+                    </div>-->
                 </div>
             </div>
 
@@ -28,7 +29,26 @@
 </div>
 
 
+<script id="menuSearch" type="text/html">
 
+    {{#  layui.each(d.permissionkey, function(index, value){ }}
+    {{# if(value=="menu:view"){ }}
+    <button id="menuBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+    {{# } }}
+    {{# if(value=="menu:add"){ }}
+    <button id="menuBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+    {{# } }}
+    {{# if(value=="menu:expand"){ }}
+    <button id="menuTreeAdvBtnExpand" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>全部展开</button>
+    {{# } }}
+    {{# if(value=="menu:fold"){ }}
+    <button id="menuTreeAdvBtnFold" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>全部折叠</button>
+    {{# } }}
+
+
+    {{# }); }}
+
+</script>
 
 <!-- 表格操作列 -->
 <script type="text/html" id="menuTableBar">
@@ -44,7 +64,8 @@
 
 <!-- js部分 -->
 <script>
-    layui.use(['layer', 'table', 'admin', 'config','form','treetable'], function () {
+
+    layui.use(['layer', 'table', 'admin', 'config','form','treetable','laytpl'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
@@ -52,7 +73,11 @@
         var admin = layui.admin;
         var config = layui.config;
         var treetable = layui.treetable;
-
+        var laytpl = layui.laytpl;
+        var btndata =config.getUserAuths();
+        laytpl(menuSearch.innerHTML).render(btndata, function(html){
+            $("#menuSearchDiv").html(html);
+        });
 
         // 渲染表格
         function renderMenuTable() {

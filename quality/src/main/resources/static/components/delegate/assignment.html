@@ -1,0 +1,125 @@
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline" id="assignmentSearchDiv"></div>
+                </div>
+            </div>
+            <table class="layui-table" id="assignmentTable" lay-filter="assignmentTable"></table>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<!-- 表格操作列 -->
+<script type="text/html" id="assignmentTableBar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">提交</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+<script id="assignmentSearch" type="text/html">
+
+    {{#  layui.each(d.permissionkey, function(index, value){ }}
+    {{# if(value=="assignment:add"){ }}
+    <button id="assignmentBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+    {{# } }}
+
+
+    {{# }); }}
+
+</script>
+
+
+
+<!-- js部分 -->
+<script>
+    layui.use(['layer', 'table', 'form', 'index', 'config', 'admin','util','laydate','laytpl'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
+        var util = layui.util;
+        var index = layui.index;
+        var config = layui.config;
+        var admin = layui.admin;
+        var laydate = layui.laydate;
+        var laytpl = layui.laytpl;
+
+        var btndata =config.getUserAuths();
+        laytpl(assignmentSearch.innerHTML).render(btndata, function(html){
+            $("#assignmentSearchDiv").html(html);
+        });
+
+        // 渲染表格
+        var ins1 = table.render({
+            elem: '#assignmentTable',
+            url: config.base_server + 'QualityAssignmentStatement/query.do',
+            method: 'POST',
+            page: true,
+            cellMinWidth: 100,
+            cols: [[
+                {type: 'numbers'},
+                {field: 'agreementNo', sort: true, title: '协议书编号'},
+                {field: 'delegateType', sort: true, title: '委托类型'},
+                {field: 'delegateUnit', sort: true, title: '委托单位'},
+                {field: 'sample', sort: true, title: '样机'},
+                {align: 'center', toolbar: '#assignmentTableBar', title: '操作'}
+            ]]
+        });
+
+
+        // 添加按钮点击事件
+        $('#assignmentBtnAdd').click(function () {
+            openEditTab();
+        });
+
+        // 工具条点击事件
+        table.on('tool(assignmentTable)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'edit') { // 修改
+                openEditTab(data);
+            } else if (layEvent === 'del') { // 删除
+                doDelete(obj);
+            }
+        });
+
+        // 删除
+        function doDelete(obj) {
+            layer.confirm('确定要删除吗？', function (i) {
+                layer.close(i);
+                layer.load(2);
+                admin.req('QualityAssignmentStatement/removeById.do?entityID=' + obj.data.id, {}, function (data) {
+                    layer.closeAll('loading');
+                    debugger
+                    if (data.status == 200) {
+                        layer.msg(data.message, {icon: 1});
+                        obj.del();
+                    } else {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                }, 'DELETE');
+            });
+        }
+
+        // 打开表单TAB
+        function openEditTab(data) {
+            admin.putTempData('quality_assignment_statement',data);
+            var data ={title: data ? '修改样品信息' : '添加样品信息',url:"#/delegate/assignmentForm"}
+            index.openNewTab(data)
+
+        }
+
+
+
+
+    });
+</script>

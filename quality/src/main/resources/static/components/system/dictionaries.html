@@ -23,13 +23,16 @@
                             <input type="text" class="layui-input date-icon" id="crtTime" placeholder="查询日期范围">
                         </div>
                     </div>
-                    <div class="layui-inline">
+
+                    <div class="layui-inline" id="dictSearchDiv"></div>
+                    <!--<div class="layui-inline">
                         <button id="lrBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
                         </button>
                         <button id="dictBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
                         <button id="lrBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe640;</i>批量删除</button>
                         <button id="lrBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
-                    </div>
+                    </div>-->
+
                 </div>
             </div>
 
@@ -38,6 +41,8 @@
         </div>
     </div>
 </div>
+
+
 
 <!-- 表单弹窗 -->
 <script type="text/html" id="dictModel">
@@ -95,17 +100,46 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 
+<script id="dictSearch" type="text/html">
+
+    {{#  layui.each(d.permissionkey, function(index, value){ }}
+    {{# if(value=="dict:view"){ }}
+    <button id="dictBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+    {{# } }}
+    {{# if(value=="dict:add"){ }}
+    <button id="dictBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+    {{# } }}
+    {{# if(value=="dict:deleteAll"){ }}
+    <button id="dictBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
+    {{# } }}
+    {{# if(value=="dict:export"){ }}
+    <button id="dictBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+    {{# } }}
+
+
+    {{# }); }}
+
+</script>
+
+
 <script>
-    layui.use(['layer', 'laydate', 'table', 'util', 'config','admin','form'], function () {
+    layui.use(['layer', 'table', 'form', 'util', 'config', 'admin','util','laydate','laytpl'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var table = layui.table;
+        var form = layui.form;
         var util = layui.util;
-        var laydate = layui.laydate;
         var config = layui.config;
         var admin = layui.admin;
-        var form = layui.form;
+        var laydate = layui.laydate;
+        var laytpl = layui.laytpl;
 
+        var btndata =config.getUserAuths();
+
+        laytpl(dictSearch.innerHTML).render(btndata, function(html){
+            $("#dictSearchDiv").html(html);
+
+        });
         //渲染表格
         var ins1 = table.render({
             elem: '#dictTable',
@@ -204,7 +238,7 @@
 
 
         //搜索按钮点击事件
-        $('#lrBtnSearch').click(function () {
+        $('#dictBtnSearch').click(function () {
             var name = $("#searchName").val();
             var type = $("#searchDictType").val();
             var searchDate = $('#crtTime').val().split(' - ');
@@ -240,7 +274,7 @@
         }
 
         // 导出excel
-        $('#lrBtnExp').click(function () {
+        $('#dictBtnExp').click(function () {
             var checkRows = table.checkStatus('dictTable');
             if (checkRows.data.length == 0) {
                 layer.msg('请选择要导出的数据', {icon: 2});
@@ -250,7 +284,7 @@
         });
 
         //批量删除
-        $("#lrBtnRM").click(function(){
+        $("#dictBtnRM").click(function(){
             var checkRows = table.checkStatus('dictTable');
             if (checkRows.data.length == 0) {
                 layer.msg('请选择要删除的数据', {icon: 2});

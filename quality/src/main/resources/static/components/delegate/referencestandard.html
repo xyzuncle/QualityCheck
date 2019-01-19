@@ -1,0 +1,153 @@
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">测量仪器名称</label>
+                        <div class="layui-input-inline">
+                            <input id="name" class="layui-input" type="text" placeholder="输入测量仪器名称"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline" id="referencestandardSearchDiv"></div>
+                    <!--<div class="layui-inline">
+                        <button id="referencestandardBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                        <button id="referencestandardBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                    </div>-->
+
+                </div>
+            </div>
+
+            <table class="layui-table" id="referencestandardTable" lay-filter="referencestandardTable"></table>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<!-- 表格操作列 -->
+<script type="text/html" id="referencestandardTableBar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+<script id="referencestandardSearch" type="text/html">
+
+    {{#  layui.each(d.permissionkey, function(index, value){ }}
+    {{# if(value=="referencestandard:view"){ }}
+    <button id="referencestandardBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+    {{# } }}
+    {{# if(value=="referencestandard:add"){ }}
+    <button id="referencestandardBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+    {{# } }}
+
+
+    {{# }); }}
+
+</script>
+
+
+
+<!-- js部分 -->
+<script>
+    layui.use(['layer', 'table', 'form', 'util', 'config', 'admin','util','laytpl'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
+        var util = layui.util;
+        var config = layui.config;
+        var admin = layui.admin;
+        var laytpl = layui.laytpl;
+
+        var btndata =config.getUserAuths();
+        laytpl(referencestandardSearch.innerHTML).render(btndata, function(html){
+            $("#referencestandardSearchDiv").html(html);
+        });
+
+
+        // 渲染表格
+        var ins1 = table.render({
+            elem: '#referencestandardTable',
+            url: config.base_server + 'QualityReferenceStandard/query.do',
+            method: 'POST',
+            page: true,
+            cellMinWidth: 100,
+            cols: [[
+                {type: 'numbers'},
+                {field: 'name', sort: true, title: '测量仪器名称'},
+                {field: 'measured', sort: true, title: '被测量'},
+                {field: 'standardSpecification', sort: true, title: '标准规范'},
+                {field: 'measureRange', sort: true, title: '测量范围'},
+                {field: 'extend', sort: true, title: '扩展不确定度'},
+                {field: 'remark', sort: true, title: '说明'},
+                {align: 'center', toolbar: '#referencestandardTableBar', title: '操作'}
+            ]]
+        });
+
+
+        // 添加按钮点击事件
+        $('#referencestandardBtnAdd').click(function () {
+            showEditModel();
+        });
+
+        // 工具条点击事件
+        table.on('tool(referencestandardTable)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'edit') { // 修改
+                showEditModel(data);
+            } else if (layEvent === 'del') { // 删除
+                doDelete(obj);
+            }
+        });
+
+        // 删除
+        function doDelete(obj) {
+            layer.confirm('确定要删除吗？', function (i) {
+                layer.close(i);
+                layer.load(2);
+                admin.req('QualityReferenceStandard/removeById.do?entityID=' + obj.data.id, {}, function (data) {
+                    layer.closeAll('loading');
+                    debugger
+                    if (data.status == 200) {
+                        layer.msg(data.message, {icon: 1});
+                        obj.del();
+                    } else {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                }, 'DELETE');
+            });
+        }
+
+        // 显示表单弹窗
+        function showEditModel(data) {
+            admin.putTempData('quality_reference_standard',data);
+            admin.open({
+                title: data ? '修改参考规范' : '添加参考规范',
+                url: 'components/delegate/referencestandardForm.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
+                }
+            });
+        }
+
+
+        // 搜索按钮点击事件
+        $('#referencestandardBtnSearch').click(function () {
+            var name = $('#name').val();
+            table.reload('referencestandardTable', {where: {"search-LIKE-name": name
+
+            }});
+        });
+
+    });
+</script>

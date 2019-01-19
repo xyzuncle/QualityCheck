@@ -1,0 +1,154 @@
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">单位名称</label>
+                        <div class="layui-input-inline">
+                            <input id="unitName" class="layui-input" type="text" placeholder="输入单位名称"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline" id="delegateunitSearchDiv"></div>
+                    <!--<div class="layui-inline">
+                        <button id="delegateunitBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                        <button id="delegateunitBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                    </div>-->
+
+                </div>
+            </div>
+
+            <table class="layui-table" id="delegateunitTable" lay-filter="delegateunitTable"></table>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<!-- 表格操作列 -->
+<script type="text/html" id="delegateunitTableBar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+<script id="delegateunitSearch" type="text/html">
+
+    {{#  layui.each(d.permissionkey, function(index, value){ }}
+    {{# if(value=="delegateunit:view"){ }}
+    <button id="delegateunitBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+    {{# } }}
+    {{# if(value=="delegateunit:add"){ }}
+    <button id="delegateunitBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+    {{# } }}
+
+
+    {{# }); }}
+
+</script>
+
+
+
+<!-- js部分 -->
+<script>
+    layui.use(['layer', 'table', 'form', 'util', 'config', 'admin','util','laydate','laytpl'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
+        var util = layui.util;
+        var config = layui.config;
+        var admin = layui.admin;
+        var laydate = layui.laydate;
+        var laytpl = layui.laytpl;
+
+        var btndata =config.getUserAuths();
+        laytpl(delegateunitSearch.innerHTML).render(btndata, function(html){
+            $("#delegateunitSearchDiv").html(html);
+        });
+
+        // 渲染表格
+        var ins1 = table.render({
+            elem: '#delegateunitTable',
+            url: config.base_server + 'QualityDelegateunit/query.do',
+            method: 'POST',
+            page: true,
+            cellMinWidth: 100,
+            cols: [[
+                {type: 'numbers'},
+                {field: 'unitName', sort: true, title: '单位名称'},
+                {field: 'address', sort: true, title: '地址'},
+                {field: 'zipCode', sort: true, title: '邮编'},
+                {field: 'linkMan', sort: true, title: '联系人'},
+                {field: 'phone', sort: true, title: '电话'},
+                {field: 'mobile', sort: true, title: '手机'},
+                {field: 'fax', sort: true, title: '传真'},
+                {align: 'center', toolbar: '#delegateunitTableBar', title: '操作'}
+            ]]
+        });
+
+
+        // 添加按钮点击事件
+        $('#delegateunitBtnAdd').click(function () {
+            showEditModel();
+        });
+
+        // 工具条点击事件
+        table.on('tool(delegateunitTable)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'edit') { // 修改
+                showEditModel(data);
+            } else if (layEvent === 'del') { // 删除
+                doDelete(obj);
+            }
+        });
+
+        // 删除
+        function doDelete(obj) {
+            layer.confirm('确定要删除吗？', function (i) {
+                layer.close(i);
+                layer.load(2);
+                admin.req('QualityDelegateunit/removeById.do?entityID=' + obj.data.id, {}, function (data) {
+                    layer.closeAll('loading');
+                    debugger
+                    if (data.status == 200) {
+                        layer.msg(data.message, {icon: 1});
+                        obj.del();
+                    } else {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                }, 'DELETE');
+            });
+        }
+
+        // 显示表单弹窗
+        function showEditModel(data) {
+            admin.putTempData('quality_delegateunit',data);
+            admin.open({
+                title: data ? '修改委托单位信息' : '添加委托单位信息',
+                url: 'components/delegate/delegateunitForm.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
+                }
+            });
+        }
+
+
+        // 搜索按钮点击事件
+        $('#delegateunitBtnSearch').click(function () {
+            var unitName = $('#unitName').val();
+            table.reload('delegateunitTable', {where: {"search-LIKE-unitName": unitName
+
+            }});
+        });
+
+    });
+</script>

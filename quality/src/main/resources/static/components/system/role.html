@@ -99,10 +99,10 @@
     <button id="roleBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
     {{# } }}
     {{# if(value=="role:deleteAll"){ }}
-    <button id="userBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
+    <button id="roleBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
     {{# } }}
     {{# if(value=="role:export"){ }}
-    <button id="userBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+    <button id="roleBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
     {{# } }}
     {{# }); }}
 
@@ -178,7 +178,7 @@
 
 
         // 导出excel
-        $('#tabBasBtnExport').click(function () {
+        $('#roleBtnExp').click(function () {
             var checkRows = table.checkStatus('roleTable');
             if (checkRows.data.length == 0) {
                 layer.msg('请选择要导出的数据', {icon: 2});

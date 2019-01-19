@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quality.delegate.mapper.QualitySampleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quality.delegate.entity.QualitySample">
+    <result column="id" property="id" />
+    <result column="crtTime" property="crtTime" />
+    <result column="updTime" property="updTime" />
+    <result column="deleted" property="deleted" />
+        <result column="sampleName" property="sampleName" />
+        <result column="sampleCode" property="sampleCode" />
+        <result column="sampleModel" property="sampleModel" />
+        <result column="sampleSpecification" property="sampleSpecification" />
+        <result column="sampleNum" property="sampleNum" />
+        <result column="receivedDate" property="receivedDate" />
+        <result column="sender" property="sender" />
+        <result column="receivedType" property="receivedType" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        crtTime,
+        updTime,
+        deleted,
+        sampleName, sampleCode, sampleModel, sampleSpecification, sampleNum, receivedDate, sender, receivedType
+    </sql>
+
+</mapper>

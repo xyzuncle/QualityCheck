@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quality.delegate.mapper.QualityAssignmentStatementMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quality.delegate.entity.QualityAssignmentStatement">
+    <result column="id" property="id" />
+    <result column="crtTime" property="crtTime" />
+    <result column="updTime" property="updTime" />
+    <result column="deleted" property="deleted" />
+        <result column="agreementNo" property="agreementNo" />
+        <result column="delegateType" property="delegateType" />
+        <result column="delegateUnitID" property="delegateUnitID" />
+        <result column="sampleID" property="sampleID" />
+        <result column="designatedMonitoringBasis" property="designatedMonitoringBasis" />
+        <result column="designatedMonitoringItems" property="designatedMonitoringItems" />
+        <result column="designatedMonitoringRequirement" property="designatedMonitoringRequirement" />
+        <result column="acceptanceReviewType" property="acceptanceReviewType" />
+        <result column="plannedCompletionTime" property="plannedCompletionTime" />
+        <result column="secret" property="secret" />
+        <result column="standardEffectivePeriod" property="standardEffectivePeriod" />
+        <result column="standardconClusion" property="standardconClusion" />
+        <result column="uncertainty" property="uncertainty" />
+        <result column="confirmMonitoringBasis" property="confirmMonitoringBasis" />
+        <result column="reference" property="reference" />
+        <result column="acceptOpinion" property="acceptOpinion" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        crtTime,
+        updTime,
+        deleted,
+        agreementNo, delegateType, delegateUnitID, sampleID, designatedMonitoringBasis, designatedMonitoringItems, designatedMonitoringRequirement, acceptanceReviewType, plannedCompletionTime, secret, standardEffectivePeriod, standardconClusion, uncertainty, confirmMonitoringBasis, reference, acceptOpinion
+    </sql>
+
+</mapper>

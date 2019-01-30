@@ -50,13 +50,19 @@
 
 <script type="text/javascript" src="assets/libs/layui/layui.js"></script>
 <script type="text/javascript" src="assets/libs/particles.min.js"></script>
+<script type="text/javascript" src="/assets/libs/jquery-3.2.1.min.js"></script>
 <script>
+    if($('.login-body').closest('.layui-tab-item').length == 1){
+        parent.window.location.href = 'http://localhost:8088';
+    }
     layui.config({
         base: 'module/'
     }).use(['config', 'form'], function () {
         var $ = layui.jquery;
         var form = layui.form;
         var config = layui.config;
+        debugger
+
 
         if (config.getToken()) {
             // location.replace('./');

@@ -83,6 +83,10 @@ public class QualityMenuController extends BaseController<QualityMenu, IQualityM
         boolean result = false;
         try {
             Integer parentId =  QualityMenu.getParentId();
+            if(parentId==null){
+                parentId = 0;
+                QualityMenu.setParentId(0);
+            }
             if (parentId == 0){
                 QualityMenu.setParentIds(parentId+"");
             }else{

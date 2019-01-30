@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quality.store.mapper.QualityBarcodeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quality.store.entity.QualityBarcode">
+    <result column="id" property="id" />
+        <result column="barCode" property="barCode"/>
+        <result column="sampleCode" property="sampleCode"/>
+        <result column="specifications" property="specifications" />
+        <result column="sampleName" property="sampleName" />
+        <result column="manufacturerName" property="manufacturerName" />
+        <result column="manufacturerCode" property="manufacturerCode" />
+        <result column="barCodeImgPath" property="barCodeImgPath" />
+        <result column="deleted" property="deleted" />
+        <result column="crtTime" property="crtTime" />
+        <result column="updTime" property="updTime" />
+        <result column="sampleModel" property="sampleModel"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        barCode, sampleCode, specifications, sampleName, manufacturerName, manufacturerCode, barCodeImgPath
+    </sql>
+
+</mapper>

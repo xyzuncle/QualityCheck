@@ -37,6 +37,9 @@ spring:
 #server
 server:
   port: 8088
+  servlet:
+    session:
+      timeout: 30M
 #mybatis
 mybatis-plus:
   type-aliases-package: com.quality.*.entity

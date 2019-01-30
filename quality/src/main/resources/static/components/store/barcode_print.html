@@ -1,0 +1,133 @@
+<!-- user表单弹窗 -->
+
+<script src="/assets/libs/jquery-3.2.1.min.js"/>
+<script src="/module/print/print.js"/>
+
+<form id="barcode-form" lay-filter="barcode-form" class="layui-form">
+    <div class="layui-container">
+        <div class="layui-row">
+            <div class="layui-col-md12">
+                <img id="barcode" src="" width="30%"/>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12">
+                <div id="manufacturerName"></div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-md12">
+                <div id="sample_Name"></div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <span id="receiveTime" class="color-bar"></span>
+            </div>
+            <div class="layui-col-xs1">
+                <input type="checkbox" lay-skin="primary" title="已检" class="grid-demo">
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <div id="specifications"></div>
+            </div>
+            <div class="layui-col-xs1">
+                <input type="checkbox"  lay-skin="primary" title="待复">
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                ------ -----
+            </div>
+            <div class="layui-col-xs1">
+                <input type="checkbox"  lay-skin="primary" title="退检">
+            </div>
+
+        </div>
+    </div>
+   <!-- <div class="layui-form-item">
+        <label class="layui-form-label">条形码</label>
+        <div class="layui-input-block">
+            <img id="barcode" src=""/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">样品名称</label>
+        <div class="layui-input-block">
+            <input name="sampleName" id="sampleTableSelect" placeholder="请选择样品" type="text" class="layui-input" maxlength="20"
+                   lay-verify="required" value=""/>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">样品编号</label>
+        <div class="layui-input-block">
+            <input name="sampleCode" id="myCode" placeholder="样品编号" type="text" class="layui-input" maxlength="20"
+                   lay-verify="" readonly/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">样品型号</label>
+        <div class="layui-input-block">
+            <input name="sampleModel" id="sampleModel" placeholder="样品型号" type="text" class="layui-input" maxlength="20"
+                   lay-verify="" readonly/>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">样品规格</label>
+        <div class="layui-input-block">
+            <input name="specifications" id="samplespec" placeholder="样品规格" type="text" class="layui-input" maxlength="20"
+                   readonly />
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属厂家</label>
+        <div class="layui-input-block">
+            <input name="manufacturerName" placeholder="所属厂家" type="text" class="layui-input" maxlength="20"
+                   readonly />
+        </div>
+    </div>-->
+
+    <div class="layui-form-item model-form-footer no-print" id="foot">
+        <button class="layui-btn layui-btn-primary close" ew-event="closeDialog" type="button">取消</button>
+        <button class="layui-btn" lay-filter="barcode-form-submit" lay-submit>打印</button>
+    </div>
+</form>
+
+<script>
+    layui.use(['layer','config', 'admin', 'form', 'formSelects','tableSelect'], function () {
+
+        var layer = layui.layer;
+        var admin = layui.admin;
+        var form = layui.form;
+        var config = layui.config;
+        var table = layui.table;
+        var formSelects = layui.formSelects;
+        //启动tableSelect组件来方便查询
+        var tableSelect = layui.tableSelect;
+
+
+
+        // 回显user数据
+        var user = admin.getTempData('quality_barcode');
+        var path = config.base_server + "fastdfs/download/file?filePath=" + user.barCodeImgPath;
+        $("#barcode").attr("src",path);
+        $("#manufacturerName").html(user.manufacturerName);
+        $("#sample_Name").html("仪器名称："+user.sampleName);
+        $("#receiveTime").html("接受日期："+user.crtTime.substr(0,10));
+        $("#specifications").html("型号规格：" + user.specifications);
+        form.render();
+        form.on('submit(barcode-form-submit)', function (data) {
+            //layer.load(2);
+            $.print("#barcode-form");
+            return false;
+        });
+    });
+</script>

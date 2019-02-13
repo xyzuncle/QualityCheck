@@ -3,6 +3,8 @@ package com.quality.store.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.quality.common.fastdfs.FastDFSClient;
 import com.quality.common.util.CustomerBarcodeUtil;
+import com.quality.delegate.entity.QualitySample;
+import com.quality.delegate.service.impl.QualitySampleServiceImpl;
 import com.quality.store.entity.QualityBarcode;
 import com.quality.store.entity.QualityFastdfsIndex;
 import com.quality.store.mapper.QualityBarcodeMapper;
@@ -33,6 +35,9 @@ public class QualityBarcodeServiceImpl extends ServiceImpl<QualityBarcodeMapper,
     QualityFastdfsIndexServiceImpl qualityFastdfsIndexService;
 
     private FastDFSClient fastDFSClient = new FastDFSClient();
+
+    @Autowired
+    QualitySampleServiceImpl qualitySampleService;
 
 
      @Override
@@ -69,6 +74,14 @@ public class QualityBarcodeServiceImpl extends ServiceImpl<QualityBarcodeMapper,
          return result;
      }
 
+    @Override
+    public QualitySample getInfoByBarCode(String barCode) {
+        QueryWrapper<QualityBarcode> qw = new QueryWrapper<>();
+        qw.eq("barCode", barCode);
+        QualityBarcode one = this.getOne(qw);
+        QualitySample qs =   qualitySampleService.getById(one.getId());
+        return qs;
+    }
 
 
     private void saveFastdfsIndex(QualityBarcode qualityBarcode) {

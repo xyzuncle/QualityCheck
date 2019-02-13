@@ -82,7 +82,6 @@
                 contentType:"application/json",
                 success: function (data) {
                     layer.closeAll('loading');
-                    debugger
                     if (data.status == 200) {
                         layer.msg(data.message, {icon: 1});
                         table.reload('referencestandardTable', {});

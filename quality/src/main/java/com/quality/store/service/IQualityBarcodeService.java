@@ -1,5 +1,6 @@
 package com.quality.store.service;
 
+import com.quality.delegate.entity.QualitySample;
 import com.quality.store.entity.QualityBarcode;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -14,5 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IQualityBarcodeService extends IService<QualityBarcode> {
     public boolean SaveBarCodeAndImg(QualityBarcode qualityBarcode);
 
-
+    public QualitySample getInfoByBarCode(String barCode);
 }

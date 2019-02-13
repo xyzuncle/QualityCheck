@@ -1,10 +1,10 @@
 <!-- user表单弹窗 -->
-<form id="barcode-form"  class="layui-form model-form">
+<form id="barcode-form"  lay-filter="barcode-form" class="layui-form model-form">
     <input name="id" type="hidden"/>
     <div class="layui-form-item">
         <label class="layui-form-label">条形码</label>
         <div class="layui-input-block">
-            <input name="barCode" placeholder="请输入条形码" type="text" class="layui-input" maxlength="20"
+            <input name="barCode" lay-filter="bar_code" placeholder="请输入条形码" type="text" class="layui-input" maxlength="20"
                    lay-verify="required|isExist"/>
         </div>
     </div>
@@ -49,6 +49,7 @@
             <input name="manufacturerName" placeholder="所属厂家" type="text" class="layui-input" maxlength="20"
                    readonly />
             <input name="barCodeImgPath" type="hidden">
+            <input name="sampleId" id="sample_id" type="hidden">
         </div>
     </div>
 
@@ -95,13 +96,13 @@
             done: function (elem, data) {
                 //选择完后的回调，包含2个返回值 elem:返回之前input对象；data:表格返回的选中的数据 []
                 //拿到data[]后 就按照业务需求做想做的事情啦~比如加个隐藏域放ID...
-                debugger
                 var myid = elem[0].id;
                 var rowData = data.data[0];
                 $("#"+myid).val(rowData.sampleName);
                 $("#myCode").val(rowData.sampleCode);
                 $("#samplespec").val(rowData.sampleSpecification);
                 $("#sampleModel").val(rowData.sampleModel);
+                $("#sample_id").val(rowData.id);
             }
         });
 
@@ -148,23 +149,37 @@
         form.verify({
             isExist: function(value){
                 var result;
-                 $.ajax({
-                     url: config.base_server + 'QualityBarcode/isExist.do?barCode='+value,
-                     type: "GET",
-                     dataType: 'json',
-                     contentType:"application/json",
-                     async: false, // 使用同步的方法
-                     success: function (data) {
-                         if (data) {
-                             if (data == true) {
-                                 result = true;
-                             }
-                         }
-                     }
-                 })
-                if(result == true){
-                    return "该条形码已经存在！"
+                var preBarCode = user.barCode;
+                var currentBarCode = value;
+
+                if(preBarCode && currentBarCode){
+                    if(preBarCode != currentBarCode){
+                        $.ajax({
+                            url: config.base_server + 'QualityBarcode/isExist.do?barCode='+value,
+                            type: "GET",
+                            dataType: 'json',
+                            contentType:"application/json",
+                            async: false, // 使用同步的方法
+                            success: function (data) {
+                                if (data) {
+                                    if (data == true) {
+                                        result = true;
+                                    }
+                                }
+                            }
+                        })
+                        if(result == true){
+                            return "该条形码已经存在！"
+                        }
+                    }else{
+                        console.log("不需要验证！")
+                    }
+
                 }
+
+
+
+
 
             }
 
@@ -172,8 +187,8 @@
 
         // 表单提交事件
         form.on('submit(barcode-form-submit)', function (data) {
-           /* layer.load(2);*/
-      /*      $.ajax({
+            layer.load(2);
+            $.ajax({
                 url: config.base_server + 'QualityBarcode/save.do',
                 data: JSON.stringify(data.field),
                 type: "POST",
@@ -192,17 +207,7 @@
                     }
                 }
 
-            });*/
-           /* admin.req('QualityUser/save.do', data.field, function (data) {
-                alert(JSON.stringify(data))
-                layer.closeAll('loading');
-                if (data.status == 200) {
-                    layer.msg(data.message, {icon: 1});
-                    admin.finishPopupCenter();
-                } else {
-                    layer.msg(data.message, {icon: 2});
-                }
-            }, $('#barcode-form').attr('method'));*/
+            });
             return false;
         });
     });

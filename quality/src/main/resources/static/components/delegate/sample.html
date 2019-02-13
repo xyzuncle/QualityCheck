@@ -119,7 +119,6 @@
                 layer.load(2);
                 admin.req('QualitySample/removeById.do?entityID=' + obj.data.id, {}, function (data) {
                     layer.closeAll('loading');
-                    debugger
                     if (data.status == 200) {
                         layer.msg(data.message, {icon: 1});
                         obj.del();

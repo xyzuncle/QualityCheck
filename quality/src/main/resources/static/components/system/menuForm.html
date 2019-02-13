@@ -88,7 +88,6 @@
         var form = layui.form;
         form.render('radio');
 
-        debugger
         // 回显menu数据
         var data = admin.getTempData('quality_menu');
         $('#menuForm').attr('method', 'GET');
@@ -151,7 +150,6 @@
                     layer.closeAll('loading');
                     if (data.status == 200) {
                         layer.msg(data.message, {icon: 1});
-                        debugger
                         table.reload('menuTable', {});
                         admin.closeDialog('#menuForm');
                     } else {

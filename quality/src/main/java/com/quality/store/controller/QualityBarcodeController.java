@@ -10,6 +10,7 @@ import com.quality.common.util.Servlets;
 import com.quality.common.util.Sort;
 import com.quality.common.util.Tools;
 import com.quality.common.controller.BaseController;
+import com.quality.delegate.entity.QualitySample;
 import com.quality.store.entity.QualityBarcode;
 import com.quality.store.service.IQualityBarcodeService;
 import com.quality.store.service.impl.QualityFastdfsIndexServiceImpl;
@@ -167,6 +168,17 @@ public Object getQualityBarcodeList(HttpServletRequest request){
         }else{
             return false;
         }
+    }
+
+    /**
+     *
+     * @return
+     */
+    @RequestMapping(value = "/getInfoByBarCode.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Object getSampleInfoByBarCode(@RequestParam("barcode") String barcode){
+        QualitySample qs = this.defaultDAO.getInfoByBarCode(barcode);
+        return super.jsonObjectResult(qs,"查询成功");
     }
 
 

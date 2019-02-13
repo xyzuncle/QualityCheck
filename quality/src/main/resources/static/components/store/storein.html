@@ -1,0 +1,230 @@
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">入库管理</div>
+        <div class="layui-card-body">
+
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">条形码</label>
+                        <div class="layui-input-inline">
+                            <input id="barCode" class="layui-input" type="text" placeholder="输入条形码"/>
+                        </div>
+                        <label class="layui-form-label w-auto">样品名称</label>
+                        <div class="layui-input-inline">
+                            <input id="sampleName" class="layui-input" type="text" placeholder="输入样品名称"/>
+                        </div>
+                        <label class="layui-form-label w-auto">样品编号</label>
+                        <div class="layui-input-inline">
+                            <input id="sampleCode" class="layui-input" type="text" placeholder="输入样品编号"/>
+                        </div>
+                        <label class="layui-form-label" w-auto>日期范围</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input date-icon" id="crtTime" placeholder="查询日期范围">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline" id="stroeindiv"></div>
+                    <!--<div class="layui-inline" id="searchdiv">-->
+                        <!--<button id="userBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                        <button id="userBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                        <button id="userBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
+                        <button id="userBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>-->
+                   <!-- </div>-->
+                </div>
+            </div>
+
+            <table class="layui-table" id="storein" lay-filter="storein"></table>
+
+        </div>
+    </div>
+</div>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="userTableBar">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="print">打印</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+
+</script>
+
+<script id="storeinSearch" type="text/html">
+
+    {{#  layui.each(d.permissionkey, function(index, value){ }}
+    {{# if(value=="user:view"){ }}
+    <button id="userBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+    {{# } }}
+    {{# if(value=="user:add"){ }}
+    <button id="userBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+    {{# } }}
+    {{# if(value=="user:deleteAll"){ }}
+    <button id="userBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
+    {{# } }}
+    {{# if(value=="user:export"){ }}
+    <button id="userBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+    {{# } }}
+
+
+    {{# }); }}
+
+</script>
+
+
+<script>
+    layui.use(['layer', 'table', 'form', 'util', 'config', 'admin','util','laydate','laytpl'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
+        var util = layui.util;
+        var config = layui.config;
+        var admin = layui.admin;
+        var laydate = layui.laydate;
+        var laytpl = layui.laytpl;
+
+        //注意模板的ID 和DIV的id 不能一样，否则会一起 一个好一个坏的现象
+        var btndata =config.getUserAuths();
+        if(btndata){
+            laytpl(storeinSearch.innerHTML).render(btndata, function(html){
+                $("#stroeindiv").html(html);
+            });
+        }
+
+
+        form.render('select');
+        // 渲染表格
+        var ins1 = table.render({
+            elem: '#storein',
+            url: config.base_server + 'QualityStoreIn/query.do',
+            method: 'GET',
+            page: true,
+            cellMinWidth: 100,
+            cols: [[
+                {type: 'checkbox'},
+                {field: 'id',hide:true},
+                {field: 'sampleCode', sort: false, title: '样品编号',width:100},
+                {field: 'sampleName', sort: false, title: '样品名称',width:120},
+                {field: 'delegateUnitName', sort: false, title: '所属厂家'},
+                {field: 'sampleCount', sort: false, title: '入库数量'},
+                {field: 'paySamplePerson', sort: false, title: '交样人'},
+                {field: 'receiveSamplePerson', sort: false, title: '收样人'},
+                {field: 'crtTime', sort: true, title: '入库时间',templet:"<div>{{layui.util.toDateString(d.crtTime, 'yyyy-MM-dd')}}</div>",width:120},
+               /* {field: 'state', sort: true, templet: '#userTableState', title: '状态'},*/
+                {align: 'center', toolbar: '#userTableBar', title: '操作', minWidth: 150}
+            ]]
+        });
+
+        // 添加按钮点击事件
+        $('#userBtnAdd').click(function () {
+            showEditModel();
+        });
+
+        // 工具条点击事件
+        table.on('tool(storein)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'edit') { // 修改
+                showEditModel(data);
+            }
+            else if(layEvent === 'delete'){
+                layer.confirm('确定删除该条数据吗？', {
+                    skin: 'layui-layer-admin'
+                }, function (i) {
+                    layer.close(i);
+                    layer.load(2);
+                    $.ajax({
+                        url: config.base_server + 'QualityStoreIn/removeById.do?entityID='+data.id,
+                        type: 'delete',
+                        dataType: 'JSON',
+                        success: function (data) {
+                            layer.closeAll('loading');
+                            layer.msg(data.message, {icon: 1});
+                            table.reload('userTable', {});
+                        },
+                        error: function (xhr) {
+                            layer.closeAll('loading');
+                            if (xhr.status == 500) {
+                                layer.msg(xhr.responseJSON.message, {icon: 5});
+                            }
+                        }
+                    });
+                });
+            }
+        });
+
+        // 显示表单弹窗
+        function showEditModel(data) {
+            admin.putTempData('quality_storein', data);
+            admin.open({
+                title: data ? "新增入库信息":"修改入库信息",
+                url: 'components/store/storein_form.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
+                }
+            });
+        };
+
+
+        laydate.render({
+            elem: '#crtTime'
+            ,range: true
+        });
+
+
+        // 搜索按钮点击事件
+        $('#userBtnSearch').bind("click",function() {
+            var barcode = $('#barCode').val();
+            var sampleName = $('#sampleName').val();
+            var sampleCode = $('#sampleCode').val();
+            var timeValue = $("#crtTime").val().split(" - ");
+            var begin = timeValue[0];
+            var end = timeValue[1]
+
+            table.reload('storein', {where: {"search-EQ-barCode": barcode,
+                    "search-LIKE-sampleName": sampleName,
+                    "search-EQ-sampleCode": sampleCode,
+                    "search-GE-crtTime":begin,
+                    "search-LT-crtTime":end,
+                }});
+        });
+
+        //批量删除
+        $("#userBtnRM").click(function(){
+            var checkRows = table.checkStatus('storein');
+            if (checkRows.data.length == 0) {
+                layer.msg('请选择要删除的数据', {icon: 2});
+            }else{
+                var ids="";
+                checkRows.data.forEach(function(item,index,array){
+                    ids+=item.id+",";
+                })
+                if(ids){
+                    ids = ids.slice(0,-1);
+                }
+                admin.req("QualityStoreIn/removeMore.do",{
+                    entityIDS: ids
+                },function(data){
+                    if (data.status == 200) {
+                        layer.msg(data.message, {icon: 1});
+                        table.reload('userTable', {});
+                    } else if(data.status == 500) {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                },'delete')
+            }
+
+        })
+
+        // 导出excel
+        $('#userBtnExp').click(function () {
+            var checkRows = table.checkStatus('storein');
+            if (checkRows.data.length == 0) {
+                layer.msg('请选择要导出的数据', {icon: 2});
+            } else {
+                table.exportFile(ins1.config.id, checkRows.data, 'xls');
+            }
+        });
+    });
+</script>

@@ -39,7 +39,7 @@
                     <a href="javascript:;" class="layui-link pull-right">忘记密码？</a>
                 </div>
                 <div class="layui-form-item">
-                    <button lay-filter="login-submit" class="layui-btn layui-btn-fluid" lay-submit>登 录</button>
+                    <button lay-filter="login-submit" id="btn" class="layui-btn layui-btn-fluid" lay-submit>登 录</button>
                 </div>
             </form>
         </div>
@@ -61,7 +61,15 @@
         var $ = layui.jquery;
         var form = layui.form;
         var config = layui.config;
-        debugger
+
+        this.enterConfirm = function(event){
+            if(event.keyCode === 13){
+                $("#btn").click();
+                return false; //阻止系统默认回车事件
+            }
+        };
+
+        $(document).on('keydown', this.enterConfirm); //监听键盘事件
 
 
         if (config.getToken()) {

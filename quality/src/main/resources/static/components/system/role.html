@@ -167,7 +167,6 @@
 
         // 查询表单
         form.on('submit(role-form-search)', function (data) {
-            debugger
             var field = data.field;
             //执行重载
             table.reload('roleTable', {
@@ -189,7 +188,6 @@
 
         // 显示编辑弹窗
         function showEditModel(data) {
-            debugger
             if(data){
                 $.ajax({
                     url: config.base_server + 'QualityRole/queryById.do?id='+data.id+'',

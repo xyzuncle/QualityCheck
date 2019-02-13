@@ -50,6 +50,18 @@ public class QualityBarcode extends BaseEntity {
     @TableField("sampleModel")
     private String sampleModel;
 
+    @ApiModelProperty(value = "样品ID")
+    @TableField("sampleId")
+    private String sampleId;
+
+    public String getSampleId() {
+        return sampleId;
+    }
+
+    public void setSampleId(String sampleId) {
+        this.sampleId = sampleId;
+    }
+
     public String getSampleModel() {
         return sampleModel;
     }

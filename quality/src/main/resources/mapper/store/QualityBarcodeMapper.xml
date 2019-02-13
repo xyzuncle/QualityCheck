@@ -16,6 +16,7 @@
         <result column="crtTime" property="crtTime" />
         <result column="updTime" property="updTime" />
         <result column="sampleModel" property="sampleModel"/>
+        <result column="sampleId" property="sampleId"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

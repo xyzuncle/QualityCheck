@@ -7,25 +7,19 @@ import com.quality.common.util.Servlets;
 import com.quality.common.util.Sort;
 import com.quality.common.util.Tools;
 import com.quality.common.controller.BaseController;
+import com.quality.delegate.dto.QualityAssignmentStatementDto;
 import com.quality.delegate.entity.QualityAssignmentStatement;
-import com.quality.delegate.entity.QualityAssignmentStatementDto;
-import com.quality.delegate.entity.QualityDelegateunit;
 import com.quality.delegate.service.IQualityAssignmentStatementService;
-import com.quality.delegate.service.IQualityDelegateunitService;
-import com.quality.delegate.service.IQualitySampleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Controller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +51,7 @@ public class QualityAssignmentStatementController extends BaseController<Quality
     @ApiOperation(value = "QualityAssignmentStatement多条件查询", notes = "多条件查询")
     @RequestMapping(value = "/query.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public PageResult<QualityAssignmentStatementDto> queryConditionPage(HttpServletRequest request) {
+    public PageResult<QualityAssignmentStatement> queryConditionPage(HttpServletRequest request) {
 
         PageResult<QualityAssignmentStatementDto> QualityAssignmentStatemenDtotListPage = null;
         PageResult<QualityAssignmentStatement> QualityAssignmentStatementListPage = null;
@@ -67,9 +61,9 @@ public class QualityAssignmentStatementController extends BaseController<Quality
             //如果需要按多个字段排序，请传多个参数,为了反射方便，数据库不使用下划线了
             Sort sort = new Sort(Sort.DESC, Tools.str2StrArray("crtTime"));
             QualityAssignmentStatementListPage = (PageResult<QualityAssignmentStatement>) queryContion(searchParams, sort);
-            QualityAssignmentStatemenDtotListPage = this.defaultDAO.converQualityAssignmentStatementDto(QualityAssignmentStatementListPage);
-            QualityAssignmentStatemenDtotListPage.setMsg("查询成功");
-            return QualityAssignmentStatemenDtotListPage;
+            //QualityAssignmentStatemenDtotListPage = this.defaultDAO.converQualityAssignmentStatementDto(QualityAssignmentStatementListPage);
+            QualityAssignmentStatementListPage.setMsg("查询成功");
+            return QualityAssignmentStatementListPage;
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("查询失败", 500);
@@ -82,16 +76,18 @@ public class QualityAssignmentStatementController extends BaseController<Quality
             notes = "保存和修改QualityAssignmentStatement信息")
     @RequestMapping(value = "/save.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Object saveOrUpdate(@RequestBody QualityAssignmentStatement QualityAssignmentStatement) {
+    public Object saveOrUpdate(@RequestBody QualityAssignmentStatementDto QualityAssignmentStatementDto) {
         boolean result = false;
         try {
-            result = this.defaultDAO.saveOrUpdate(QualityAssignmentStatement);
+            result = this.defaultDAO.saveOrUpdateDto(QualityAssignmentStatementDto);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("保存失败", 500);
         }
         return super.jsonObjectResult(result, "保存成功");
     }
+
+
 
     @ApiOperation(value = "根据Id删除QualityAssignmentStatement信息")
     @RequestMapping(value = "/removeById.do", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -107,8 +103,8 @@ public class QualityAssignmentStatementController extends BaseController<Quality
     @ResponseBody
     public Object queryById(@ApiParam(value = "QualityAssignmentStatement唯一标识") @RequestParam(name = "id") String id) {
         try {
-            QualityAssignmentStatement QualityAssignmentStatement = this.defaultDAO.getById(id);
-            return super.jsonObjectResult(QualityAssignmentStatement, "查询成功");
+            QualityAssignmentStatementDto dto = this.defaultDAO.getByAgreementNo(id);
+            return super.jsonObjectResult(dto, "查询成功");
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("查询失败", 500);

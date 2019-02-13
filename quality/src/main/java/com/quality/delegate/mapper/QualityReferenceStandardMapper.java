@@ -3,6 +3,8 @@ package com.quality.delegate.mapper;
 import com.quality.delegate.entity.QualityReferenceStandard;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * <p>
  * 认可标准 Mapper 接口
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface QualityReferenceStandardMapper extends BaseMapper<QualityReferenceStandard> {
 
+    List<QualityReferenceStandard> queryByReferenceStandardIds(String[] referenceStandardIds);
 }

@@ -9,9 +9,11 @@
     <result column="updTime" property="updTime" />
     <result column="deleted" property="deleted" />
         <result column="agreementNo" property="agreementNo" />
+        <result column="state" property="state" />
         <result column="delegateType" property="delegateType" />
         <result column="delegateUnitID" property="delegateUnitID" />
-        <result column="sampleID" property="sampleID" />
+        <result column="sampleIDs" property="sampleIDs" />
+        <result column="referenceStandardIds" property="referenceStandardIds"/>
         <result column="designatedMonitoringBasis" property="designatedMonitoringBasis" />
         <result column="designatedMonitoringItems" property="designatedMonitoringItems" />
         <result column="designatedMonitoringRequirement" property="designatedMonitoringRequirement" />
@@ -32,7 +34,11 @@
         crtTime,
         updTime,
         deleted,
-        agreementNo, delegateType, delegateUnitID, sampleID, designatedMonitoringBasis, designatedMonitoringItems, designatedMonitoringRequirement, acceptanceReviewType, plannedCompletionTime, secret, standardEffectivePeriod, standardconClusion, uncertainty, confirmMonitoringBasis, reference, acceptOpinion
+        agreementNo,state, delegateType, delegateUnitID, sampleIDs,referenceStandardIds, designatedMonitoringBasis, designatedMonitoringItems, designatedMonitoringRequirement, acceptanceReviewType, plannedCompletionTime, secret, standardEffectivePeriod, standardconClusion, uncertainty, confirmMonitoringBasis, reference, acceptOpinion
     </sql>
+
+    <select id="getByAgreementNo" resultType="com.quality.delegate.entity.QualityAssignmentStatement">
+        SELECT  <include refid="Base_Column_List"/> FROM  quality_assignment_statement where agreementNo =#{agreementNo}
+    </select>
 
 </mapper>

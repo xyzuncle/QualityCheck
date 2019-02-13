@@ -6,6 +6,8 @@ import com.quality.delegate.service.IQualitySampleService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 样机信息 服务实现类
@@ -17,4 +19,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class QualitySampleServiceImpl extends ServiceImpl<QualitySampleMapper, QualitySample> implements IQualitySampleService {
 
+    @Override
+    public List<QualitySample> queryBySampleIds(String[] sampleIds) {
+        return this.baseMapper.queryBySampleIds(sampleIds);
+    }
 }

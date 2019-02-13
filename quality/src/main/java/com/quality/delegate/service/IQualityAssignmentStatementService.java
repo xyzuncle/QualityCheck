@@ -1,9 +1,9 @@
 package com.quality.delegate.service;
 
 import com.quality.common.dto.PageResult;
+import com.quality.delegate.dto.QualityAssignmentStatementDto;
 import com.quality.delegate.entity.QualityAssignmentStatement;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.quality.delegate.entity.QualityAssignmentStatementDto;
 
 /**
  * <p>
@@ -18,4 +18,7 @@ public interface IQualityAssignmentStatementService extends IService<QualityAssi
 
     public PageResult<QualityAssignmentStatementDto> converQualityAssignmentStatementDto(PageResult<QualityAssignmentStatement> qualityAssignmentStatementListPage);
 
+    boolean saveOrUpdateDto(QualityAssignmentStatementDto QualityAssignmentStatementDto);
+
+    QualityAssignmentStatementDto getByAgreementNo(String agreementNo);
 }

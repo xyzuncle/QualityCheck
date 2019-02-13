@@ -25,4 +25,13 @@
         NAME, measured, standardSpecification, measureRange, extend, remark
     </sql>
 
+    <!--查询符合条件的参考信息信息-->
+    <select id="queryByReferenceStandardIds" parameterType="string" resultMap="BaseResultMap">
+
+        select <include refid="Base_Column_List"/> FROM  quality_reference_standard where id IN
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

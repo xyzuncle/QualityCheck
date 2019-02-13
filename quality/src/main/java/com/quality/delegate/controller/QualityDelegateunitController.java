@@ -125,15 +125,20 @@ public Object deleteByIds(@ApiParam(value = "多个元素ID") @RequestParam(name
 
 @RequestMapping(value = "/list.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @ResponseBody
-public Object getQualityDelegateunitList(HttpServletRequest request){
-    try{
-    //把查询条件都写好了
-        Map<String, Object> searchParams=Servlets.getParametersStartingWith(request,"search-");
-        List<QualityDelegateunit> list=super.queryContionNoPage(searchParams);
-        return super.jsonObjectResult(list,"查询成功");
-    }catch(Exception e){
+public PageResult<QualityDelegateunit> getQualityDelegateunitList(HttpServletRequest request){
+
+    PageResult<QualityDelegateunit> QualityDelegateunitListPage = null;
+    try {
+        //把查询条件都写好了
+        Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search-");
+        //如果需要按多个字段排序，请传多个参数,为了反射方便，数据库不使用下划线了
+        Sort sort = new Sort(Sort.DESC, Tools.str2StrArray("crtTime"));
+        QualityDelegateunitListPage = (PageResult<QualityDelegateunit>) queryContion(searchParams, sort);
+        QualityDelegateunitListPage.setMsg("查询成功");
+        return QualityDelegateunitListPage;
+    } catch (Exception e) {
         e.printStackTrace();
-        throw new BaseException("查询失败",500);
+        throw new BaseException("查询失败", 500);
     }
 }
 

@@ -8,14 +8,17 @@
     <result column="crtTime" property="crtTime" />
     <result column="updTime" property="updTime" />
     <result column="deleted" property="deleted" />
-        <result column="sampleName" property="sampleName" />
-        <result column="sampleCode" property="sampleCode" />
-        <result column="sampleModel" property="sampleModel" />
-        <result column="sampleSpecification" property="sampleSpecification" />
-        <result column="sampleNum" property="sampleNum" />
-        <result column="receivedDate" property="receivedDate" />
-        <result column="sender" property="sender" />
-        <result column="receivedType" property="receivedType" />
+    <result column="sampleName" property="sampleName" />
+    <result column="sampleCode" property="sampleCode" />
+    <result column="sampleModel" property="sampleModel" />
+    <result column="sampleSpecification" property="sampleSpecification" />
+    <result column="sampleNum" property="sampleNum" />
+    <result column="receivedDate" property="receivedDate" />
+    <result column="sender" property="sender" />
+    <result column="receivedType" property="receivedType" />
+    <result column="unitName" property="unitName" />
+    <result column="delegateUnitID" property="delegateUnitID" />
+    <result column="laboratory" property="laboratory" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -24,7 +27,15 @@
         crtTime,
         updTime,
         deleted,
-        sampleName, sampleCode, sampleModel, sampleSpecification, sampleNum, receivedDate, sender, receivedType
+        sampleName, sampleCode, sampleModel, sampleSpecification, sampleNum, receivedDate, sender, receivedType,unitName,delegateUnitID,laboratory
     </sql>
 
+    <!--查询符合条件的样品信息-->
+    <select id="queryBySampleIds" parameterType="string" resultMap="BaseResultMap">
+
+        select <include refid="Base_Column_List"/> FROM  quality_sample where id IN
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>

@@ -1,94 +1,76 @@
-package com.quality.delegate.entity;
+package com.quality.delegate.dto;
 
-import com.quality.common.entity.BaseEntity;
-import com.baomidou.mybatisplus.annotation.TableField;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import com.quality.delegate.entity.QualityReferenceStandard;
+import com.quality.delegate.entity.QualitySample;
+
+import java.util.List;
 
 /**
- * <p>
- * 委托协议书
- * </p>
- *
- * @author yerui
- * @since 2019-01-05
+ * Created by sunzw on 2019/1/28.
  */
-@ApiModel(value="QualityAssignmentStatement对象", description="委托协议书")
-public class QualityAssignmentStatement extends BaseEntity {
+public class QualityAssignmentStatementDto {
 
-    private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "协议书审批状态")
-    @TableField("state")
-    private Integer state=0; // 审批状态 0初始录入,1.开始审批,2为审批完成
+    private Integer state=0;// 状态 0初始录入,1.开始审批,2为审批完成
 
-    @ApiModelProperty(value = "协议书编号")
-    @TableField("agreementNo")
+    private String assignmentId;
+
     private String agreementNo;
 
-    @ApiModelProperty(value = "委托类型")
-    @TableField("delegateType")
     private String delegateType;
 
-    @ApiModelProperty(value = "委托单位ID")
-    @TableField("delegateUnitID")
     private String delegateUnitID;
 
-    @ApiModelProperty(value = "样机ID集合")
-    @TableField("sampleIDs")
-    private String sampleIDs;
+    private String sampleID;
 
-    @ApiModelProperty(value = "参考规范ID集合")
-    @TableField("referenceStandardIds")
-    private String referenceStandardIds;
-
-    @ApiModelProperty(value = "指定监测依据")
-    @TableField("designatedMonitoringBasis")
     private String designatedMonitoringBasis;
 
-    @ApiModelProperty(value = "指定监测项目")
-    @TableField("designatedMonitoringItems")
     private String designatedMonitoringItems;
 
-    @ApiModelProperty(value = "指定监测要求")
-    @TableField("designatedMonitoringRequirement")
     private String designatedMonitoringRequirement;
 
-    @ApiModelProperty(value = "受理评审类型")
-    @TableField("acceptanceReviewType")
     private String acceptanceReviewType;
 
-    @ApiModelProperty(value = "计划完成时间")
-    @TableField("plannedCompletionTime")
     private String plannedCompletionTime;
 
-    @ApiModelProperty(value = "是否保密")
-    @TableField("secret")
     private String secret;
 
-    @ApiModelProperty(value = "标准有效期")
-    @TableField("standardEffectivePeriod")
     private String standardEffectivePeriod;
 
-    @ApiModelProperty(value = "标准结论")
-    @TableField("standardconClusion")
     private String standardconClusion;
 
-    @ApiModelProperty(value = "不确定度")
-    @TableField("uncertainty")
     private String uncertainty;
 
-    @ApiModelProperty(value = "确认监测依据")
-    @TableField("confirmMonitoringBasis")
     private String confirmMonitoringBasis;
 
-    @ApiModelProperty(value = "参照检验依据")
-    @TableField("reference")
     private String reference;
 
-    @ApiModelProperty(value = "受理意见")
-    @TableField("acceptOpinion")
     private String acceptOpinion;
+
+    private List<QualitySample> qualitySamples;
+
+    private List<QualityReferenceStandard> qualityReferenceStandards;
+
+
+    private String unitId;
+
+    private String unitName;
+
+    private String address;
+
+    private String zipCode;
+
+    private String linkMan;
+
+    private String phone;
+
+    private String mobile;
+
+    private String fax;
+
+    public String getAssignmentId() {
+        return assignmentId;
+    }
 
     public Integer getState() {
         return state;
@@ -96,6 +78,10 @@ public class QualityAssignmentStatement extends BaseEntity {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public void setAssignmentId(String assignmentId) {
+        this.assignmentId = assignmentId;
     }
 
     public String getAgreementNo() {
@@ -122,20 +108,12 @@ public class QualityAssignmentStatement extends BaseEntity {
         this.delegateUnitID = delegateUnitID;
     }
 
-    public String getSampleIDs() {
-        return sampleIDs;
+    public String getSampleID() {
+        return sampleID;
     }
 
-    public void setSampleIDs(String sampleIDs) {
-        this.sampleIDs = sampleIDs;
-    }
-
-    public String getReferenceStandardIds() {
-        return referenceStandardIds;
-    }
-
-    public void setReferenceStandardIds(String referenceStandardIds) {
-        this.referenceStandardIds = referenceStandardIds;
+    public void setSampleID(String sampleID) {
+        this.sampleID = sampleID;
     }
 
     public String getDesignatedMonitoringBasis() {
@@ -234,27 +212,83 @@ public class QualityAssignmentStatement extends BaseEntity {
         this.acceptOpinion = acceptOpinion;
     }
 
-    @Override
-    public String toString() {
-        return "QualityAssignmentStatement{" +
-        "agreementNo=" + agreementNo +
-        "state=" + state +
-        ", delegateType=" + delegateType +
-        ", delegateUnitID=" + delegateUnitID +
-        ", sampleID=" + sampleIDs +
-        ", referenceStandardIds=" + referenceStandardIds +
-        ", designatedMonitoringBasis=" + designatedMonitoringBasis +
-        ", designatedMonitoringItems=" + designatedMonitoringItems +
-        ", designatedMonitoringRequirement=" + designatedMonitoringRequirement +
-        ", acceptanceReviewType=" + acceptanceReviewType +
-        ", plannedCompletionTime=" + plannedCompletionTime +
-        ", secret=" + secret +
-        ", standardEffectivePeriod=" + standardEffectivePeriod +
-        ", standardconClusion=" + standardconClusion +
-        ", uncertainty=" + uncertainty +
-        ", confirmMonitoringBasis=" + confirmMonitoringBasis +
-        ", reference=" + reference +
-        ", acceptOpinion=" + acceptOpinion +
-        "}";
+    public List<QualitySample> getQualitySamples() {
+        return qualitySamples;
+    }
+
+    public void setQualitySamples(List<QualitySample> qualitySamples) {
+        this.qualitySamples = qualitySamples;
+    }
+
+    public List<QualityReferenceStandard> getQualityReferenceStandards() {
+        return qualityReferenceStandards;
+    }
+
+    public void setQualityReferenceStandards(List<QualityReferenceStandard> qualityReferenceStandards) {
+        this.qualityReferenceStandards = qualityReferenceStandards;
+    }
+
+    public String getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
+    }
+
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getLinkMan() {
+        return linkMan;
+    }
+
+    public void setLinkMan(String linkMan) {
+        this.linkMan = linkMan;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
     }
 }

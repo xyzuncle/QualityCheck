@@ -51,6 +51,19 @@ public class QualitySample extends BaseEntity {
     @TableField("receivedType")
     private String receivedType;
 
+    @ApiModelProperty(value = "单位名称")
+    @TableField("unitName")
+    private String unitName;
+
+    @ApiModelProperty(value = "委托单位ID")
+    @TableField("delegateUnitID")
+    private String delegateUnitID;
+
+
+    @ApiModelProperty(value = "实验室")
+    @TableField("laboratory")
+    private String laboratory;
+
 
     public String getSampleName() {
         return sampleName;
@@ -116,6 +129,30 @@ public class QualitySample extends BaseEntity {
         this.receivedType = receivedType;
     }
 
+    public String getUnitName() {
+        return unitName;
+    }
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
+    public String getDelegateUnitID() {
+        return delegateUnitID;
+    }
+
+    public void setDelegateUnitID(String delegateUnitID) {
+        this.delegateUnitID = delegateUnitID;
+    }
+
+    public String getLaboratory() {
+        return laboratory;
+    }
+
+    public void setLaboratory(String laboratory) {
+        this.laboratory = laboratory;
+    }
+
     @Override
     public String toString() {
         return "QualitySample{" +
@@ -124,6 +161,9 @@ public class QualitySample extends BaseEntity {
         ", sampleModel=" + sampleModel +
         ", sampleSpecification=" + sampleSpecification +
         ", sampleNum=" + sampleNum +
+        ", unitName=" + unitName +
+        ", delegateUnitID=" + delegateUnitID +
+        ", laboratory=" + laboratory +
         ", receivedDate=" + receivedDate +
         ", sender=" + sender +
         ", receivedType=" + receivedType +

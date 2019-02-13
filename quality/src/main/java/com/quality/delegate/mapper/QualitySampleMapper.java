@@ -3,6 +3,8 @@ package com.quality.delegate.mapper;
 import com.quality.delegate.entity.QualitySample;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * <p>
  * 样机信息 Mapper 接口
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface QualitySampleMapper extends BaseMapper<QualitySample> {
 
+    List<QualitySample> queryBySampleIds(String[] sampleIds);
 }

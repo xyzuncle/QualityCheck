@@ -2,6 +2,7 @@ package com.quality.delegate.mapper;
 
 import com.quality.delegate.entity.QualityAssignmentStatement;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface QualityAssignmentStatementMapper extends BaseMapper<QualityAssignmentStatement> {
 
+    QualityAssignmentStatement getByAgreementNo(@Param(value = "agreementNo") String agreementNo);
 }

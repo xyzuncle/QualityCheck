@@ -353,35 +353,7 @@
 
 
 
-        //回写数据
-        var data =  admin.getTempData('quality_assignment');
-        if (data) {
-            layer.closeAll('loading');
-            //协议书信息
-            $("#assignmentId").val(data.assignmentId);
-            $("#agreementNo").val(data.agreementNo);
-            $("#delegateType").val(data.delegateType);
-            //代理机构
-            $("#unitName").val(data.unitName);
-            $("#address").val(data.address);
-            $("#zipCode").val(data.zipCode);
-            $("#linkMan").val(data.linkMan);
-            $("#phone").val(data.phone);
-            $("#mobile").val(data.mobile);
-            $("#fax").val(data.fax);
-            $("#unitId").val(data.unitId);
-            //样品
-            debugger
-            var sampledata =  data.qualitySamples;
-            table.reload('assignmentSampleTable',{
-                data : sampledata
-            });
-            //参考信息
-            var referenceStandarddata =  data.qualityReferenceStandards;
-            table.reload('assignmentReferenceStandardTable',{
-                data : referenceStandarddata
-            });
-        }
+
 
 
         // 提交按钮
@@ -432,5 +404,36 @@
 
 
         });
+
+        //回写数据
+        var data =  admin.getTempData('quality_assignment');
+        debugger
+        if (data) {
+            layer.closeAll('loading');
+            //协议书信息
+            $("#assignmentId").val(data.assignmentId);
+            $("#agreementNo").val(data.agreementNo);
+            $("#delegateType").val(data.delegateType);
+            //代理机构
+            $("#unitName").val(data.unitName);
+            $("#address").val(data.address);
+            $("#zipCode").val(data.zipCode);
+            $("#linkMan").val(data.linkMan);
+            $("#phone").val(data.phone);
+            $("#mobile").val(data.mobile);
+            $("#fax").val(data.fax);
+            $("#unitId").val(data.unitId);
+            //样品
+            debugger
+            var sampledata =  data.qualitySamples;
+            table.reload('assignmentSampleTable',{
+                data : sampledata
+            });
+            //参考信息
+            var referenceStandarddata =  data.qualityReferenceStandards;
+            table.reload('assignmentReferenceStandardTable',{
+                data : referenceStandarddata
+            });
+        }
     });
 </script>

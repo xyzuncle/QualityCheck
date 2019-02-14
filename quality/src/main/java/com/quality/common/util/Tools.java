@@ -4,6 +4,7 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -310,7 +311,28 @@ public class Tools {
 		return result;
 	}
 
-
+	/**
+	 *  把集合转换为字符串
+	 * @param list
+	 * @return
+	 */
+	public static String listToString(List<String> list){
+		if(list==null){
+			return null;
+		}
+		StringBuilder result = new StringBuilder();
+		boolean first = true;
+		//第一个前面不拼接","
+		for(String string :list) {
+			if(first) {
+				first=false;
+			}else{
+				result.append(",");
+			}
+			result.append(string);
+		}
+		return result.toString();
+	}
 
 	public static void main(String[] args) {
 		String[] aaa = new String[]{"aaaa", "bbbb"};

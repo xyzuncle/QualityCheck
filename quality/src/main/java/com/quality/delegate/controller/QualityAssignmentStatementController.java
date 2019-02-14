@@ -51,7 +51,7 @@ public class QualityAssignmentStatementController extends BaseController<Quality
     @ApiOperation(value = "QualityAssignmentStatement多条件查询", notes = "多条件查询")
     @RequestMapping(value = "/query.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public PageResult<QualityAssignmentStatement> queryConditionPage(HttpServletRequest request) {
+    public PageResult<QualityAssignmentStatementDto> queryConditionPage(HttpServletRequest request) {
 
         PageResult<QualityAssignmentStatementDto> QualityAssignmentStatemenDtotListPage = null;
         PageResult<QualityAssignmentStatement> QualityAssignmentStatementListPage = null;
@@ -61,9 +61,9 @@ public class QualityAssignmentStatementController extends BaseController<Quality
             //如果需要按多个字段排序，请传多个参数,为了反射方便，数据库不使用下划线了
             Sort sort = new Sort(Sort.DESC, Tools.str2StrArray("crtTime"));
             QualityAssignmentStatementListPage = (PageResult<QualityAssignmentStatement>) queryContion(searchParams, sort);
-            //QualityAssignmentStatemenDtotListPage = this.defaultDAO.converQualityAssignmentStatementDto(QualityAssignmentStatementListPage);
-            QualityAssignmentStatementListPage.setMsg("查询成功");
-            return QualityAssignmentStatementListPage;
+            QualityAssignmentStatemenDtotListPage = this.defaultDAO.converQualityAssignmentStatementDto(QualityAssignmentStatementListPage);
+            QualityAssignmentStatemenDtotListPage.setMsg("查询成功");
+            return QualityAssignmentStatemenDtotListPage;
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("查询失败", 500);

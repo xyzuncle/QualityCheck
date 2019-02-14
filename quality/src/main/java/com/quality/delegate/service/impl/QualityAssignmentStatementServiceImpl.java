@@ -56,6 +56,37 @@ public class QualityAssignmentStatementServiceImpl extends ServiceImpl<QualityAs
         List<QualityAssignmentStatement> list = qualityAssignmentStatementListPage.getData();
 
         List<QualityAssignmentStatementDto> dtolist = new ArrayList<QualityAssignmentStatementDto>();
+
+        for(int i=0;i<list.size();i++){
+
+            QualityAssignmentStatement assignmentStatement = list.get(i);
+            QualityAssignmentStatementDto dto = new QualityAssignmentStatementDto();
+            dto.setAssignmentId(assignmentStatement.getId());
+            //查询委托单位信息
+            String delegateUnitID = assignmentStatement.getDelegateUnitID();
+            QualityDelegateunit delegateunit = delegateunitService.getById(delegateUnitID);
+            BeanCopierUtils.copyProperties(delegateunit, dto);
+            dto.setUnitId(delegateunit.getId());
+
+            String sampleids = assignmentStatement.getSampleIDs();
+            String referenceStandardIds= assignmentStatement.getReferenceStandardIds();
+
+            //查询样品信息
+            String[] sampleIds = Tools.str2StrArray(sampleids);
+            List<QualitySample> sampleList = sampleService.queryBySampleIds(sampleIds);
+
+
+            //查询参考规范
+            String[] referenceStandardids = Tools.str2StrArray(referenceStandardIds);
+            List<QualityReferenceStandard> referenceStandardList = referenceStandardService.queryByReferenceStandardIds(referenceStandardids);
+            BeanCopierUtils.copyProperties(assignmentStatement, dto);
+
+            dto.setQualitySamples(sampleList);
+            dto.setQualityReferenceStandards(referenceStandardList);
+            dtolist.add(dto);
+
+        }
+
         /*list.forEach(item -> {
             QualityAssignmentStatementDto dto = new QualityAssignmentStatementDto();
             dto.setAgreementNo(item.getAgreementNo());

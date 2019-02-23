@@ -11,16 +11,12 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author yerui
- * @since 2019-01-05
+ * @since 2019-02-23
  */
 @ApiModel(value="QualityAssignmentStatement对象", description="委托协议书")
 public class QualityAssignmentStatement extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
-
-    @ApiModelProperty(value = "协议书审批状态")
-    @TableField("state")
-    private Integer state=0; // 审批状态 0初始录入,1.开始审批,2为审批完成
 
     @ApiModelProperty(value = "协议书编号")
     @TableField("agreementNo")
@@ -34,13 +30,13 @@ public class QualityAssignmentStatement extends BaseEntity {
     @TableField("delegateUnitID")
     private String delegateUnitID;
 
-    @ApiModelProperty(value = "样机ID集合")
-    @TableField("sampleIDs")
-    private String sampleIDs;
-
     @ApiModelProperty(value = "参考规范ID集合")
     @TableField("referenceStandardIds")
     private String referenceStandardIds;
+
+    @ApiModelProperty(value = "样机ID集合")
+    @TableField("sampleIDs")
+    private String sampleIDs;
 
     @ApiModelProperty(value = "指定监测依据")
     @TableField("designatedMonitoringBasis")
@@ -90,13 +86,26 @@ public class QualityAssignmentStatement extends BaseEntity {
     @TableField("acceptOpinion")
     private String acceptOpinion;
 
-    public Integer getState() {
-        return state;
-    }
+    @ApiModelProperty(value = "流程定义id")
+    @TableField("procdefId")
+    private String procdefId;
 
-    public void setState(Integer state) {
-        this.state = state;
-    }
+    @ApiModelProperty(value = "执行实例ID")
+    @TableField("executionId")
+    private String executionId;
+
+    @ApiModelProperty(value = "审批状态 0初始录入,1.开始审批,2为审批完成")
+    @TableField("state")
+    private Integer state;
+
+    @ApiModelProperty(value = "附件")
+    @TableField("agreementAttachment")
+    private String agreementAttachment;
+
+    @ApiModelProperty(value = "备注")
+    @TableField("remarks")
+    private String remarks;
+
 
     public String getAgreementNo() {
         return agreementNo;
@@ -122,20 +131,20 @@ public class QualityAssignmentStatement extends BaseEntity {
         this.delegateUnitID = delegateUnitID;
     }
 
-    public String getSampleIDs() {
-        return sampleIDs;
-    }
-
-    public void setSampleIDs(String sampleIDs) {
-        this.sampleIDs = sampleIDs;
-    }
-
     public String getReferenceStandardIds() {
         return referenceStandardIds;
     }
 
     public void setReferenceStandardIds(String referenceStandardIds) {
         this.referenceStandardIds = referenceStandardIds;
+    }
+
+    public String getSampleIDs() {
+        return sampleIDs;
+    }
+
+    public void setSampleIDs(String sampleIDs) {
+        this.sampleIDs = sampleIDs;
     }
 
     public String getDesignatedMonitoringBasis() {
@@ -234,27 +243,71 @@ public class QualityAssignmentStatement extends BaseEntity {
         this.acceptOpinion = acceptOpinion;
     }
 
+    public String getProcdefId() {
+        return procdefId;
+    }
+
+    public void setProcdefId(String procdefId) {
+        this.procdefId = procdefId;
+    }
+
+    public String getExecutionId() {
+        return executionId;
+    }
+
+    public void setExecutionId(String executionId) {
+        this.executionId = executionId;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public String getAgreementAttachment() {
+        return agreementAttachment;
+    }
+
+    public void setAgreementAttachment(String agreementAttachment) {
+        this.agreementAttachment = agreementAttachment;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
     @Override
     public String toString() {
         return "QualityAssignmentStatement{" +
-        "agreementNo=" + agreementNo +
-        "state=" + state +
-        ", delegateType=" + delegateType +
-        ", delegateUnitID=" + delegateUnitID +
-        ", sampleID=" + sampleIDs +
-        ", referenceStandardIds=" + referenceStandardIds +
-        ", designatedMonitoringBasis=" + designatedMonitoringBasis +
-        ", designatedMonitoringItems=" + designatedMonitoringItems +
-        ", designatedMonitoringRequirement=" + designatedMonitoringRequirement +
-        ", acceptanceReviewType=" + acceptanceReviewType +
-        ", plannedCompletionTime=" + plannedCompletionTime +
-        ", secret=" + secret +
-        ", standardEffectivePeriod=" + standardEffectivePeriod +
-        ", standardconClusion=" + standardconClusion +
-        ", uncertainty=" + uncertainty +
-        ", confirmMonitoringBasis=" + confirmMonitoringBasis +
-        ", reference=" + reference +
-        ", acceptOpinion=" + acceptOpinion +
-        "}";
+                "agreementNo=" + agreementNo +
+                ", delegateType=" + delegateType +
+                ", delegateUnitID=" + delegateUnitID +
+                ", referenceStandardIds=" + referenceStandardIds +
+                ", sampleIDs=" + sampleIDs +
+                ", designatedMonitoringBasis=" + designatedMonitoringBasis +
+                ", designatedMonitoringItems=" + designatedMonitoringItems +
+                ", designatedMonitoringRequirement=" + designatedMonitoringRequirement +
+                ", acceptanceReviewType=" + acceptanceReviewType +
+                ", plannedCompletionTime=" + plannedCompletionTime +
+                ", secret=" + secret +
+                ", standardEffectivePeriod=" + standardEffectivePeriod +
+                ", standardconClusion=" + standardconClusion +
+                ", uncertainty=" + uncertainty +
+                ", confirmMonitoringBasis=" + confirmMonitoringBasis +
+                ", reference=" + reference +
+                ", acceptOpinion=" + acceptOpinion +
+                ", procdefId=" + procdefId +
+                ", executionId=" + executionId +
+                ", state=" + state +
+                ", agreementAttachment=" + agreementAttachment +
+                ", remarks=" + remarks +
+                "}";
     }
 }

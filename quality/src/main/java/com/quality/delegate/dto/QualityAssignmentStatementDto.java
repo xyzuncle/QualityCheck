@@ -15,13 +15,20 @@ public class QualityAssignmentStatementDto {
 
     private String assignmentId;
 
+
+    //private List<QualitySample> qualitySamples;
+
+    //private List<QualityReferenceStandard> qualityReferenceStandards;
+
     private String agreementNo;
 
     private String delegateType;
 
     private String delegateUnitID;
 
-    private String sampleID;
+    private String referenceStandardIds;
+
+    private String sampleIDs;
 
     private String designatedMonitoringBasis;
 
@@ -47,9 +54,14 @@ public class QualityAssignmentStatementDto {
 
     private String acceptOpinion;
 
-    private List<QualitySample> qualitySamples;
+    private String procdefId;
 
-    private List<QualityReferenceStandard> qualityReferenceStandards;
+    private String executionId;
+
+
+    private String agreementAttachment;
+
+    private String remarks;
 
 
     private String unitId;
@@ -68,16 +80,16 @@ public class QualityAssignmentStatementDto {
 
     private String fax;
 
-    public String getAssignmentId() {
-        return assignmentId;
-    }
-
     public Integer getState() {
         return state;
     }
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public String getAssignmentId() {
+        return assignmentId;
     }
 
     public void setAssignmentId(String assignmentId) {
@@ -108,12 +120,20 @@ public class QualityAssignmentStatementDto {
         this.delegateUnitID = delegateUnitID;
     }
 
-    public String getSampleID() {
-        return sampleID;
+    public String getReferenceStandardIds() {
+        return referenceStandardIds;
     }
 
-    public void setSampleID(String sampleID) {
-        this.sampleID = sampleID;
+    public void setReferenceStandardIds(String referenceStandardIds) {
+        this.referenceStandardIds = referenceStandardIds;
+    }
+
+    public String getSampleIDs() {
+        return sampleIDs;
+    }
+
+    public void setSampleIDs(String sampleIDs) {
+        this.sampleIDs = sampleIDs;
     }
 
     public String getDesignatedMonitoringBasis() {
@@ -212,20 +232,36 @@ public class QualityAssignmentStatementDto {
         this.acceptOpinion = acceptOpinion;
     }
 
-    public List<QualitySample> getQualitySamples() {
-        return qualitySamples;
+    public String getProcdefId() {
+        return procdefId;
     }
 
-    public void setQualitySamples(List<QualitySample> qualitySamples) {
-        this.qualitySamples = qualitySamples;
+    public void setProcdefId(String procdefId) {
+        this.procdefId = procdefId;
     }
 
-    public List<QualityReferenceStandard> getQualityReferenceStandards() {
-        return qualityReferenceStandards;
+    public String getExecutionId() {
+        return executionId;
     }
 
-    public void setQualityReferenceStandards(List<QualityReferenceStandard> qualityReferenceStandards) {
-        this.qualityReferenceStandards = qualityReferenceStandards;
+    public void setExecutionId(String executionId) {
+        this.executionId = executionId;
+    }
+
+    public String getAgreementAttachment() {
+        return agreementAttachment;
+    }
+
+    public void setAgreementAttachment(String agreementAttachment) {
+        this.agreementAttachment = agreementAttachment;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     public String getUnitId() {

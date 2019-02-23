@@ -31,6 +31,10 @@ public class QualityAttachment extends BaseEntity {
     private String smpath;
 
 
+    @ApiModelProperty(value = "附件名称")
+    @TableField("fileName")
+    private String fileName;
+
     public String getBusinessId() {
         return businessId;
     }
@@ -55,12 +59,21 @@ public class QualityAttachment extends BaseEntity {
         this.smpath = smpath;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     @Override
     public String toString() {
         return "QualityAttachment{" +
         "businessId=" + businessId +
         ", path=" + path +
         ", smpath=" + smpath +
+        ", fileName=" + fileName +
         "}";
     }
 }

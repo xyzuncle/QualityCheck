@@ -51,6 +51,7 @@ public class QualityAttachmentServiceImpl extends ServiceImpl<QualityAttachmentM
         String path = fileResponseData.getFilePath();
         String name = fileResponseData.getFileName();
         qualityAttachment.setPath(path);
+        qualityAttachment.setFileName(name);
         if (useSm != null && useSm) {
             String contentType = null;
             try {

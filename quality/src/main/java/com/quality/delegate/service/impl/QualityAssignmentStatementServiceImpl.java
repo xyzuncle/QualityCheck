@@ -61,6 +61,7 @@ public class QualityAssignmentStatementServiceImpl extends ServiceImpl<QualityAs
 
             QualityAssignmentStatement assignmentStatement = list.get(i);
             QualityAssignmentStatementDto dto = new QualityAssignmentStatementDto();
+            BeanCopierUtils.copyProperties(assignmentStatement, dto);
             dto.setAssignmentId(assignmentStatement.getId());
             //查询委托单位信息
             String delegateUnitID = assignmentStatement.getDelegateUnitID();
@@ -68,21 +69,6 @@ public class QualityAssignmentStatementServiceImpl extends ServiceImpl<QualityAs
             BeanCopierUtils.copyProperties(delegateunit, dto);
             dto.setUnitId(delegateunit.getId());
 
-            String sampleids = assignmentStatement.getSampleIDs();
-            String referenceStandardIds= assignmentStatement.getReferenceStandardIds();
-
-            //查询样品信息
-            String[] sampleIds = Tools.str2StrArray(sampleids);
-            List<QualitySample> sampleList = sampleService.queryBySampleIds(sampleIds);
-
-
-            //查询参考规范
-            String[] referenceStandardids = Tools.str2StrArray(referenceStandardIds);
-            List<QualityReferenceStandard> referenceStandardList = referenceStandardService.queryByReferenceStandardIds(referenceStandardids);
-            BeanCopierUtils.copyProperties(assignmentStatement, dto);
-
-            dto.setQualitySamples(sampleList);
-            dto.setQualityReferenceStandards(referenceStandardList);
             dtolist.add(dto);
 
         }
@@ -118,46 +104,6 @@ public class QualityAssignmentStatementServiceImpl extends ServiceImpl<QualityAs
 
         QualityDelegateunit delegateunit = new QualityDelegateunit();
         BeanCopierUtils.copyProperties(dto, delegateunit);
-        String sampleIDs="",referenceStandardIds="";
-        List<String> sampleids = new ArrayList<>();
-        List<String> referenceStandardids = new ArrayList<>();
-   
-        //更新和保存样品信息
-        if(result){
-            List<QualitySample> samples = dto.getQualitySamples();
-            samples.forEach(item->{
-                String sampleid = item.getId() + "";
-                if(sampleid==null){
-                    sampleid = UUID.randomUUID().toString().replace("-", "").toLowerCase();
-                    item.setId(sampleid);
-                    sampleService.save(item);
-                }else{
-                    sampleService.saveOrUpdate(item);
-                }
-                sampleids.add(sampleid);
-            });
-
-
-            result = sampleService.saveOrUpdateBatch(samples);
-        }
-        //更新和保存相关依据
-        if(result){
-            List<QualityReferenceStandard> referenceStandards = dto.getQualityReferenceStandards();
-            referenceStandards.forEach(item->{
-                String referenceStandardid = item.getId() + "";
-                if(referenceStandardid==null){
-                    referenceStandardid = UUID.randomUUID().toString().replace("-", "").toLowerCase();
-                    item.setId(referenceStandardid);
-                    referenceStandardService.save(item);
-                }else{
-                    referenceStandardService.saveOrUpdate(item);
-                }
-                referenceStandardids.add(referenceStandardid);
-            });
-
-
-            result = referenceStandardService.saveOrUpdateBatch(referenceStandards);
-        }
         //委托单位
         if(result){
             String unitId = dto.getUnitId();
@@ -169,10 +115,6 @@ public class QualityAssignmentStatementServiceImpl extends ServiceImpl<QualityAs
 
         if(result){
 
-            sampleIDs = Tools.listToString(sampleids);
-            referenceStandardIds = Tools.listToString(referenceStandardids);
-            qualityAssignmentStatement.setSampleIDs(sampleIDs);
-            qualityAssignmentStatement.setReferenceStandardIds(referenceStandardIds);
             qualityAssignmentStatement.setDelegateUnitID(dto.getUnitId());
 
             String assignmentId = dto.getAssignmentId();
@@ -192,28 +134,13 @@ public class QualityAssignmentStatementServiceImpl extends ServiceImpl<QualityAs
 
         //根据协议编号查询
         QualityAssignmentStatement assignmentStatement = this.baseMapper.getByAgreementNo(agreementNo);
+        BeanCopierUtils.copyProperties(assignmentStatement, dto);
         dto.setAssignmentId(assignmentStatement.getId());
         //查询委托单位信息
         String delegateUnitID = assignmentStatement.getDelegateUnitID();
         QualityDelegateunit delegateunit = delegateunitService.getById(delegateUnitID);
         BeanCopierUtils.copyProperties(delegateunit, dto);
         dto.setUnitId(delegateunit.getId());
-
-        String sampleids = assignmentStatement.getSampleIDs();
-        String referenceStandardIds= assignmentStatement.getReferenceStandardIds();
-
-        //查询样品信息
-        String[] sampleIds = Tools.str2StrArray(sampleids);
-        List<QualitySample> sampleList = sampleService.queryBySampleIds(sampleIds);
-
-
-        //查询参考规范
-        String[] referenceStandardids = Tools.str2StrArray(referenceStandardIds);
-        List<QualityReferenceStandard> referenceStandardList = referenceStandardService.queryByReferenceStandardIds(referenceStandardids);
-        BeanCopierUtils.copyProperties(assignmentStatement, dto);
-
-        dto.setQualitySamples(sampleList);
-        dto.setQualityReferenceStandards(referenceStandardList);
 
         return dto;
     }

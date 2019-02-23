@@ -1,0 +1,151 @@
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">标准器名称</label>
+                        <div class="layui-input-inline">
+                            <input id="standardName" class="layui-input" type="text" placeholder="输入标准器名称"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline" id="standardSearchDiv"></div>
+
+
+                </div>
+            </div>
+
+            <table class="layui-table" id="standardTable" lay-filter="standardTable"></table>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<!-- 表格操作列 -->
+<script type="text/html" id="standardTableBar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+<script id="standardSearch" type="text/html">
+
+    {{#  layui.each(d.permissionkey, function(index, value){ }}
+    {{# if(value=="standard:view"){ }}
+    <button id="standardBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+    {{# } }}
+    {{# if(value=="standard:add"){ }}
+    <button id="standardBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+    {{# } }}
+
+
+    {{# }); }}
+
+</script>
+
+
+
+<!-- js部分 -->
+<script>
+    layui.use(['layer', 'table', 'form', 'util', 'config', 'admin','util','laytpl'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
+        var util = layui.util;
+        var config = layui.config;
+        var admin = layui.admin;
+        var laytpl = layui.laytpl;
+
+        var btndata =config.getUserAuths();
+        laytpl(standardSearch.innerHTML).render(btndata, function(html){
+            $("#standardSearchDiv").html(html);
+        });
+
+
+        // 渲染表格
+        var ins1 = table.render({
+            elem: '#standardTable',
+            url: config.base_server + 'QualityStandard/query.do',
+            method: 'POST',
+            page: true,
+            cellMinWidth: 100,
+            cols: [[
+                {type: 'numbers'},
+                {field: 'standardName', sort: true, title: '标准器名称'},
+                {field: 'specifications', sort: true, title: '型号规格'},
+                {field: 'instrumentCode', sort: true, title: '仪器编号'},
+                {field: 'certificateCode', sort: true, title: '证书编号'},
+                {field: 'uncertainty', sort: true, title: '不确定度'},
+                {field: 'measurementDate', sort: true, title: '计量日期'},
+                {field: 'validityDate', sort: true, title: '有效期'},
+                {field: 'status', sort: true, title: '状态'},
+                {field: 'remarks', sort: true, title: '备注'},
+                {align: 'center', toolbar: '#standardTableBar', title: '操作'}
+            ]]
+        });
+
+
+        // 添加按钮点击事件
+        $('#standardBtnAdd').click(function () {
+            showEditModel();
+        });
+
+        // 工具条点击事件
+        table.on('tool(standardTable)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'edit') { // 修改
+                showEditModel(data);
+            } else if (layEvent === 'del') { // 删除
+                doDelete(obj);
+            }
+        });
+
+        // 删除
+        function doDelete(obj) {
+            layer.confirm('确定要删除吗？', function (i) {
+                layer.close(i);
+                layer.load(2);
+                admin.req('QualityStandard/removeById.do?entityID=' + obj.data.id, {}, function (data) {
+                    layer.closeAll('loading');
+                    if (data.status == 200) {
+                        layer.msg(data.message, {icon: 1});
+                        obj.del();
+                    } else {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                }, 'DELETE');
+            });
+        }
+
+        // 显示表单弹窗
+        function showEditModel(data) {
+            admin.putTempData('quality_standard',data);
+            admin.open({
+                title: data ? '修改标准器' : '添加标准器',
+                url: 'components/delegate/standardForm.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
+                }
+            });
+        }
+
+
+        // 搜索按钮点击事件
+        $('#standardBtnSearch').click(function () {
+            var name = $('#standardName').val();
+            table.reload('standardTable', {where: {"search-LIKE-standardName": name
+
+            }});
+        });
+
+    });
+</script>

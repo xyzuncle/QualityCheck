@@ -1,0 +1,146 @@
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">规范名称</label>
+                        <div class="layui-input-inline">
+                            <input id="specificationCName" class="layui-input" type="text" placeholder="输入规范名称"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline" id="checkAbilitySearchDiv"></div>
+
+
+                </div>
+            </div>
+
+            <table class="layui-table" id="checkAbilityTable" lay-filter="checkAbilityTable"></table>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<!-- 表格操作列 -->
+<script type="text/html" id="checkAbilityTableBar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+<script id="checkAbilitySearch" type="text/html">
+
+    {{#  layui.each(d.permissionkey, function(index, value){ }}
+    {{# if(value=="checkAbility:view"){ }}
+    <button id="checkAbilityBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+    {{# } }}
+    {{# if(value=="checkAbility:add"){ }}
+    <button id="checkAbilityBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+    {{# } }}
+
+
+    {{# }); }}
+
+</script>
+
+
+
+<!-- js部分 -->
+<script>
+    layui.use(['layer', 'table', 'form', 'util', 'config', 'admin','util','laytpl'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
+        var util = layui.util;
+        var config = layui.config;
+        var admin = layui.admin;
+        var laytpl = layui.laytpl;
+
+        var btndata =config.getUserAuths();
+        laytpl(checkAbilitySearch.innerHTML).render(btndata, function(html){
+            $("#checkAbilitySearchDiv").html(html);
+        });
+
+
+        // 渲染表格
+        var ins1 = table.render({
+            elem: '#checkAbilityTable',
+            url: config.base_server + 'QualityCheckAbility/query.do',
+            method: 'POST',
+            page: true,
+            cellMinWidth: 100,
+            cols: [[
+                {type: 'numbers'},
+                {field: 'specificationCName', sort: true, title: '规范名称'},
+                {field: 'specificationEName', sort: true, title: '规范名称（英文）'},
+                {field: 'codeCName', sort: true, title: '代号'},
+                {field: 'codeEName', sort: true, title: '代号（英文）'},
+                {align: 'center', toolbar: '#checkAbilityTableBar', title: '操作'}
+            ]]
+        });
+
+
+        // 添加按钮点击事件
+        $('#checkAbilityBtnAdd').click(function () {
+            showEditModel();
+        });
+
+        // 工具条点击事件
+        table.on('tool(checkAbilityTable)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'edit') { // 修改
+                showEditModel(data);
+            } else if (layEvent === 'del') { // 删除
+                doDelete(obj);
+            }
+        });
+
+        // 删除
+        function doDelete(obj) {
+            layer.confirm('确定要删除吗？', function (i) {
+                layer.close(i);
+                layer.load(2);
+                admin.req('QualityCheckAbility/removeById.do?entityID=' + obj.data.id, {}, function (data) {
+                    layer.closeAll('loading');
+                    if (data.status == 200) {
+                        layer.msg(data.message, {icon: 1});
+                        obj.del();
+                    } else {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                }, 'DELETE');
+            });
+        }
+
+        // 显示表单弹窗
+        function showEditModel(data) {
+            admin.putTempData('quality_check_ability',data);
+            admin.open({
+                title: data ? '修改参考规范' : '添加参考规范',
+                url: 'components/delegate/checkAbilityForm.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
+                }
+            });
+        }
+
+
+        // 搜索按钮点击事件
+        $('#checkAbilityBtnSearch').click(function () {
+            var name = $('#specificationCName').val();
+            table.reload('checkAbilityTable', {where: {"search-LIKE-specificationCName": name
+
+            }});
+        });
+
+    });
+</script>

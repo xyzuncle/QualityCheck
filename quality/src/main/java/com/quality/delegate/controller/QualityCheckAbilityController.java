@@ -1,4 +1,4 @@
-package com.quality.common.controller;
+package com.quality.delegate.controller;
 
 import com.quality.common.dto.PageResult;
 import com.quality.common.exception.BaseException;
@@ -6,13 +6,11 @@ import com.quality.common.util.Servlets;
 import com.quality.common.util.Sort;
 import com.quality.common.util.Tools;
 import com.quality.common.controller.BaseController;
-import com.quality.common.entity.QualityAttachment;
-import com.quality.common.service.IQualityAttachmentService;
+import com.quality.delegate.entity.QualityCheckAbility;
+import com.quality.delegate.service.IQualityCheckAbilityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -20,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,88 +27,78 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
- * 通用的附件表
+ * <p>
  * </p>
  *
  * @author yerui
- * @since 2019-02-22
+ * @since 2019-02-23
  */
 
-@Api(value = "QualityAttachmentController}", description = "具体API")
+@Api(value = "QualityCheckAbilityController}", description = "校准能力具体API")
 @Controller
-@RequestMapping("/QualityAttachment")
-@PropertySource(value = "classpath:config.properties")
-public class QualityAttachmentController extends BaseController<QualityAttachment, IQualityAttachmentService> {
+@RequestMapping("/QualityCheckAbility")
+public class QualityCheckAbilityController extends BaseController<QualityCheckAbility, IQualityCheckAbilityService> {
 
-    private final Logger logger = LoggerFactory.getLogger(QualityAttachmentController.class);
+    private final Logger logger = LoggerFactory.getLogger(QualityCheckAbilityController.class);
 
-    /**
-     * 文件服务器地址
-     */
-    @Value("${file_server_addr}")
-    private String fileServerAddr;
 
     /**
      * 带分页的查询条件
      *
      * @return
      */
-    @ApiOperation(value = "QualityAttachment多条件查询", notes = "多条件查询")
-    @RequestMapping(value = "/query.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "QualityStandard多条件查询", notes = "多条件查询")
+    @RequestMapping(value = "/query.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public PageResult queryConditionPage(HttpServletRequest request) {
-        PageResult<QualityAttachment> QualityAttachmentListPage = null;
+    public PageResult<QualityCheckAbility> queryConditionPage(HttpServletRequest request) {
+
+
+        PageResult<QualityCheckAbility> qualityCheckAbilityPage = null;
         try {
             //把查询条件都写好了
             Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search-");
             //如果需要按多个字段排序，请传多个参数,为了反射方便，数据库不使用下划线了
             Sort sort = new Sort(Sort.DESC, Tools.str2StrArray("crtTime"));
-            QualityAttachmentListPage = (PageResult<QualityAttachment>) queryContion(searchParams, sort);
-            QualityAttachmentListPage.setMsg("查询成功");
-            return QualityAttachmentListPage;
+            qualityCheckAbilityPage = (PageResult<QualityCheckAbility>) queryContion(searchParams, sort);
+            qualityCheckAbilityPage.setMsg("查询成功");
+            return qualityCheckAbilityPage;
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("查询失败", 500);
         }
     }
 
-    @ApiOperation(value = "增加/修改QualityAttachment信息",
-            notes = "保存和修改QualityAttachment信息")
-    @RequestMapping(value = "/save.do")
+    @ApiOperation(value = "增加/修改QualityCheckAbility信息",
+            notes = "保存和修改QualityCheckAbility信息")
+    @RequestMapping(value = "/save.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Object saveOrUpdate(MultipartFile file, HttpServletRequest request) {
-        String id = "";
+    public Object saveOrUpdate(@RequestBody QualityCheckAbility QualityCheckAbility) {
+        boolean result = false;
         try {
-             QualityAttachment qualityAttachment = new QualityAttachment();
-             id = this.defaultDAO.custumSave(qualityAttachment,file,request);
+            result = this.defaultDAO.saveOrUpdate(QualityCheckAbility);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("保存失败", 500);
         }
-        return super.jsonObjectResult(id, "保存成功");
+        return super.jsonObjectResult(result, "保存成功");
     }
 
-    @ApiOperation(value = "根据Id删除QualityAttachment信息")
+    @ApiOperation(value = "根据Id删除QualityCheckAbility信息")
     @RequestMapping(value = "/removeById.do", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Object deleteQualityAttachmentById(@ApiParam(value = "QualityAttachmentID") @RequestParam(name = "entityID") String entityID) {
+    public Object deleteQualityCheckAbilityById(@ApiParam(value = "QualityCheckAbilityID") @RequestParam(name = "entityID") String entityID) {
         boolean result = this.defaultDAO.removeById(entityID);
         return super.jsonObjectResult(result, "删除成功");
     }
 
 
-    @ApiOperation(value = "根据ID获取QualityAttachment的基本信息")
+    @ApiOperation(value = "根据ID获取QualityCheckAbility的基本信息")
     @RequestMapping(value = "/queryById.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Object queryById(@ApiParam(value = "QualityAttachment唯一标识") @RequestParam(name = "id") String id) {
+    public Object queryById(@ApiParam(value = "QualityCheckAbility唯一标识") @RequestParam(name = "id") String id) {
         try {
-            QualityAttachment qualityAttachment = this.defaultDAO.getById(id);
-            //获取服务器地址
-            String path = qualityAttachment.getPath();
-            String spath = qualityAttachment.getSmpath();
-            qualityAttachment.setPath("http://"+fileServerAddr+"/"+path);
-            qualityAttachment.setSmpath("http://"+fileServerAddr+"/"+spath);
-            return super.jsonObjectResult(qualityAttachment, "查询成功");
+            QualityCheckAbility QualityCheckAbility = this.defaultDAO.getById(id);
+            return super.jsonObjectResult(QualityCheckAbility, "查询成功");
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("查询失败", 500);
@@ -138,11 +125,11 @@ public class QualityAttachmentController extends BaseController<QualityAttachmen
 
     @RequestMapping(value = "/list.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Object getQualityAttachmentList(HttpServletRequest request) {
+    public Object getQualityCheckAbilityList(HttpServletRequest request) {
         try {
             //把查询条件都写好了
             Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search-");
-            List<QualityAttachment> list = super.queryContionNoPage(searchParams);
+            List<QualityCheckAbility> list = super.queryContionNoPage(searchParams);
             return super.jsonObjectResult(list, "查询成功");
         } catch (Exception e) {
             e.printStackTrace();

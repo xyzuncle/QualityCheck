@@ -1,0 +1,188 @@
+<!-- standard表单弹窗 -->
+<form id="standardForm" lay-filter="standardForm" class="layui-form model-form">
+    <input name="id" type="hidden"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">标准器名称</label>
+        <div class="layui-input-block">
+            <input name="standardName" placeholder="请输入标准器名称" type="text" class="layui-input"
+                   lay-verify="required"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">型号规格</label>
+        <div class="layui-input-block">
+            <input name="specifications" placeholder="请输入型号规格" type="text" class="layui-input" maxlength="100"
+                   lay-verify="required" />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">仪器编号</label>
+        <div class="layui-input-block">
+            <input name="instrumentCode" placeholder="请输入仪器编号" type="text" class="layui-input"
+                   lay-verify="required"/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">证书编号</label>
+        <div class="layui-input-block">
+            <input name="certificateCode" placeholder="请输入证书编号" type="text" class="layui-input"
+                   lay-verify="required"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">证书附件</label>
+        <!--<div class="layui-input-block">
+            <input name="certificateAttachment"  type="file" class="layui-input"
+            />
+        </div>-->
+        <input name="certificateAttachment"  id="certificateAttachment" type="hidden">
+        <div class="layui-upload">
+            <button type="button" class="layui-btn" id="certificateUpload">上传证书</button>
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="certificate" style="width: 90px ;height: 90px;margin-left: 100px;">
+                <p id="certificateText" style="margin-left: 100px"></p>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">不确定度</label>
+        <div class="layui-input-block">
+            <input name="uncertainty" placeholder="请输入不确定度" type="text" class="layui-input"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">计量日期</label>
+        <div class="layui-input-block">
+            <input type="text" class=" layui-input date-icon" id="measurementDate" name="measurementDate"  lay-verify="required">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">有效期</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input date-icon" id="validityDate" name="validityDate" lay-verify="required">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <input name="status" placeholder="请输入状态" type="text" class="layui-input"
+            />
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <input name="remarks" placeholder="请输入备注" type="text" class="layui-input"
+            />
+        </div>
+    </div>
+
+    <div class="layui-form-item text-right">
+        <button class="layui-btn layui-btn-primary" ew-event="closeDialog" type="button">取消</button>
+        <button class="layui-btn" lay-filter="standardFormSubmit" lay-submit>保存</button>
+    </div>
+</form>
+
+<script>
+    layui.use(['layer', 'form', 'config','formSelects', 'table', 'laydate','admin','upload'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var formSelects = layui.formSelects;
+        var table = layui.table;
+        var admin = layui.admin;
+        var config = layui.config;
+        var laydate = layui.laydate;
+        var upload = layui.upload;
+
+        // 渲染laydate
+        laydate.render({
+            elem: '#measurementDate'
+        });
+
+
+        // 渲染laydate
+        laydate.render({
+            elem: '#validityDate'
+        });
+
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#certificateUpload'
+            ,url:config.base_server + 'QualityAttachment/save.do'
+            ,accept:'file'
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                  $('#certificate').attr('src', result); //图片链接（base64）
+                    console.info(file)
+                    $('#certificateText').html(file.name);
+                });
+            }
+            ,done: function(res){
+                //alert(JSON.stringify(res));
+
+                $('#certificateAttachment').val(res.data);
+                //如果上传失败
+                // if(res.code > 0){
+                //     return layer.msg('上传失败');
+                // }
+                //上传成功
+            }
+            ,error: function(){
+                alert("失败");
+                //演示失败状态，并实现重传
+                //var demoText = $('#demoText');
+                //demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                //demoText.find('.demo-reload').on('click', function(){
+                // uploadInst.upload();
+                //});
+            }
+        });
+
+        // 回显数据
+        var data = admin.getTempData('quality_standard');
+        $('#standardForm').attr('method', 'GET');
+        if (data) {
+            form.val('standardForm', data);
+            var certificateAttachment = data.certificateAttachment;
+            admin.req('QualityAttachment/queryById.do?id=' + certificateAttachment, {}, function (data) {
+               //alert(JSON.stringify(data))
+                $('#certificate').attr('src', data.data.path); //图片链接（base64）
+            }, 'GET');
+
+            $('#standardForm').attr('method', 'GET');
+        }
+
+        // 表单提交事件
+        form.on('submit(standardFormSubmit)', function (data) {
+            alert(JSON.stringify(data));
+            layer.load(2);
+            $.ajax({
+                url: config.base_server + 'QualityStandard/save.do',
+                data: JSON.stringify(data.field),
+                type: "POST",
+                dataType: 'json',
+                contentType:"application/json",
+                success: function (data) {
+                    layer.closeAll('loading');
+                    if (data.status == 200) {
+                        layer.msg(data.message, {icon: 1});
+                        table.reload('standardTable', {});
+                        admin.closeDialog('#standardForm');
+                    } else {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                }
+
+            });
+
+            return false;
+        });
+    });
+</script>

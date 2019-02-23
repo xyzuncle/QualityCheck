@@ -4,16 +4,15 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.quality.delegate.entity.QualityAssignmentStatement">
-    <result column="id" property="id" />
-    <result column="crtTime" property="crtTime" />
-    <result column="updTime" property="updTime" />
-    <result column="deleted" property="deleted" />
+        <result column="id" property="id" />
+        <result column="crtTime" property="crtTime" />
+        <result column="updTime" property="updTime" />
+        <result column="deleted" property="deleted" />
         <result column="agreementNo" property="agreementNo" />
-        <result column="state" property="state" />
         <result column="delegateType" property="delegateType" />
         <result column="delegateUnitID" property="delegateUnitID" />
+        <result column="referenceStandardIds" property="referenceStandardIds" />
         <result column="sampleIDs" property="sampleIDs" />
-        <result column="referenceStandardIds" property="referenceStandardIds"/>
         <result column="designatedMonitoringBasis" property="designatedMonitoringBasis" />
         <result column="designatedMonitoringItems" property="designatedMonitoringItems" />
         <result column="designatedMonitoringRequirement" property="designatedMonitoringRequirement" />
@@ -26,6 +25,11 @@
         <result column="confirmMonitoringBasis" property="confirmMonitoringBasis" />
         <result column="reference" property="reference" />
         <result column="acceptOpinion" property="acceptOpinion" />
+        <result column="procdefId" property="procdefId" />
+        <result column="executionId" property="executionId" />
+        <result column="state" property="state" />
+        <result column="agreementAttachment" property="agreementAttachment" />
+        <result column="remarks" property="remarks" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -34,7 +38,7 @@
         crtTime,
         updTime,
         deleted,
-        agreementNo,state, delegateType, delegateUnitID, sampleIDs,referenceStandardIds, designatedMonitoringBasis, designatedMonitoringItems, designatedMonitoringRequirement, acceptanceReviewType, plannedCompletionTime, secret, standardEffectivePeriod, standardconClusion, uncertainty, confirmMonitoringBasis, reference, acceptOpinion
+        agreementNo, delegateType, delegateUnitID, referenceStandardIds, sampleIDs, designatedMonitoringBasis, designatedMonitoringItems, designatedMonitoringRequirement, acceptanceReviewType, plannedCompletionTime, secret, standardEffectivePeriod, standardconClusion, uncertainty, confirmMonitoringBasis, reference, acceptOpinion, procdefId, executionId, state, agreementAttachment, remarks
     </sql>
 
     <select id="getByAgreementNo" resultType="com.quality.delegate.entity.QualityAssignmentStatement">

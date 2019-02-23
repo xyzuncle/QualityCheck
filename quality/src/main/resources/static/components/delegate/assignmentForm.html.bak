@@ -35,26 +35,6 @@
                 </div>
             </div>
 
-            <div class="layui-form">
-                <label class="layui-form-label">附件</label>
-                <input name="agreementAttachment"  id="agreementAttachment" type="hidden">
-                <div class="layui-upload">
-                    <button type="button" class="layui-btn" id="attachmentUpload">上传附件</button>
-                    <div class="layui-upload-list">
-                        <a id="attachmentText" style="margin-left: 100px"></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="layui-form">
-                <label class="layui-form-label">备注</label>
-                <div class="layui-input-block">
-                    <input name="remarks" id="remarks" placeholder="请输入备注" type="text" class="layui-input"
-                    />
-                </div>
-            </div>
-
-
         </div>
     </div>
 
@@ -121,6 +101,54 @@
 
         </div>
     </div>
+    <div class="layui-card">
+        <div class="layui-card-header">样品信息</div>
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">样品名称</label>
+                        <div class="layui-input-inline">
+                            <input id="sampleName"  name="sampleName" class="layui-input" type="text" placeholder="输入样品名称"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button id="sampleFromBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                        <button id="assignmentSampleFromBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                    </div>
+
+                </div>
+            </div>
+            <table class="layui-table" id="assignmentSampleTable" lay-filter="assignmentSampleTable"></table>
+        </div>
+
+    </div>
+
+    <div class="layui-card">
+        <div class="layui-card-header">参考标准</div>
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">测量仪器名称</label>
+                        <div class="layui-input-inline">
+                            <input id="name" class="layui-input" type="text" placeholder="输入测量仪器名称"/>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <table class="layui-table" id="assignmentReferenceStandardTable" lay-filter="assignmentReferenceStandardTable"></table>
+        </div>
+
+    </div>
+
+
+
+
 
 
     <div class="layui-card">
@@ -133,7 +161,7 @@
 
 <!-- js部分 -->
 <script>
-    layui.use(['layer','admin', 'form', 'table','tableSelect', 'util','upload', 'laydate','index','config'], function () {
+    layui.use(['layer','admin', 'form', 'table','tableSelect', 'util', 'laydate','index','config'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
         var form = layui.form;
@@ -144,41 +172,8 @@
         var tableSelect = layui.tableSelect;
         var admin = layui.admin;
         var index = layui.index;
-        var upload = layui.upload;
 
         form.render();
-
-        //普通图片上传
-        var uploadInst = upload.render({
-            elem: '#attachmentUpload'
-            ,url:config.base_server + 'QualityAttachment/save.do'
-            ,accept:'file'
-            ,before: function(obj){
-                //预读本地文件示例，不支持ie8
-                obj.preview(function(index, file, result){
-                    $('#attachmentText').html(file.name);
-                });
-            }
-            ,done: function(res){
-                //alert(JSON.stringify(res));
-
-                $('#agreementAttachment').val(res.data);
-                //如果上传失败
-                // if(res.code > 0){
-                //     return layer.msg('上传失败');
-                // }
-                //上传成功
-            }
-            ,error: function(){
-                alert("失败");
-                //演示失败状态，并实现重传
-                //var demoText = $('#demoText');
-                //demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
-                //demoText.find('.demo-reload').on('click', function(){
-                // uploadInst.upload();
-                //});
-            }
-        });
 
 
 
@@ -217,6 +212,146 @@
             }
         })
 
+        /**样品信息*/
+        var tableData=new Array(); // 用于存放表格数据
+
+        tableSelect.render({
+            elem: '#sampleName',
+            checkedKey: 'id',
+            searchKey: 'sampleName',
+            table: {
+                url: config.base_server + 'QualitySample/list.do',
+                cols: [[
+                    { type: 'checkbox' }
+                    ,{field: 'id', title: 'ID'}
+                    ,{field: 'sampleName', sort: true, title: '名称'}
+                   /* ,{field: 'sampleCode', sort: true, title: '编号'}
+                    ,{field: 'sampleModel', sort: true, title: '型号'}
+                    ,{field: 'sampleSpecification', sort: true, title: '规格'}
+                    ,{field: 'sampleNum', sort: true, title: '数量'}*/
+                    ,{field: 'receivedDate', sort: true, title: '收样日期'}
+                    ,{field: 'sender', sort: true, title: '送样人'}
+                    /*,{field: 'receivedType', sort: true, title: '来样方式'}*/
+
+                ]]
+            },
+            done: function (elem, data) {
+                layui.each(data.data, function (index, item) {
+                    debugger
+                    var tableData =  table.cache["assignmentSampleTable"];
+                    tableData.push(item);
+                    table.reload('assignmentSampleTable',{
+                        data : tableData
+                    });
+                })
+
+            }
+        })
+
+
+        // 样品添加按钮点击事件
+        $('#assignmentSampleFromBtnAdd').click(function () {
+
+            admin.open({
+                title: '添加样品信息',
+                url: 'components/delegate/assignmentSampleForm.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
+                }
+            });
+        });
+
+
+
+        table.render({
+            elem: '#assignmentSampleTable'
+            ,data:tableData
+            ,cols: [[
+                ,{field: 'id', title: 'ID'}
+                ,{field: 'sampleName', sort: true, title: '名称'}
+                ,{field: 'sampleCode', sort: true, title: '编号'}
+                ,{field: 'sampleModel', sort: true, title: '型号'}
+                ,{field: 'sampleSpecification', sort: true, title: '规格'}
+                ,{field: 'sampleNum', sort: true, title: '数量'}
+                ,{field: 'receivedDate', sort: true, title: '收样日期'}
+                ,{field: 'sender', sort: true, title: '送样人'}
+                ,{field: 'receivedType', sort: true, title: '来样方式'}
+            ]]
+            , done: function(res, curr, count){
+                //关闭新增表单，追加表数据
+            }
+
+        });
+
+
+
+        /**参考标准信息*/
+        var rsTableData=new Array(); // 用于存放表格数据
+
+        tableSelect.render({
+            elem: '#name',
+            checkedKey: 'id',
+            searchKey: 'name',
+            table: {
+                url: config.base_server + 'QualityReferenceStandard/list.do',
+                cols: [[
+                    { type: 'checkbox' }
+                    ,{field: 'id', title: 'ID'}
+                    ,{field: 'name',title: '测量仪器名称'}
+                    /*,{field: 'measured',title: '被测量'}*/
+                    ,{field: 'standardSpecification', title: '标准规范'}
+                    ,{field: 'measureRange', title: '测量范围'}
+                  /*  ,{field: 'extend', title: '扩展不确定度'}
+                    ,{field: 'remark', title: '说明'}*/
+
+                ]]
+            },
+            done: function (elem, data) {
+                layui.each(data.data, function (index, item) {
+                    var rsTableData =  table.cache["assignmentReferenceStandardTable"];
+                    rsTableData.push(item);
+                    table.reload('assignmentReferenceStandardTable',{
+                        data : rsTableData
+                    });
+                })
+
+            }
+        })
+
+
+        // 参考标准添加按钮点击事件
+        $('#assignmentReferenceStandardFromBtnAdd').click(function () {
+
+            admin.open({
+                title: '添加参考标准信息',
+                url: 'components/delegate/assignmentReferencestandardForm.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
+                }
+            });
+        });
+
+
+
+        table.render({
+            elem: '#assignmentReferenceStandardTable'
+            ,data:rsTableData
+            ,cols: [[
+                ,{field: 'id', title: 'ID'}
+                ,{field: 'name', title: '测量仪器名称'}
+                ,{field: 'measured', title: '被测量'}
+                ,{field: 'standardSpecification',title: '标准规范'}
+                ,{field: 'measureRange', title: '测量范围'}
+                ,{field: 'extend', title: '扩展不确定度'}
+                ,{field: 'remark', title: '说明'}
+            ]]
+            , done: function(res, curr, count){
+
+            }
+
+        });
+
+
 
 
 
@@ -229,9 +364,6 @@
             filed["assignmentId"]= $("#assignmentId").val();
             filed["agreementNo"]= $("#agreementNo").val();
             filed["delegateType"]= $("#delegateType").val();
-            filed["remarks"] = $("#remarks").val();
-            filed["agreementAttachment"] = $("#agreementAttachment").val();
-
             //代理机构
             filed["unitId"] = $("#unitId").val();
             filed["unitName"]= $("#unitName").val();
@@ -242,6 +374,12 @@
             filed["mobile"]= $("#mobile").val();
             filed["fax"]= $("#fax").val();
 
+            //样品
+            var sampledata =  table.cache["assignmentSampleTable"];
+            //参考信息
+            var referenceStandarddata =  table.cache["assignmentReferenceStandardTable"];
+            filed["qualitySamples"] = sampledata;
+            filed["qualityReferenceStandards"] = referenceStandarddata;
 
             layer.load(2);
             $.ajax({
@@ -276,11 +414,6 @@
             $("#assignmentId").val(data.assignmentId);
             $("#agreementNo").val(data.agreementNo);
             $("#delegateType").val(data.delegateType);
-            $("#remarks").val(data.remarks);
-            $("#agreementAttachment").val(data.agreementAttachment);
-
-
-
             //代理机构
             $("#unitName").val(data.unitName);
             $("#address").val(data.address);
@@ -290,14 +423,17 @@
             $("#mobile").val(data.mobile);
             $("#fax").val(data.fax);
             $("#unitId").val(data.unitId);
-
-            admin.req('QualityAttachment/queryById.do?id=' + data.agreementAttachment, {}, function (json) {
-                //alert(JSON.stringify(data))
-                debugger
-                $("#attachmentText").attr('href',json.data.path);
-                $("#attachmentText").text(json.data.fileName);
-
-            }, 'GET');
+            //样品
+            debugger
+            var sampledata =  data.qualitySamples;
+            table.reload('assignmentSampleTable',{
+                data : sampledata
+            });
+            //参考信息
+            var referenceStandarddata =  data.qualityReferenceStandards;
+            table.reload('assignmentReferenceStandardTable',{
+                data : referenceStandarddata
+            });
         }
     });
 </script>

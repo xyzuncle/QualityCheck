@@ -66,6 +66,9 @@ logging:
   level:
     com:
       quality: debug
+#fastfds是否使用缩略图
+fs:
+  useSm: true
 
 
 

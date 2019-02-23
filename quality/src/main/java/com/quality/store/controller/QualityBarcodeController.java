@@ -18,7 +18,7 @@ import com.quality.system.entity.QualityUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import jdk.internal.util.xml.impl.Input;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -178,7 +178,12 @@ public Object getQualityBarcodeList(HttpServletRequest request){
     @ResponseBody
     public Object getSampleInfoByBarCode(@RequestParam("barcode") String barcode){
         QualitySample qs = this.defaultDAO.getInfoByBarCode(barcode);
-        return super.jsonObjectResult(qs,"查询成功");
+        if(qs==null){
+             throw new BaseException("条形码不存在",500);
+        }else{
+            return super.jsonObjectResult(qs,"查询成功");
+        }
+
     }
 
 

@@ -76,11 +76,16 @@ public class QualityBarcodeServiceImpl extends ServiceImpl<QualityBarcodeMapper,
 
     @Override
     public QualitySample getInfoByBarCode(String barCode) {
-        QueryWrapper<QualityBarcode> qw = new QueryWrapper<>();
-        qw.eq("barCode", barCode);
-        QualityBarcode one = this.getOne(qw);
-        QualitySample qs =   qualitySampleService.getById(one.getId());
+        QualitySample qs = null;
+         if(StringUtils.isNotBlank(barCode)){
+             QueryWrapper<QualityBarcode> qw = new QueryWrapper<>();
+             qw.eq("barCode", barCode);
+             QualityBarcode one = this.getOne(qw);
+              qs =   qualitySampleService.getById(one.getSampleId());
+         }
         return qs;
+
+
     }
 
 

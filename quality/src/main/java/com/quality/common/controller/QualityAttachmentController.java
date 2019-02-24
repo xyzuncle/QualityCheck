@@ -40,7 +40,6 @@ import javax.servlet.http.HttpServletRequest;
 @Api(value = "QualityAttachmentController}", description = "具体API")
 @Controller
 @RequestMapping("/QualityAttachment")
-@PropertySource(value = "classpath:config.properties")
 public class QualityAttachmentController extends BaseController<QualityAttachment, IQualityAttachmentService> {
 
     private final Logger logger = LoggerFactory.getLogger(QualityAttachmentController.class);
@@ -106,11 +105,6 @@ public class QualityAttachmentController extends BaseController<QualityAttachmen
     public Object queryById(@ApiParam(value = "QualityAttachment唯一标识") @RequestParam(name = "id") String id) {
         try {
             QualityAttachment qualityAttachment = this.defaultDAO.getById(id);
-            //获取服务器地址
-            String path = qualityAttachment.getPath();
-            String spath = qualityAttachment.getSmpath();
-            qualityAttachment.setPath("http://"+fileServerAddr+"/"+path);
-            qualityAttachment.setSmpath("http://"+fileServerAddr+"/"+spath);
             return super.jsonObjectResult(qualityAttachment, "查询成功");
         } catch (Exception e) {
             e.printStackTrace();

@@ -163,7 +163,7 @@ public class QualityUser extends BaseEntity implements UserDetails, Serializable
 
     @Override
     public String getUsername() {
-        return loginName;
+        return userName;
     }
 
     @Override

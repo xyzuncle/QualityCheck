@@ -1,0 +1,120 @@
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table class="layui-table" id="taskTable" lay-filter="taskTable"></table>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<!-- 表格操作列 -->
+<script type="text/html" id="taskTableBar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+
+</script>
+
+
+
+
+
+
+<!-- js部分 -->
+<script>
+    layui.use(['layer', 'table', 'form', 'index', 'config', 'admin','util','laydate','laytpl'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
+        var util = layui.util;
+        var index = layui.index;
+        var config = layui.config;
+        var admin = layui.admin;
+        var laydate = layui.laydate;
+        var laytpl = layui.laytpl;
+
+        // 渲染表格
+        var ins1 = table.render({
+            elem: '#taskTable',
+            url: config.base_server + 'QualityTask/query.do',
+            method: 'POST',
+            page: true,
+            cellMinWidth: 100,
+            cols: [[
+                {type: 'numbers'},
+                {field: 'taskIssuedBy', sort: true, title: '任务签发人'},
+                {field: 'agreementNo', sort: true, title: '协议书编号'},
+                {field: 'delegateType', sort: true, title: '委托类型'},
+                {field: 'delegateUnit', sort: true, title: '委托单位'},
+                /*{field: 'sample', sort: true, title: '样机'},*/
+                {align: 'center', toolbar: '#taskTableBar', title: '操作'}
+            ]]
+        });
+
+
+        // 添加按钮点击事件
+        $('#taskBtnAdd').click(function () {
+            openNewTab();
+        });
+
+        // 工具条点击事件
+        table.on('tool(taskTable)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'edit') { // 修改
+                openEditTab(obj);
+            }else if (layEvent === 'del') { // 删除
+                doDelete(obj);
+        }
+        });
+
+
+
+        // 打开表单TAB
+        function openEditTab(obj) {
+            layer.load(2);
+            $.ajax({
+                url: config.base_server + 'QualityTask/queryById.do?id='+obj.data.id,
+                type: "GET",
+                dataType: 'json',
+                contentType:"application/json",
+                success: function (data) {
+                    if (data.status == 200) {
+                        var  da = data.data;
+                        admin.putTempData('quality_task',da);
+                        var data ={title: '修改任务信息',url:"#/delegate/taskForm"}
+                        index.openNewTab(data)
+                    } else {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                }
+
+            });
+
+        }
+
+        // 删除
+        function doDelete(obj) {
+            layer.confirm('确定要删除吗？', function (i) {
+                layer.close(i);
+                layer.load(2);
+                admin.req('QualityTask/removeById.do?entityID=' + obj.data.id, {}, function (data) {
+                    layer.closeAll('loading');
+                    if (data.status == 200) {
+                        layer.msg(data.message, {icon: 1});
+                        obj.del();
+                    } else {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                }, 'DELETE');
+            });
+        }
+
+
+    });
+</script>

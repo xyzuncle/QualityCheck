@@ -1,0 +1,249 @@
+<style>
+    #advForm .layui-form-item {
+        margin-bottom: 0;
+        margin-top: 20px;
+    }
+
+    #advForm .layui-form-item .layui-inline {
+        margin-bottom: 25px;
+        margin-right: 0;
+    }
+</style>
+
+<!-- 正文开始 -->
+<div class="layui-fluid" id="advForm">
+
+    <div class="layui-card">
+        <div class="layui-card-header">任务单信息</div>
+        <div class="layui-card-body">
+            <input type="hidden" id="taskId" name="taskId">
+            <div class="layui-form">
+                <div class="layui-form-item layui-row">
+
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label">任务签发人:</label>
+                        <div class="layui-input-block">
+                            <input name="taskIssuedBy" id="taskIssuedBy" placeholder="请输入任务签发人" type="text" class="layui-input" lay-verify="required"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label">任务签发日期:</label>
+                        <div class="layui-input-block">
+                            <input name="taskIssuedDate" id="taskIssuedDate" type="text" placeholder="请输入任务签发日期" class="layui-input" lay-verify="required"/>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline layui-col-md10">
+                        <label class="layui-form-label">单位名称:</label>
+                        <div class="layui-input-block">
+                            <input name="delegateUnit" id="delegateUnit" placeholder="请输入单位名称" type="text" class="layui-input"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label">协议书编号:</label>
+                        <div class="layui-input-block">
+                            <input name="agreementNo" id="agreementNo" placeholder="请输入协议书编号" type="text" class="layui-input" lay-verify="required"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label">委托类型:</label>
+                        <div class="layui-input-block">
+                            <input name="delegateType" id="delegateType" type="text" placeholder="请输入委托类型" class="layui-input" lay-verify="required"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="layui-card">
+        <div class="layui-card-header">样品信息</div>
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">样品名称</label>
+                        <div class="layui-input-inline">
+                            <input id="sampleName"  name="sampleName" class="layui-input" type="text" placeholder="输入样品名称"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button id="sampleFromBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                        <button id="assignmentSampleFromBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                    </div>
+
+                </div>
+            </div>
+            <table class="layui-table" id="taskSampleTable" lay-filter="taskSampleTable"></table>
+        </div>
+
+    </div>
+
+
+    <div class="layui-card">
+            <div style="text-align: center;margin-top: 30px;margin-bottom: 20px;">
+                <button id="formAdvBtnSubmit" type="button" class="layui-btn">&emsp;提交&emsp;</button>
+              <!--  <button type="button" class="layui-btn layui-btn-primary">&emsp;重置&emsp;</button>-->
+            </div>
+    </div>
+</div>
+
+
+<!-- js部分 -->
+<script>
+    layui.use(['layer','admin', 'form', 'table','tableSelect', 'util', 'laydate','index','config'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+        var laydate = layui.laydate;
+        var config = layui.config;
+        var tableSelect = layui.tableSelect;
+        var admin = layui.admin;
+        var index = layui.index;
+
+        form.render();
+
+        /**样品信息*/
+        var tableData=new Array(); // 用于存放表格数据
+
+        tableSelect.render({
+            elem: '#sampleName',
+            checkedKey: 'id',
+            searchKey: 'sampleName',
+            table: {
+                url: config.base_server + 'QualitySample/list.do',
+                cols: [[
+                    { type: 'checkbox' }
+                    ,{field: 'id', title: 'ID'}
+                    ,{field: 'sampleName', sort: true, title: '名称'}
+                   /* ,{field: 'sampleCode', sort: true, title: '编号'}
+                    ,{field: 'sampleModel', sort: true, title: '型号'}
+                    ,{field: 'sampleSpecification', sort: true, title: '规格'}
+                    ,{field: 'sampleNum', sort: true, title: '数量'}*/
+                    ,{field: 'receivedDate', sort: true, title: '收样日期'}
+                    ,{field: 'sender', sort: true, title: '送样人'}
+                    /*,{field: 'receivedType', sort: true, title: '来样方式'}*/
+
+                ]]
+            },
+            done: function (elem, data) {
+                layui.each(data.data, function (index, item) {
+                    debugger
+                    var tableData =  table.cache["taskSampleTable"];
+                    tableData.push(item);
+                    table.reload('taskSampleTable',{
+                        data : tableData
+                    });
+                })
+
+            }
+        })
+
+
+        // 样品添加按钮点击事件
+        $('#assignmentSampleFromBtnAdd').click(function () {
+
+            admin.open({
+                title: '添加样品信息',
+                url: 'components/delegate/assignmentSampleForm.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
+                }
+            });
+        });
+
+
+
+        table.render({
+            elem: '#taskSampleTable'
+            ,data:tableData
+            ,cols: [[
+                ,{field: 'id', title: 'ID'}
+                ,{field: 'sampleName', sort: true, title: '名称'}
+                ,{field: 'sampleCode', sort: true, title: '编号'}
+                ,{field: 'sampleModel', sort: true, title: '型号'}
+                ,{field: 'sampleSpecification', sort: true, title: '规格'}
+                ,{field: 'sampleNum', sort: true, title: '数量'}
+                ,{field: 'receivedDate', sort: true, title: '收样日期'}
+                ,{field: 'sender', sort: true, title: '送样人'}
+                ,{field: 'receivedType', sort: true, title: '来样方式'}
+
+            ]]
+            , done: function(res, curr, count){
+                //关闭新增表单，追加表数据
+            }
+
+        });
+
+
+
+        // 提交按钮
+        $('#formAdvBtnSubmit').click(function () {
+            var filed = new Object();
+            debugger
+            //任务单
+            filed["taskId"]= $("#taskId").val();
+
+            filed["taskIssuedDate"]= $("#taskIssuedDate").val();
+            filed["taskIssuedBy"]= $("#taskIssuedBy").val();
+            filed["agreementNo"]= $("#agreementNo").val();
+            filed["delegateType"]= $("#delegateType").val();
+            filed["delegateUnit"]= $("#delegateUnit").val();
+
+            //样品
+            var sampledata =  table.cache["taskSampleTable"];
+            //参考信息
+            var referenceStandarddata =  table.cache["assignmentReferenceStandardTable"];
+            filed["qualitySamples"] = sampledata;
+            filed["qualityReferenceStandards"] = referenceStandarddata;
+
+            layer.load(2);
+            $.ajax({
+                url: config.base_server + 'QualityTask/save.do',
+                data: JSON.stringify(filed),
+                type: "POST",
+                dataType: 'json',
+                contentType:"application/json",
+                success: function (data) {
+                    layer.closeAll('loading');
+                    debugger
+                    if (data.status == 200) {
+                        layer.msg(data.message, {icon: 1});
+                        //关闭tab
+                        index.closeTab("/delegate/assignmentForm");
+                    } else {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                }
+
+            });
+
+
+        });
+
+        //回写数据
+        var data =  admin.getTempData('quality_task');
+        debugger
+        if (data) {
+            layer.closeAll('loading');
+            $("#taskId").val(data.id);
+            //任务单
+            $("#taskIssuedDate").val(data.taskIssuedDate);
+            $("#taskIssuedBy").val(data.taskIssuedBy);
+            $("#agreementNo").val(data.agreementNo);
+            $("#delegateType").val(data.delegateType);
+            $("#delegateUnit").val(data.delegateUnit);
+            //样品
+            debugger
+            var sampledata =  data.qualitySamples;
+            table.reload('taskSampleTable',{
+                data : sampledata
+            });
+
+        }
+    });
+</script>

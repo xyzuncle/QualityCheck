@@ -18,4 +18,6 @@ public interface IQualityAttachmentService extends IService<QualityAttachment> {
 
     public String custumSave(QualityAttachment qualityAttachment, MultipartFile file, HttpServletRequest request);
 
+    public boolean custumDel(String attachmentId);
+
 }

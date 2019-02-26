@@ -1,5 +1,6 @@
 package com.quality.system.service;
 
+import com.quality.common.entity.QualityAttachment;
 import com.quality.system.entity.QualityTemplate;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IQualityTemplateService extends IService<QualityTemplate> {
 
+    public void customSave(QualityTemplate qualityTemplate);
+
+    public boolean customRemoveById(String EntityId,String attachmentId);
 }

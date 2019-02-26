@@ -70,9 +70,10 @@ public PageResult queryConditionPage(HttpServletRequest request){
 @RequestMapping(value = "/save.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @ResponseBody
 public Object saveOrUpdate(@RequestBody QualityTemplate QualityTemplate){
-    boolean result=false;
+    boolean result=true;
     try{
-        result=this.defaultDAO.saveOrUpdate(QualityTemplate);
+
+         this.defaultDAO.customSave(QualityTemplate);
     }catch(Exception e){
         e.printStackTrace();
         throw new BaseException("保存失败",500);
@@ -83,8 +84,10 @@ public Object saveOrUpdate(@RequestBody QualityTemplate QualityTemplate){
 @ApiOperation(value = "根据Id删除QualityTemplate信息")
 @RequestMapping(value = "/removeById.do", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @ResponseBody
-public Object deleteQualityTemplateById(@ApiParam(value = "QualityTemplateID") @RequestParam(name = "entityID")  String entityID){
-        boolean result=this.defaultDAO.removeById(entityID);
+public Object deleteQualityTemplateById(@ApiParam(value = "QualityTemplateID")
+                                        @RequestParam(name = "entityID")  String entityID,
+                                        @RequestParam(name = "attachmentId") String attachmentId){
+        boolean result=this.defaultDAO.customRemoveById(entityID,attachmentId);
         return super.jsonObjectResult(result,"删除成功");
 }
 
@@ -105,7 +108,8 @@ public Object queryById(@ApiParam(value = "QualityTemplate唯一标识") @Reques
 @ApiOperation(value = "根据多个ID，批量删除")
 @RequestMapping(value = "/removeMore.do", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @ResponseBody
-public Object deleteByIds(@ApiParam(value = "多个元素ID") @RequestParam(name = "entityIDS") String entityIDS){
+public Object deleteByIds(@ApiParam(value = "多个元素ID")
+                          @RequestParam(name = "entityIDS") String entityIDS){
     boolean result=false;
     try{
         String[]str=Tools.str2StrArray(entityIDS);

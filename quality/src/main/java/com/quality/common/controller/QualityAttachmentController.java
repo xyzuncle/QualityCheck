@@ -2,6 +2,7 @@ package com.quality.common.controller;
 
 import com.quality.common.dto.PageResult;
 import com.quality.common.exception.BaseException;
+import com.quality.common.fastdfs.FastDFSClient;
 import com.quality.common.util.Servlets;
 import com.quality.common.util.Sort;
 import com.quality.common.util.Tools;
@@ -11,6 +12,8 @@ import com.quality.common.service.IQualityAttachmentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
@@ -22,10 +25,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -43,7 +49,7 @@ import javax.servlet.http.HttpServletRequest;
 public class QualityAttachmentController extends BaseController<QualityAttachment, IQualityAttachmentService> {
 
     private final Logger logger = LoggerFactory.getLogger(QualityAttachmentController.class);
-
+    private FastDFSClient fastDFSClient = new FastDFSClient();
     /**
      * 文件服务器地址
      */
@@ -78,10 +84,15 @@ public class QualityAttachmentController extends BaseController<QualityAttachmen
             notes = "保存和修改QualityAttachment信息")
     @RequestMapping(value = "/save.do")
     @ResponseBody
-    public Object saveOrUpdate(MultipartFile file, HttpServletRequest request) {
+    public Object saveOrUpdate(MultipartFile file, HttpServletRequest request,
+                               @RequestParam("attid") String attid) {
         String id = "";
         try {
+
              QualityAttachment qualityAttachment = new QualityAttachment();
+             if(StringUtils.isNotBlank(attid)){
+                 qualityAttachment.setId(attid);
+             }
              id = this.defaultDAO.custumSave(qualityAttachment,file,request);
         } catch (Exception e) {
             e.printStackTrace();
@@ -141,6 +152,116 @@ public class QualityAttachmentController extends BaseController<QualityAttachmen
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("查询失败", 500);
+        }
+    }
+
+
+    /**
+     * 点击下载成文件
+     */
+    @RequestMapping(value = "/download/file.do", method = RequestMethod.GET)
+    public void downFileById(String attachmentId, HttpServletResponse response){
+        try {
+            QualityAttachment qualityAttachment = this.defaultDAO.getById(attachmentId);
+            if(attachmentId!=null){
+                String path = qualityAttachment.getPath();
+                fastDFSClient.downloadFile(path, response);
+            }
+
+        } catch (BaseException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+
+
+
+
+    /**
+     * 形成预览图
+     * @return
+     */
+    @RequestMapping(value = "/download/image.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void downImage(String attachmentId, HttpServletResponse response){
+        try {
+
+            QualityAttachment qualityAttachment = this.defaultDAO.getById(attachmentId);
+
+            if(attachmentId!=null){
+                String fileDir = "fstdfssm/";
+                String filePath = qualityAttachment.getSmpath();
+                outputFile(fileDir+ filePath, response);
+                //fastDFSClient.downloadFile(filePath, response.getOutputStream());
+            }
+
+        } catch (BaseException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    // 输出文件流
+    private void outputFile(String file, HttpServletResponse response) {
+        // 判断文件是否存在
+        File inFile = new File(File.listRoots()[0], file);
+        if (!inFile.exists()) {
+            PrintWriter writer = null;
+            try {
+                response.setContentType("text/html;charset=UTF-8");
+                writer = response.getWriter();
+                writer.write("<!doctype html><title>404 Not Found</title><h1 style=\"text-align: center\">404 Not Found</h1><hr/><p style=\"text-align: center\">Easy File Server</p>");
+                writer.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        // 获取文件类型
+        String contentType = null;
+        try {
+            // Path path = Paths.get(inFile.getName());
+            // contentType = Files.probeContentType(path);
+            contentType = new Tika().detect(inFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (contentType != null) {
+            response.setContentType(contentType);
+        } else {
+            response.setContentType("application/force-download");
+            String newName;
+            try {
+                newName = URLEncoder.encode(inFile.getName(), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                newName = inFile.getName();
+            }
+            response.setHeader("Content-Disposition", "attachment;fileName=" + newName);
+        }
+        // 输出文件流
+        OutputStream os = null;
+        FileInputStream is = null;
+        try {
+            is = new FileInputStream(inFile);
+            os = response.getOutputStream();
+            byte[] bytes = new byte[1024];
+            int len;
+            while ((len = is.read(bytes)) != -1) {
+                os.write(bytes, 0, len);
+            }
+            os.flush();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+                os.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

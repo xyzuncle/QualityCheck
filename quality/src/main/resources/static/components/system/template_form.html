@@ -1,0 +1,205 @@
+<!-- user表单弹窗 -->
+<form id="template-form" lay-filter="template-form" class="layui-form model-form">
+    <input name="id" type="hidden"/>
+    <div class="layui-form-item">
+        <label class="layui-form-label">模板名称</label>
+        <div class="layui-input-block">
+            <input name="templateName" placeholder="请输入姓名" type="text" class="layui-input" maxlength="20"
+                   lay-verify="required"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">模板描述</label>
+        <div class="layui-input-block">
+            <input name="templateDESC" placeholder="模板描述" type="text" class="layui-input" maxlength="100"
+                     />
+            <input name="attachmentId" id="attid" type="hidden">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">模板类型</label>
+        <div class="layui-input-block">
+            <select name="type" placeholder="模板类型" lay-verify=""/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">文件上传</label>
+            <div class="layui-upload">
+                <button type="button" class="layui-btn" id="file_up" lay-verify="file">上传</button>
+                <div class="layui-upload-list">
+                    <img class="layui-upload-img" id="demo1" style="cursor:pointer"
+                    src="">
+                    <p id="demoText"></p>
+                </div>
+            </div>
+
+    </div>
+
+    <div class="layui-form-item model-form-footer">
+        <button class="layui-btn layui-btn-primary close" ew-event="closeDialog" type="button">取消</button>
+        <button class="layui-btn" lay-filter="template-form-submit" lay-submit>保存</button>
+    </div>
+</form>
+
+<script>
+    layui.use(['layer','config', 'admin', 'form', 'upload'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var admin = layui.admin;
+        var form = layui.form;
+        var config = layui.config;
+        var table = layui.table;
+        var upload = layui.upload;
+
+
+        //自定义验证规则
+        form.verify({
+            file: function(value){
+                if(value==""){
+                    return '请上传文件!';
+                }
+            }
+        });
+
+
+
+        //上传文件
+        var uploadInst = upload.render({
+            elem: '#file_up'
+            //,url: '/components/template/file/ok.json'
+            , url: config.base_server + 'QualityAttachment/save.do'
+            ,accept:'file',
+            data: {
+                attid: function(){
+                    return $('#attid').val();
+                }
+            }
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    debugger
+                    var typeindex = file.name.indexOf(".");
+                    var type = file.name.substr(typeindex+1);
+                    if(type){
+                        if(type.toLowerCase()=="ppt" || type.toLowerCase()=="pptx"){
+                            result = "assets/images/fti/ppt.png"
+                        }else if(type.toLowerCase()=="doc" || type.toLowerCase()=="docx"){
+                            result = "assets/images/fti/doc.png"
+                        }else if(type.toLowerCase()=="xls" || type.toLowerCase()=="xlsx"){
+                            result = "assets/images/fti/xls.png"
+                        }else if(type.toLowerCase()=="html" || type.toLowerCase()=="html"){
+                            result = "assets/images/fti/htm.png"
+                        }else if(type.toLowerCase()=="pdf"){
+                            result = "assets/images/fti/pdf.png"
+                        }else if(type.toLowerCase()=="swf"){
+                            result = "assets/images/fti/swf.png"
+                        }else if(type.toLowerCase()=="zip" || type.toLowerCase()=="rar" || type.toLowerCase()=="7z"){
+                            result = "assets/images/fti/zip.png"
+                        }else if(type.toLowerCase()=="mp3"){
+                            result = "assets/images/fti/mp3.png"
+                        }else if(type.toLowerCase()=="mp4"){
+                            result = "assets/images/fti/mp4.png"
+                        }else {
+                            result = "assets/images/fti/file.png"
+                        }
+                    }
+
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                    $('#demoText').html(file.name);
+                });
+            }
+            ,done: function(res){
+                //如果上传失败
+                if(res.status==200){
+                    $("#file_up").val("xxx");
+                    $("#attid").val(res.data);
+                    return layer.msg('上传成功');
+                }
+            }
+            ,error: function(){
+                return layer.msg('上传失败');
+                //演示失败状态，并实现重传
+                //var demoText = $('#demoText');
+                //demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                //demoText.find('.demo-reload').on('click', function(){
+                // uploadInst.upload();
+                //});
+            }
+        });
+
+
+
+        // 回显user数据
+        var user = admin.getTempData('template_data');
+        $('#template-form').attr('method', 'POST');
+        if (user) {
+            form.val('template-form', user);
+            //开始判断上传文件的
+            if(user.attachmentId){
+
+                $("#demo1").bind("click",function(){
+                    var downloadUrl = config.base_server + 'QualityAttachment/download/file.do?attachmentId='+user.attachmentId;
+                    window.location.href = downloadUrl;
+
+                })
+
+
+                $.ajax({
+                    url: config.base_server + 'QualityAttachment/queryById.do',
+                    data: {"id":user.attachmentId},
+                    type: "GET",
+                    dataType: 'json',
+                    contentType:"application/json",
+                    success: function (data) {
+                        if(data.data.type!="jpg"){
+                            var url = data.data.smpath;
+                            $("#demo1").attr("src", url)
+                                .attr("width",data.data.smImgWidth)
+                                .attr("height",data.data.smImgHeight);
+                            $('#demoText').html(data.data.fileName);
+                        }else{
+                            var url = config.base_server + "QualityAttachment/download/image.do?attachmentId="+user.attachmentId;
+                            $("#demo1").attr("src", url)
+                                .attr("width",data.data.smImgWidth)
+                                .attr("height",data.data.smImgHeight);
+                            $('#demoText').html(data.data.fileName);
+                        }
+
+                    }
+                });
+
+            }
+        }
+
+        // 表单提交事件
+        form.on('submit(template-form-submit)', function (data) {
+            layer.load(2);
+            $.ajax({
+                url: config.base_server + 'QualityTemplate/save.do',
+                data: JSON.stringify(data.field),
+                type: "POST",
+                dataType: 'json',
+                contentType:"application/json",
+                success: function (data) {
+                    layer.closeAll('loading');
+                    if (data.status == 200) {
+                        layer.msg(data.message, {icon: 1});
+                        admin.closeDialog("#template-form");
+                        table.reload("templateTable",{});
+                    } else {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                }
+
+            });
+
+            return false;
+        });
+
+
+
+    });
+</script>

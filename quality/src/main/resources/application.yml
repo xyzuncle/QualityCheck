@@ -69,6 +69,7 @@ logging:
 #fastfds是否使用缩略图
 fs:
   useSm: true
+  dir: fstdfssm
 
 
 

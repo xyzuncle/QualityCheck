@@ -10,8 +10,11 @@
     <result column="deleted" property="deleted" />
         <result column="businessId" property="businessId" />
         <result column="path" property="path" />
-        <result column="smpath" property="smpath" />
+        <result column="smpath" property="smpath"/>
         <result column="fileName" property="fileName" />
+        <result column="smImgHeight" property="smImgHeight"/>
+        <result column="smImgWidth" property="smImgWidth"/>
+        <result column="type" property="type"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->

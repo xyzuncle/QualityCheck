@@ -26,11 +26,11 @@
 
                     <div class="layui-inline" id="searchdiv"></div>
                     <!--<div class="layui-inline" id="searchdiv">-->
-                        <!--<button id="userBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
+                        <!--<button id="barCodeBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
                         </button>
                         <button id="userBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
-                        <button id="userBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
-                        <button id="userBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>-->
+                        <button id="barCodeBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
+                        <button id="barCodeBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>-->
                    <!-- </div>-->
                 </div>
             </div>
@@ -61,16 +61,16 @@
 
     {{#  layui.each(d.permissionkey, function(index, value){ }}
     {{# if(value=="user:view"){ }}
-    <button id="userBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+    <button id="barCodeBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
     {{# } }}
     {{# if(value=="user:add"){ }}
-    <button id="userBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+    <button id="barCodeAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
     {{# } }}
     {{# if(value=="user:deleteAll"){ }}
-    <button id="userBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
+    <button id="barCodeBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
     {{# } }}
     {{# if(value=="user:export"){ }}
-    <button id="userBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+    <button id="barCodeBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
     {{# } }}
 
 
@@ -122,8 +122,8 @@
         });
 
         // 添加按钮点击事件
-        $('#userBtnAdd').click(function () {
-            showEditModel();
+        $('#barCodeAdd').click(function () {
+            showDialog();
         });
 
         // 工具条点击事件
@@ -165,10 +165,10 @@
         });
 
         // 显示表单弹窗
-        function showEditModel(data) {
+        function showDialog(data) {
             admin.putTempData('quality_barcode', data);
             admin.open({
-                title: data ? '修改关联信息' : '添加关联信息',
+                title: data ? '修改条形码信息' : '添加条形码信息',
                 url: 'components/store/barcode_form.html',
                 success: function (layero, index) {
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
@@ -196,7 +196,7 @@
 
 
         // 搜索按钮点击事件
-        $('#userBtnSearch').bind("click",function() {
+        $('#barCodeBtnSearch').bind("click",function() {
             var barcode = $('#barCode').val();
             var sampleName = $('#sampleName').val();
             var sampleCode = $('#sampleCode').val();
@@ -213,7 +213,7 @@
         });
 
         //批量删除
-        $("#userBtnRM").click(function(){
+        $("#barCodeBtnRM").click(function(){
             var checkRows = table.checkStatus('barTable');
             if (checkRows.data.length == 0) {
                 layer.msg('请选择要删除的数据', {icon: 2});
@@ -240,7 +240,7 @@
         })
 
         // 导出excel
-        $('#userBtnExp').click(function () {
+        $('#barCodeBtnExp').click(function () {
             var checkRows = table.checkStatus('barTable');
             if (checkRows.data.length == 0) {
                 layer.msg('请选择要导出的数据', {icon: 2});

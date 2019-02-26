@@ -1,0 +1,213 @@
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-header">模板管理</div>
+        <div class="layui-card-body">
+
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                   <!-- <div class="layui-inline">
+                        <label class="layui-form-label w-auto">账号：</label>
+                        <div class="layui-input-inline mr0">
+                            <input id="lrEdtAccount" class="layui-input" type="text" placeholder="请输入账号"/>
+                        </div>
+                    </div>-->
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">日期：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input date-icon" id="crtTime" placeholder="查询日期范围">
+                        </div>
+                    </div>
+
+
+
+                    <div class="layui-inline" id="templatediv">
+                        <!--<button id="templateBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
+                        </button>
+                        <button id="templateBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>添加
+                        </button>
+                        <button id="templateBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe640;</i>批量删除</button>
+                        <button id="templateBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>-->
+                    </div>
+                </div>
+            </div>
+
+            <table class="layui-table" id="templateTable" lay-filter="templateTable"></table>
+
+        </div>
+    </div>
+</div>
+
+<script id="templateSearch" type="text/html">
+    {{#  layui.each(d.permissionkey, function(index, value){ }}
+    {{# if(value=="user:view"){ }}
+    <button id="templateBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+    {{# } }}
+    {{# if(value=="user:add"){ }}
+    <button id="templateBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+    {{# } }}
+    {{# if(value=="user:deleteAll"){ }}
+    <button id="templateBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
+    {{# } }}
+    {{# if(value=="user:export"){ }}
+    <button id="templateBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+    {{# } }}
+
+    {{# }); }}
+</script>
+
+<script type="text/html" id="templateBar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+
+</script>
+
+<script>
+    layui.use(['layer', 'laydate', 'table', 'util', 'config','admin'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var table = layui.table;
+        var util = layui.util;
+        var laydate = layui.laydate;
+        var config = layui.config;
+        var admin = layui.admin;
+        var laytpl = layui.laytpl;
+        //获取按钮权限
+        var btndata =config.getUserAuths();
+        laytpl(templateSearch.innerHTML).render(btndata, function(html){
+            $("#templatediv").html(html);
+        });
+
+
+        //渲染表格
+        var ins1 = table.render({
+            elem: '#templateTable',
+            url: config.base_server + 'QualityTemplate/query.do',
+            page: true,
+            cellMinWidth: 100,
+            cols: [[
+                {type: 'numbers'},
+                {field: 'templateName', sort: true, title: '模板名称'},
+                {field: 'uploadUser', sort: true, title: '上传人'},
+                {field: 'type', sort: true, title: '模板类型'},
+                {field: 'templateDESC', sort: true, title: '模板描述'},
+                {
+                    field: 'crtTime', sort: true, templet: function (d) {
+                        return util.toDateString(d.crtTime);
+                    }, title: '创建时间'
+                },
+                {align: 'center', toolbar: '#templateBar', title: '操作', minWidth: 150}
+            ]]
+        });
+
+        //时间范围
+        laydate.render({
+            elem: '#crtTime',
+            type: 'date',
+            range: true,
+            theme: 'molv'
+        });
+
+        //搜索按钮点击事件
+        $('#templateBtnSearch').click(function () {
+            var searchDate = $('#crtTime').val().split(' - ');
+            table.reload('templateTable', {
+                where: {
+                    "search-GE-crtTime": searchDate[0],
+                    "search-LT-crtTime": searchDate[1]
+
+                }
+            });
+        });
+
+        // 添加按钮点击事件
+        $('#templateBtnAdd').click(function () {
+            showEditModel();
+        });
+
+        // 显示表单弹窗
+        function showEditModel(data) {
+            admin.putTempData('template_data', data);
+            admin.open({
+                title: data?"修改模板信息":"添加模板信息",
+                url: 'components/system/template_form.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
+                }
+            });
+        };
+
+
+
+        // 导出excel
+        $('#templateBtnExp').click(function () {
+            var checkRows = table.checkStatus('templateTable');
+            if (checkRows.data.length == 0) {
+                layer.msg('请选择要导出的数据', {icon: 2});
+            } else {
+                table.exportFile(ins1.config.id, checkRows.data, 'xls');
+            }
+        });
+
+        //批量删除
+        $("#templateBtnRM").click(function(){
+            var checkRows = table.checkStatus('templateTable');
+            if (checkRows.data.length == 0) {
+                layer.msg('请选择要删除的数据', {icon: 2});
+            }else{
+                var ids="";
+                checkRows.data.forEach(function(item,index,array){
+                    ids+=item.id+",";
+                })
+                if(ids){
+                    ids = ids.slice(0,-1);
+                }
+                admin.req("QualityTemplate/removeMore.do",{
+                    entityIDS: ids
+                },function(data){
+                    if (data.status == 200) {
+                        layer.msg(data.message, {icon: 1});
+                        table.reload('templateTable', {});
+                    } else if(data.status == 500) {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                },'delete')
+            }
+
+        })
+
+        // 工具条点击事件
+        table.on('tool(templateTable)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+
+            if (layEvent === 'edit') { // 修改
+                showEditModel(data);
+            }
+            else if(layEvent === 'delete'){
+                layer.confirm('确定删除该条数据吗？', {
+                    skin: 'layui-layer-admin'
+                }, function (i) {
+                    layer.close(i);
+                    layer.load(2);
+                    $.ajax({
+                        url: config.base_server + 'QualityTemplate/removeById.do?entityID='+data.id+"&attachmentId="+data.attachmentId,
+                        type: 'delete',
+                        dataType: 'JSON',
+                        success: function (data) {
+                            layer.closeAll('loading');
+                            layer.msg(data.message, {icon: 1});
+                            table.reload('templateTable', {});
+                        },
+                        error: function (xhr) {
+                            layer.closeAll('loading');
+                            if (xhr.status == 500) {
+                                layer.msg(xhr.responseJSON.message, {icon: 5});
+                            }
+                        }
+                    });
+                });
+            }
+        });
+
+    });
+</script>

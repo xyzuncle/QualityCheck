@@ -23,4 +23,13 @@
         specificationCName, specificationEName, CodeCName, CodeEName
     </sql>
 
+    <!--查询符合条件的信息-->
+    <select id="queryByCheckAbilityIds" parameterType="string" resultMap="BaseResultMap">
+
+        select <include refid="Base_Column_List"/> FROM  quality_check_ability where id IN
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

@@ -3,6 +3,8 @@ package com.quality.delegate.service;
 import com.quality.delegate.entity.QualityCheckAbility;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 校准能力 服务类
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IQualityCheckAbilityService extends IService<QualityCheckAbility> {
 
+    List<QualityCheckAbility> queryByCheckAbilityIds(String[] checkAbilityIds);
 }

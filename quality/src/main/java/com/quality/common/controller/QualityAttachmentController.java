@@ -51,12 +51,6 @@ public class QualityAttachmentController extends BaseController<QualityAttachmen
     private final Logger logger = LoggerFactory.getLogger(QualityAttachmentController.class);
     private FastDFSClient fastDFSClient = new FastDFSClient();
     /**
-     * 文件服务器地址
-     */
-    @Value("${file_server_addr}")
-    private String fileServerAddr;
-
-    /**
      * 带分页的查询条件
      *
      * @return

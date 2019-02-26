@@ -6,6 +6,8 @@ import com.quality.delegate.service.IQualityCheckAbilityService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 校准能力 服务实现类
@@ -17,4 +19,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class QualityCheckAbilityServiceImpl extends ServiceImpl<QualityCheckAbilityMapper, QualityCheckAbility> implements IQualityCheckAbilityService {
 
+    @Override
+    public List<QualityCheckAbility> queryByCheckAbilityIds(String[] checkAbilityIds) {
+        return baseMapper.queryByCheckAbilityIds(checkAbilityIds);
+    }
 }

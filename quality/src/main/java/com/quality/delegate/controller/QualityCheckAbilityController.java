@@ -125,12 +125,17 @@ public class QualityCheckAbilityController extends BaseController<QualityCheckAb
 
     @RequestMapping(value = "/list.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Object getQualityCheckAbilityList(HttpServletRequest request) {
+    public PageResult<QualityCheckAbility> getQualityCheckAbilityList(HttpServletRequest request) {
+
+        PageResult<QualityCheckAbility> QualityCheckAbilityListPage = null;
         try {
             //把查询条件都写好了
             Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search-");
-            List<QualityCheckAbility> list = super.queryContionNoPage(searchParams);
-            return super.jsonObjectResult(list, "查询成功");
+            //如果需要按多个字段排序，请传多个参数,为了反射方便，数据库不使用下划线了
+            Sort sort = new Sort(Sort.DESC, Tools.str2StrArray("crtTime"));
+            QualityCheckAbilityListPage = (PageResult<QualityCheckAbility>) queryContion(searchParams, sort);
+            QualityCheckAbilityListPage.setMsg("查询成功");
+            return QualityCheckAbilityListPage;
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("查询失败", 500);

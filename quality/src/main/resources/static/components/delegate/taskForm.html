@@ -51,6 +51,24 @@
                             <input name="delegateType" id="delegateType" type="text" placeholder="请输入委托类型" class="layui-input" lay-verify="required"/>
                         </div>
                     </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label">项目负责人:</label>
+                        <div class="layui-input-block">
+                            <input name="projectLeader" id="projectLeader" type="text" placeholder="请选择项目负责人" class="layui-input"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label">项目参加人:</label>
+                        <div class="layui-input-block">
+                            <input name="projectParticipant" id="projectParticipant" type="text" placeholder="请选择项目参加人" class="layui-input"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label">项目复核人:</label>
+                        <div class="layui-input-block">
+                            <input name="projectReviewer" id="projectReviewer" type="text" placeholder="请选择项目复核人" class="layui-input"/>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -69,8 +87,6 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <button id="sampleFromBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
-                        </button>
                         <button id="assignmentSampleFromBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
                     </div>
 
@@ -81,6 +97,24 @@
 
     </div>
 
+    <div class="layui-card">
+        <div class="layui-card-header">考核能力</div>
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">规范名称</label>
+                        <div class="layui-input-inline">
+                            <input id="specificationCName"  name="specificationCName" class="layui-input" type="text" placeholder="输入规范名称"/>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <table class="layui-table" id="taskCheckAbilityTable" lay-filter="taskCheckAbilityTable"></table>
+        </div>
+
+    </div>
 
     <div class="layui-card">
             <div style="text-align: center;margin-top: 30px;margin-bottom: 20px;">
@@ -91,6 +125,10 @@
 </div>
 
 
+<!-- 表格操作列 -->
+<script type="text/html" id="taskCheckAbilityTableBar">
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
 <!-- js部分 -->
 <script>
     layui.use(['layer','admin', 'form', 'table','tableSelect', 'util', 'laydate','index','config'], function () {
@@ -132,7 +170,6 @@
             },
             done: function (elem, data) {
                 layui.each(data.data, function (index, item) {
-                    debugger
                     var tableData =  table.cache["taskSampleTable"];
                     tableData.push(item);
                     table.reload('taskSampleTable',{
@@ -180,7 +217,90 @@
         });
 
 
+        /**参考标准信息*/
+        var caTableData=new Array(); // 用于存放表格数据
 
+        tableSelect.render({
+            elem: '#specificationCName',
+            checkedKey: 'id',
+            searchKey: 'specificationCName',
+            table: {
+                url: config.base_server + 'QualityCheckAbility/list.do',
+                cols: [[
+                    { type: 'checkbox' }
+                    ,{field: 'id', title: 'ID'}
+                    ,{field: 'specificationCName',title: '规范名称'}
+                    ,{field: 'specificationEName', title: '规范名称（英文）'}
+                    ,{field: 'codeCName', title: '代号'}
+                    ,{field: 'codeEName', title: '代号（英文）'}
+                ]]
+            },
+            done: function (elem, data) {
+                layui.each(data.data, function (index, item) {
+                    var rsTableData =  table.cache["taskCheckAbilityTable"];
+                    rsTableData.push(item);
+                    table.reload('taskCheckAbilityTable',{
+                        data : rsTableData
+                    });
+                })
+
+            }
+        })
+
+
+        // 工具条点击事件
+        table.on('tool(taskCheckAbilityTable)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+         if (layEvent === 'del') { // 删除
+                doDelete(obj);
+            }
+        });
+
+        // 删除
+        function doDelete(obj) {
+            layer.confirm('确定要删除吗？', function (i) {
+                layer.close(i);
+                layer.load(2);
+                admin.req('QualityCheckAbility/removeById.do?entityID=' + obj.data.id, {}, function (data) {
+                    layer.closeAll('loading');
+                    if (data.status == 200) {
+                        layer.msg(data.message, {icon: 1});
+                        obj.del();
+                    } else {
+                        layer.msg(data.message, {icon: 2});
+                    }
+                }, 'DELETE');
+            });
+        }
+        table.render({
+            elem: '#taskCheckAbilityTable'
+            ,data:tableData
+            ,cols: [[
+                ,{field: 'id', title: 'ID'}
+                ,{field: 'specificationCName',title: '规范名称'}
+                ,{field: 'specificationEName', title: '规范名称（英文）'}
+                ,{field: 'codeCName', title: '代号'}
+                ,{field: 'codeEName', title: '代号（英文）'}
+                ,{align: 'center', toolbar: '#taskCheckAbilityTableBar', title: '操作'}
+
+            ]]
+            , done: function(res, curr, count){
+                //关闭新增表单，追加表数据
+            }
+
+        });
+
+        function removeEmptyArrayEle(arr){
+            for(var i = 0; i < arr.length; i++) {
+                if(arr[i] == undefined||arr[i].length==0) {
+                    arr.splice(i,1);
+                    i = i - 1; // i - 1 ,因为空元素在数组下标 2 位置，删除空之后，后面的元素要向前补位，
+                    // 这样才能真正去掉空元素,觉得这句可以删掉的连续为空试试，然后思考其中逻辑
+                }
+            }
+            return arr;
+        };
         // 提交按钮
         $('#formAdvBtnSubmit').click(function () {
             var filed = new Object();
@@ -197,9 +317,9 @@
             //样品
             var sampledata =  table.cache["taskSampleTable"];
             //参考信息
-            var referenceStandarddata =  table.cache["assignmentReferenceStandardTable"];
+            var askCheckAbilitydata =  table.cache["taskCheckAbilityTable"];
             filed["qualitySamples"] = sampledata;
-            filed["qualityReferenceStandards"] = referenceStandarddata;
+            filed["qualityCheckAbilities"] = removeEmptyArrayEle(askCheckAbilitydata);
 
             layer.load(2);
             $.ajax({
@@ -214,7 +334,7 @@
                     if (data.status == 200) {
                         layer.msg(data.message, {icon: 1});
                         //关闭tab
-                        index.closeTab("/delegate/assignmentForm");
+                        index.closeTab("/delegate/taskForm");
                     } else {
                         layer.msg(data.message, {icon: 2});
                     }
@@ -230,7 +350,7 @@
         debugger
         if (data) {
             layer.closeAll('loading');
-            $("#taskId").val(data.id);
+            $("#taskId").val(data.taskId);
             //任务单
             $("#taskIssuedDate").val(data.taskIssuedDate);
             $("#taskIssuedBy").val(data.taskIssuedBy);
@@ -243,6 +363,12 @@
             table.reload('taskSampleTable',{
                 data : sampledata
             });
+            var askCheckAbilitydata =  data.qualityCheckAbilities;
+            table.reload('taskCheckAbilityTable',{
+                data : askCheckAbilitydata
+            });
+
+
 
         }
     });

@@ -112,18 +112,18 @@ public class QualityTaskServiceImpl extends ServiceImpl<QualityTaskMapper, Quali
         if(result){
             List<QualitySample> samples = dto.getQualitySamples();
             if(samples !=null){
-                samples.forEach(item->{
+                for(int i=0;i<samples.size();i++){
+                    QualitySample item =samples.get(i);
                     String sampleid = item.getId() + "";
                     if(sampleid==null){
                         sampleid = UUID.randomUUID().toString().replace("-", "").toLowerCase();
                         item.setId(sampleid);
-                        sampleService.save(item);
+                        result =  sampleService.save(item);
                     }else{
-                        sampleService.saveOrUpdate(item);
+                        result =  sampleService.saveOrUpdate(item);
                     }
                     sampleids.add(sampleid);
-                });
-                result = sampleService.saveOrUpdateBatch(samples);
+                }
             }
 
 
@@ -132,18 +132,19 @@ public class QualityTaskServiceImpl extends ServiceImpl<QualityTaskMapper, Quali
         if(result){
             List<QualityCheckAbility> checkAbilities = dto.getQualityCheckAbilities();
             if(checkAbilities!=null){
-                checkAbilities.forEach(item->{
+                for(int i=0;i<checkAbilities.size();i++){
+                    QualityCheckAbility item =checkAbilities.get(i);
                     String checkAbilityid = item.getId() + "";
                     if(checkAbilityid==null){
                         checkAbilityid = UUID.randomUUID().toString().replace("-", "").toLowerCase();
                         item.setId(checkAbilityid);
-                        checkAbilityService.save(item);
+                        result =  checkAbilityService.save(item);
                     }else{
-                        checkAbilityService.saveOrUpdate(item);
+                        result =  checkAbilityService.saveOrUpdate(item);
                     }
                     checkAbilityids.add(checkAbilityid);
-                });
-                result = checkAbilityService.saveOrUpdateBatch(checkAbilities);
+                }
+
             }
         }
         if(result){

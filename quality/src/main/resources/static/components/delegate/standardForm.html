@@ -36,12 +36,13 @@
             <input name="certificateAttachment"  type="file" class="layui-input"
             />
         </div>-->
-        <input name="certificateAttachment"  id="certificateAttachment" type="hidden">
+        <input name="certificateAttachment"  id="attid" type="hidden">
         <div class="layui-upload">
             <button type="button" class="layui-btn" id="certificateUpload">上传证书</button>
             <div class="layui-upload-list">
-                <img class="layui-upload-img" id="certificate" style="width: 90px ;height: 90px;margin-left: 100px;">
-                <p id="certificateText" style="margin-left: 100px"></p>
+                <img class="layui-upload-img" id="certificate" style="cursor:pointer"
+                     src="">
+                <p id="certificateText"></p>
             </div>
         </div>
     </div>
@@ -111,31 +112,59 @@
             elem: '#validityDate'
         });
 
-        //普通图片上传
+        //上传文件
         var uploadInst = upload.render({
             elem: '#certificateUpload'
-            ,url:config.base_server + 'QualityAttachment/save.do'
-            ,accept:'file'
+            //,url: '/components/template/file/ok.json'
+            , url: config.base_server + 'QualityAttachment/save.do'
+            ,accept:'file',
+            data: {
+                attid: function(){
+                    return $('#attid').val();
+                }
+            }
             ,before: function(obj){
                 //预读本地文件示例，不支持ie8
                 obj.preview(function(index, file, result){
-                  $('#certificate').attr('src', result); //图片链接（base64）
-                    console.info(file)
+                    var typeindex = file.name.indexOf(".");
+                    var type = file.name.substr(typeindex+1);
+                    if(type){
+                        if(type.toLowerCase()=="ppt" || type.toLowerCase()=="pptx"){
+                            result = "assets/images/fti/ppt.png"
+                        }else if(type.toLowerCase()=="doc" || type.toLowerCase()=="docx"){
+                            result = "assets/images/fti/doc.png"
+                        }else if(type.toLowerCase()=="xls" || type.toLowerCase()=="xlsx"){
+                            result = "assets/images/fti/xls.png"
+                        }else if(type.toLowerCase()=="html" || type.toLowerCase()=="html"){
+                            result = "assets/images/fti/htm.png"
+                        }else if(type.toLowerCase()=="pdf"){
+                            result = "assets/images/fti/pdf.png"
+                        }else if(type.toLowerCase()=="swf"){
+                            result = "assets/images/fti/swf.png"
+                        }else if(type.toLowerCase()=="zip" || type.toLowerCase()=="rar" || type.toLowerCase()=="7z"){
+                            result = "assets/images/fti/zip.png"
+                        }else if(type.toLowerCase()=="mp3"){
+                            result = "assets/images/fti/mp3.png"
+                        }else if(type.toLowerCase()=="mp4"){
+                            result = "assets/images/fti/mp4.png"
+                        }else {
+                            result = "assets/images/fti/file.png"
+                        }
+                    }
+
+                    $('#certificate').attr('src', result); //图片链接（base64）
                     $('#certificateText').html(file.name);
                 });
             }
             ,done: function(res){
-                //alert(JSON.stringify(res));
-
-                $('#certificateAttachment').val(res.data);
                 //如果上传失败
-                // if(res.code > 0){
-                //     return layer.msg('上传失败');
-                // }
-                //上传成功
+                if(res.status==200){
+                    $("#attid").val(res.data);
+                    return layer.msg('上传成功');
+                }
             }
             ,error: function(){
-                alert("失败");
+                return layer.msg('上传失败');
                 //演示失败状态，并实现重传
                 //var demoText = $('#demoText');
                 //demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
@@ -145,16 +174,44 @@
             }
         });
 
+
         // 回显数据
         var data = admin.getTempData('quality_standard');
         $('#standardForm').attr('method', 'GET');
         if (data) {
             form.val('standardForm', data);
-            var certificateAttachment = data.certificateAttachment;
-            admin.req('QualityAttachment/queryById.do?id=' + certificateAttachment, {}, function (data) {
-               //alert(JSON.stringify(data))
-                $('#certificate').attr('src', data.data.path); //图片链接（base64）
-            }, 'GET');
+            var certificateAttachment = data.certificateAttachment;//开始判断上传文件的
+            if(certificateAttachment){
+                $("#certificate").bind("click",function(){
+                    var downloadUrl = config.base_server + 'QualityAttachment/download/file.do?attachmentId='+certificateAttachment;
+                    window.location.href = downloadUrl;
+
+                })
+                $.ajax({
+                    url: config.base_server + 'QualityAttachment/queryById.do',
+                    data: {"id":certificateAttachment},
+                    type: "GET",
+                    dataType: 'json',
+                    contentType:"application/json",
+                    success: function (data) {
+                        if(data.data.type!="jpg"){
+                            var url = data.data.smpath;
+                            $("#certificate").attr("src", url)
+                                .attr("width",data.data.smImgWidth)
+                                .attr("height",data.data.smImgHeight);
+                            $('#certificateText').html(data.data.fileName);
+                        }else{
+                            var url = config.base_server + "QualityAttachment/download/image.do?attachmentId="+user.attachmentId;
+                            $("#certificate").attr("src", url)
+                                .attr("width",data.data.smImgWidth)
+                                .attr("height",data.data.smImgHeight);
+                            $('#certificateText').html(data.data.fileName);
+                        }
+
+                    }
+                });
+
+            }
 
             $('#standardForm').attr('method', 'GET');
         }

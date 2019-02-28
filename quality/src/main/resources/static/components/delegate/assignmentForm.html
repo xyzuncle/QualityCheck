@@ -37,11 +37,14 @@
 
             <div class="layui-form">
                 <label class="layui-form-label">附件</label>
-                <input name="agreementAttachment"  id="agreementAttachment" type="hidden">
+                <input name="agreementAttachment"  id="attid" type="hidden">
                 <div class="layui-upload">
                     <button type="button" class="layui-btn" id="attachmentUpload">上传附件</button>
+
                     <div class="layui-upload-list">
-                        <a id="attachmentText" style="margin-left: 100px"></a>
+                        <img class="layui-upload-img" id="attachment" style="cursor:pointer"
+                             src="">
+                        <p id="attachmentText"></p>
                     </div>
                 </div>
             </div>
@@ -148,29 +151,60 @@
 
         form.render();
 
-        //普通图片上传
+        //上传文件
         var uploadInst = upload.render({
             elem: '#attachmentUpload'
-            ,url:config.base_server + 'QualityAttachment/save.do'
-            ,accept:'file'
+            //,url: '/components/template/file/ok.json'
+            , url: config.base_server + 'QualityAttachment/save.do'
+            ,accept:'file',
+            data: {
+                attid: function(){
+                    return $('#attid').val();
+                }
+            }
             ,before: function(obj){
                 //预读本地文件示例，不支持ie8
                 obj.preview(function(index, file, result){
+                    debugger
+                    var typeindex = file.name.indexOf(".");
+                    var type = file.name.substr(typeindex+1);
+                    if(type){
+                        if(type.toLowerCase()=="ppt" || type.toLowerCase()=="pptx"){
+                            result = "assets/images/fti/ppt.png"
+                        }else if(type.toLowerCase()=="doc" || type.toLowerCase()=="docx"){
+                            result = "assets/images/fti/doc.png"
+                        }else if(type.toLowerCase()=="xls" || type.toLowerCase()=="xlsx"){
+                            result = "assets/images/fti/xls.png"
+                        }else if(type.toLowerCase()=="html" || type.toLowerCase()=="html"){
+                            result = "assets/images/fti/htm.png"
+                        }else if(type.toLowerCase()=="pdf"){
+                            result = "assets/images/fti/pdf.png"
+                        }else if(type.toLowerCase()=="swf"){
+                            result = "assets/images/fti/swf.png"
+                        }else if(type.toLowerCase()=="zip" || type.toLowerCase()=="rar" || type.toLowerCase()=="7z"){
+                            result = "assets/images/fti/zip.png"
+                        }else if(type.toLowerCase()=="mp3"){
+                            result = "assets/images/fti/mp3.png"
+                        }else if(type.toLowerCase()=="mp4"){
+                            result = "assets/images/fti/mp4.png"
+                        }else {
+                            result = "assets/images/fti/file.png"
+                        }
+                    }
+
+                    $('#attachment').attr('src', result); //图片链接（base64）
                     $('#attachmentText').html(file.name);
                 });
             }
             ,done: function(res){
-                //alert(JSON.stringify(res));
-
-                $('#agreementAttachment').val(res.data);
                 //如果上传失败
-                // if(res.code > 0){
-                //     return layer.msg('上传失败');
-                // }
-                //上传成功
+                if(res.status==200){
+                    $("#attid").val(res.data);
+                    return layer.msg('上传成功');
+                }
             }
             ,error: function(){
-                alert("失败");
+                return layer.msg('上传失败');
                 //演示失败状态，并实现重传
                 //var demoText = $('#demoText');
                 //demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
@@ -230,7 +264,7 @@
             filed["agreementNo"]= $("#agreementNo").val();
             filed["delegateType"]= $("#delegateType").val();
             filed["remarks"] = $("#remarks").val();
-            filed["agreementAttachment"] = $("#agreementAttachment").val();
+            filed["agreementAttachment"] = $("#attid").val();
 
             //代理机构
             filed["unitId"] = $("#unitId").val();
@@ -277,7 +311,7 @@
             $("#agreementNo").val(data.agreementNo);
             $("#delegateType").val(data.delegateType);
             $("#remarks").val(data.remarks);
-            $("#agreementAttachment").val(data.agreementAttachment);
+            $("#attid").val(data.agreementAttachment);
 
 
 
@@ -291,13 +325,39 @@
             $("#fax").val(data.fax);
             $("#unitId").val(data.unitId);
 
-            admin.req('QualityAttachment/queryById.do?id=' + data.agreementAttachment, {}, function (json) {
-                //alert(JSON.stringify(data))
-                debugger
-                $("#attachmentText").attr('href',json.data.path);
-                $("#attachmentText").text(json.data.fileName);
 
-            }, 'GET');
+            //开始判断上传文件的
+            if(data.agreementAttachment){
+                $("#attachment").bind("click",function(){
+                    var downloadUrl = config.base_server + 'QualityAttachment/download/file.do?attachmentId='+data.agreementAttachment;
+                    window.location.href = downloadUrl;
+
+                })
+                $.ajax({
+                    url: config.base_server + 'QualityAttachment/queryById.do',
+                    data: {"id":data.agreementAttachment},
+                    type: "GET",
+                    dataType: 'json',
+                    contentType:"application/json",
+                    success: function (data) {
+                        if(data.data.type!="jpg"){
+                            var url = data.data.smpath;
+                            $("#attachment").attr("src", url)
+                                .attr("width",data.data.smImgWidth)
+                                .attr("height",data.data.smImgHeight);
+                            $('#attachmentText').html(data.data.fileName);
+                        }else{
+                            var url = config.base_server + "QualityAttachment/download/image.do?attachmentId="+user.attachmentId;
+                            $("#attachment").attr("src", url)
+                                .attr("width",data.data.smImgWidth)
+                                .attr("height",data.data.smImgHeight);
+                            $('#attachmentText').html(data.data.fileName);
+                        }
+
+                    }
+                });
+
+            }
         }
     });
 </script>

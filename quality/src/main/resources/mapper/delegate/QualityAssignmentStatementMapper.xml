@@ -30,6 +30,10 @@
         <result column="state" property="state" />
         <result column="agreementAttachment" property="agreementAttachment" />
         <result column="remarks" property="remarks" />
+        <result column="acceptor" property="acceptor" />
+        <result column="acceptDate" property="acceptDate" />
+        <result column="reviewer" property="reviewer" />
+        <result column="reviewDate" property="reviewDate" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -38,7 +42,8 @@
         crtTime,
         updTime,
         deleted,
-        agreementNo, delegateType, delegateUnitID, referenceStandardIds, sampleIDs, designatedMonitoringBasis, designatedMonitoringItems, designatedMonitoringRequirement, acceptanceReviewType, plannedCompletionTime, secret, standardEffectivePeriod, standardconClusion, uncertainty, confirmMonitoringBasis, reference, acceptOpinion, procdefId, executionId, state, agreementAttachment, remarks
+        agreementNo, delegateType, delegateUnitID, referenceStandardIds, sampleIDs, designatedMonitoringBasis, designatedMonitoringItems, designatedMonitoringRequirement, acceptanceReviewType, plannedCompletionTime, secret, standardEffectivePeriod, standardconClusion, uncertainty, confirmMonitoringBasis, reference, acceptOpinion, procdefId, executionId, state, agreementAttachment, remarks,
+        acceptor,acceptDate,reviewer,reviewDate
     </sql>
 
     <select id="getByAgreementNo" resultType="com.quality.delegate.entity.QualityAssignmentStatement">

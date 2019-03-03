@@ -41,15 +41,19 @@ layui.config({
 
 
     // 获取当前用户的菜单权限
-    admin.req('QualityMenu/getQualityMenuBtn.do', {}, function (data) {
-        if (200 == data.status) {
-            if(data.data){
-                config.putAuthorities(data.data);
+    if(!config.getAuthorities()){
+        debugger
+        admin.req('QualityMenu/getQualityMenuBtn.do', {}, function (data) {
+            if (200 == data.status) {
+                if(data.data){
+                    config.putAuthorities(data.data);
+                }
+            } else {
+                layer.msg('获取当前用户菜单权限失败', {icon: 2});
             }
-        } else {
-            layer.msg('获取当前用户菜单权限失败', {icon: 2});
-        }
-    }, 'get');
+        }, 'get');
+    }
+
 
 
     // 加载侧边栏

@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Date;
+
 /**
  * <p>
  * 委托协议书
@@ -105,6 +107,25 @@ public class QualityAssignmentStatement extends BaseEntity {
     @ApiModelProperty(value = "备注")
     @TableField("remarks")
     private String remarks;
+
+    @ApiModelProperty(value = "受理人")
+    @TableField("acceptor")
+    private String acceptor;
+
+
+    @ApiModelProperty(value = "受理时间")
+    @TableField("acceptDate")
+    private Date acceptDate;
+
+
+    @ApiModelProperty(value = "复核人")
+    @TableField("reviewer")
+    private String reviewer;
+
+    @ApiModelProperty(value = "复核时间")
+    @TableField("reviewDate")
+    private Date reviewDate;
+
 
 
     public String getAgreementNo() {
@@ -283,31 +304,67 @@ public class QualityAssignmentStatement extends BaseEntity {
         this.remarks = remarks;
     }
 
+    public String getAcceptor() {
+        return acceptor;
+    }
+
+    public void setAcceptor(String acceptor) {
+        this.acceptor = acceptor;
+    }
+
+    public Date getAcceptDate() {
+        return acceptDate;
+    }
+
+    public void setAcceptDate(Date acceptDate) {
+        this.acceptDate = acceptDate;
+    }
+
+    public String getReviewer() {
+        return reviewer;
+    }
+
+    public void setReviewer(String reviewer) {
+        this.reviewer = reviewer;
+    }
+
+    public Date getReviewDate() {
+        return reviewDate;
+    }
+
+    public void setReviewDate(Date reviewDate) {
+        this.reviewDate = reviewDate;
+    }
+
     @Override
     public String toString() {
         return "QualityAssignmentStatement{" +
-                "agreementNo=" + agreementNo +
-                ", delegateType=" + delegateType +
-                ", delegateUnitID=" + delegateUnitID +
-                ", referenceStandardIds=" + referenceStandardIds +
-                ", sampleIDs=" + sampleIDs +
-                ", designatedMonitoringBasis=" + designatedMonitoringBasis +
-                ", designatedMonitoringItems=" + designatedMonitoringItems +
-                ", designatedMonitoringRequirement=" + designatedMonitoringRequirement +
-                ", acceptanceReviewType=" + acceptanceReviewType +
-                ", plannedCompletionTime=" + plannedCompletionTime +
-                ", secret=" + secret +
-                ", standardEffectivePeriod=" + standardEffectivePeriod +
-                ", standardconClusion=" + standardconClusion +
-                ", uncertainty=" + uncertainty +
-                ", confirmMonitoringBasis=" + confirmMonitoringBasis +
-                ", reference=" + reference +
-                ", acceptOpinion=" + acceptOpinion +
-                ", procdefId=" + procdefId +
-                ", executionId=" + executionId +
+                "agreementNo='" + agreementNo + '\'' +
+                ", delegateType='" + delegateType + '\'' +
+                ", delegateUnitID='" + delegateUnitID + '\'' +
+                ", referenceStandardIds='" + referenceStandardIds + '\'' +
+                ", sampleIDs='" + sampleIDs + '\'' +
+                ", designatedMonitoringBasis='" + designatedMonitoringBasis + '\'' +
+                ", designatedMonitoringItems='" + designatedMonitoringItems + '\'' +
+                ", designatedMonitoringRequirement='" + designatedMonitoringRequirement + '\'' +
+                ", acceptanceReviewType='" + acceptanceReviewType + '\'' +
+                ", plannedCompletionTime='" + plannedCompletionTime + '\'' +
+                ", secret='" + secret + '\'' +
+                ", standardEffectivePeriod='" + standardEffectivePeriod + '\'' +
+                ", standardconClusion='" + standardconClusion + '\'' +
+                ", uncertainty='" + uncertainty + '\'' +
+                ", confirmMonitoringBasis='" + confirmMonitoringBasis + '\'' +
+                ", reference='" + reference + '\'' +
+                ", acceptOpinion='" + acceptOpinion + '\'' +
+                ", procdefId='" + procdefId + '\'' +
+                ", executionId='" + executionId + '\'' +
                 ", state=" + state +
-                ", agreementAttachment=" + agreementAttachment +
-                ", remarks=" + remarks +
-                "}";
+                ", agreementAttachment='" + agreementAttachment + '\'' +
+                ", remarks='" + remarks + '\'' +
+                ", acceptor='" + acceptor + '\'' +
+                ", acceptDate=" + acceptDate +
+                ", reviewer='" + reviewer + '\'' +
+                ", reviewDate=" + reviewDate +
+                '}';
     }
 }

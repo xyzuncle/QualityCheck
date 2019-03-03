@@ -20,7 +20,7 @@ import java.util.List;
 public class QualityMenuServiceImpl extends ServiceImpl<QualityMenuMapper, QualityMenu> implements IQualityMenuService {
 
     @Override
-    public List<QualityMenu> selectListByParentId(Integer parentId) {
+    public List<QualityMenu> selectListByParentId(String parentId) {
         return this.baseMapper.selectListByParentId(parentId);
     }
 

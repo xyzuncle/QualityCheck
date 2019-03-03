@@ -1,7 +1,10 @@
 package com.quality.delegate.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.quality.common.entity.BaseEntity;
 import java.time.LocalDate;
+import java.util.Date;
+
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,7 +28,8 @@ public class QualityTask extends BaseEntity {
 
     @ApiModelProperty(value = "任务签发日期")
     @TableField("taskIssuedDate")
-    private LocalDate taskIssuedDate;
+    @JSONField(format = "yyyy-MM-dd")
+    private Date taskIssuedDate;
 
     @ApiModelProperty(value = "委托单位")
     @TableField("delegateUnit")
@@ -61,7 +65,8 @@ public class QualityTask extends BaseEntity {
 
     @ApiModelProperty(value = "计划完成日期")
     @TableField("plannedCompletionDate")
-    private LocalDate plannedCompletionDate;
+    @JSONField(format = "yyyy-MM-dd")
+    private Date plannedCompletionDate;
 
     @ApiModelProperty(value = "标准有效期")
     @TableField("standardValidityDate")
@@ -79,6 +84,9 @@ public class QualityTask extends BaseEntity {
     @TableField("delegateType")
     private String delegateType;
 
+    @ApiModelProperty(value = "结算")
+    @TableField("settlement")
+    private String settlement;
 
     public String getTaskIssuedBy() {
         return taskIssuedBy;
@@ -88,11 +96,11 @@ public class QualityTask extends BaseEntity {
         this.taskIssuedBy = taskIssuedBy;
     }
 
-    public LocalDate getTaskIssuedDate() {
+    public Date getTaskIssuedDate() {
         return taskIssuedDate;
     }
 
-    public void setTaskIssuedDate(LocalDate taskIssuedDate) {
+    public void setTaskIssuedDate(Date taskIssuedDate) {
         this.taskIssuedDate = taskIssuedDate;
     }
 
@@ -176,11 +184,11 @@ public class QualityTask extends BaseEntity {
         this.checkAbilityIDs = checkAbilityIDs;
     }
 
-    public LocalDate getPlannedCompletionDate() {
+    public Date getPlannedCompletionDate() {
         return plannedCompletionDate;
     }
 
-    public void setPlannedCompletionDate(LocalDate plannedCompletionDate) {
+    public void setPlannedCompletionDate(Date plannedCompletionDate) {
         this.plannedCompletionDate = plannedCompletionDate;
     }
 
@@ -200,11 +208,19 @@ public class QualityTask extends BaseEntity {
         this.remarks = remarks;
     }
 
+    public String getSettlement() {
+        return settlement;
+    }
+
+    public void setSettlement(String settlement) {
+        this.settlement = settlement;
+    }
+
     @Override
     public String toString() {
         return "QualityTask{" +
-                "taskIssuedBy=" + taskIssuedBy +
-                ", taskIssuedDate='" + taskIssuedDate + '\'' +
+                "taskIssuedBy='" + taskIssuedBy + '\'' +
+                ", taskIssuedDate=" + taskIssuedDate +
                 ", delegateUnit='" + delegateUnit + '\'' +
                 ", sampleIDs='" + sampleIDs + '\'' +
                 ", projectLeader='" + projectLeader + '\'' +
@@ -218,6 +234,7 @@ public class QualityTask extends BaseEntity {
                 ", remarks='" + remarks + '\'' +
                 ", agreementNo='" + agreementNo + '\'' +
                 ", delegateType='" + delegateType + '\'' +
+                ", settlement='" + settlement + '\'' +
                 '}';
     }
 }

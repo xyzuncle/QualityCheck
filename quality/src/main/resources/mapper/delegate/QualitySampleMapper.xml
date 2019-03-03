@@ -19,6 +19,11 @@
     <result column="unitName" property="unitName" />
     <result column="delegateUnitID" property="delegateUnitID" />
     <result column="laboratory" property="laboratory" />
+    <result column="managementCode" property="managementCode" />
+    <result column="internalCode" property="internalCode" />
+    <result column="manufacturer" property="manufacturer" />
+    <result column="remarks" property="remarks" />
+
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -27,7 +32,7 @@
         crtTime,
         updTime,
         deleted,
-        sampleName, sampleCode, sampleModel, sampleSpecification, sampleNum, receivedDate, sender, receivedType,unitName,delegateUnitID,laboratory
+        sampleName, sampleCode, sampleModel, sampleSpecification, sampleNum, receivedDate, sender, receivedType,unitName,delegateUnitID,laboratory,managementCode,internalCode,manufacturer,remarks
     </sql>
 
     <!--查询符合条件的样品信息-->

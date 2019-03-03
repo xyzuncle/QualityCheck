@@ -37,7 +37,7 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM quality_menu
-        WHERE parentId = #{parentId}
+        WHERE parentIds LIKE CONCAT('%',#{parentId},'%')
     </select>
 
     <!--根据MenuType查询-->

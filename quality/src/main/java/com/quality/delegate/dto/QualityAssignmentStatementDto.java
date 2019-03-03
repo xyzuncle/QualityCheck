@@ -1,8 +1,10 @@
 package com.quality.delegate.dto;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.quality.delegate.entity.QualityReferenceStandard;
 import com.quality.delegate.entity.QualitySample;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -63,6 +65,15 @@ public class QualityAssignmentStatementDto {
 
     private String remarks;
 
+
+    private String acceptor;
+
+    @JSONField(format = "yyyy-MM-dd")
+    private Date acceptDate;
+    private String reviewer;
+
+    @JSONField(format = "yyyy-MM-dd")
+    private Date reviewDate;
 
     private String unitId;
 
@@ -262,6 +273,38 @@ public class QualityAssignmentStatementDto {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public String getAcceptor() {
+        return acceptor;
+    }
+
+    public void setAcceptor(String acceptor) {
+        this.acceptor = acceptor;
+    }
+
+    public Date getAcceptDate() {
+        return acceptDate;
+    }
+
+    public void setAcceptDate(Date acceptDate) {
+        this.acceptDate = acceptDate;
+    }
+
+    public String getReviewer() {
+        return reviewer;
+    }
+
+    public void setReviewer(String reviewer) {
+        this.reviewer = reviewer;
+    }
+
+    public Date getReviewDate() {
+        return reviewDate;
+    }
+
+    public void setReviewDate(Date reviewDate) {
+        this.reviewDate = reviewDate;
     }
 
     public String getUnitId() {

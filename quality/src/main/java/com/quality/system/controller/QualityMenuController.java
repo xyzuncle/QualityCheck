@@ -111,12 +111,14 @@ public class QualityMenuController extends BaseController<QualityMenu, IQualityM
             return JsonResult.error("解除相关的引用");
         }else{
             //删除的ID 是否为父ID
-            List<QualityMenu>  pMenuList = this.defaultDAO.selectListByParentId(entityID);
+            QualityMenu menu = this.defaultDAO.getById(entityID);
+            List<QualityMenu>  pMenuList = this.defaultDAO.selectListByParentId(menu.getParentIds()+"-"+menu.getId());
             if(pMenuList.size() > 0){
                 List<Integer> ids = new ArrayList<>();
                 pMenuList.forEach(item->{
                     ids.add(item.getId());
                 });
+
                 result = this.defaultDAO.removeByIds(ids);
             }
 

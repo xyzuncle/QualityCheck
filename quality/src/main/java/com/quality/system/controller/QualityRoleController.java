@@ -1,6 +1,7 @@
 package com.quality.system.controller;
 
 
+import com.baomidou.mybatisplus.core.toolkit.sql.SqlHelper;
 import com.quality.common.dto.PageResult;
 import com.quality.common.exception.BaseException;
 import com.quality.common.util.Servlets;
@@ -91,6 +92,7 @@ public class QualityRoleController extends BaseController<QualityRole, IQualityR
                 });
 
                 result = this.defaultDAO.save(QualityRole);
+
             }else{
 
                 menuids.forEach(menu->{
@@ -121,6 +123,10 @@ public class QualityRoleController extends BaseController<QualityRole, IQualityR
     @ResponseBody
     public Object deleteQualityRoleById(@ApiParam(value = "QualityRoleID") @RequestParam(name = "entityID") String entityID) {
         boolean result = this.defaultDAO.removeById(entityID);
+        //删除关联表信息
+        if(result){
+            result = SqlHelper.delBool(this.defaultDAO.deleteByRoleId(entityID));
+        }
         return super.jsonObjectResult(result, "删除成功");
     }
 

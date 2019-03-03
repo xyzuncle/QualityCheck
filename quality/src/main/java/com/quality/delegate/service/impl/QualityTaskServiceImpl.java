@@ -1,21 +1,18 @@
 package com.quality.delegate.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.quality.common.dto.PageResult;
 import com.quality.common.exception.BaseException;
 import com.quality.common.util.BeanCopierUtils;
 import com.quality.common.util.Tools;
 import com.quality.delegate.dto.QualityTaskDto;
-import com.quality.delegate.entity.QualityCheckAbility;
-import com.quality.delegate.entity.QualityDelegateunit;
-import com.quality.delegate.entity.QualitySample;
-import com.quality.delegate.entity.QualityTask;
+import com.quality.delegate.entity.*;
 import com.quality.delegate.mapper.QualityTaskMapper;
-import com.quality.delegate.service.IQualityCheckAbilityService;
-import com.quality.delegate.service.IQualityDelegateunitService;
-import com.quality.delegate.service.IQualitySampleService;
-import com.quality.delegate.service.IQualityTaskService;
+import com.quality.delegate.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.quality.system.entity.QualityMenu;
 import com.quality.system.entity.QualityUser;
+import com.quality.system.service.IQualityUserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -24,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * <p>
@@ -49,6 +43,12 @@ public class QualityTaskServiceImpl extends ServiceImpl<QualityTaskMapper, Quali
 
     @Autowired
     private IQualityCheckAbilityService checkAbilityService;
+
+    @Autowired
+    private  IQualityReportService  reportService;
+
+    @Autowired
+    private IQualityUserService userService;
 
     /**
      * 转换
@@ -108,6 +108,7 @@ public class QualityTaskServiceImpl extends ServiceImpl<QualityTaskMapper, Quali
         List<String> sampleids = new ArrayList<>();
         List<String> checkAbilityids = new ArrayList<>();
 
+
         //更新和保存样品信息
         if(result){
             List<QualitySample> samples = dto.getQualitySamples();
@@ -119,14 +120,10 @@ public class QualityTaskServiceImpl extends ServiceImpl<QualityTaskMapper, Quali
                         sampleid = UUID.randomUUID().toString().replace("-", "").toLowerCase();
                         item.setId(sampleid);
                         result =  sampleService.save(item);
-                    }else{
-                        result =  sampleService.saveOrUpdate(item);
                     }
                     sampleids.add(sampleid);
                 }
             }
-
-
         }
         //更新和保存相关依据
         if(result){
@@ -135,13 +132,6 @@ public class QualityTaskServiceImpl extends ServiceImpl<QualityTaskMapper, Quali
                 for(int i=0;i<checkAbilities.size();i++){
                     QualityCheckAbility item =checkAbilities.get(i);
                     String checkAbilityid = item.getId() + "";
-                    if(checkAbilityid==null){
-                        checkAbilityid = UUID.randomUUID().toString().replace("-", "").toLowerCase();
-                        item.setId(checkAbilityid);
-                        result =  checkAbilityService.save(item);
-                    }else{
-                        result =  checkAbilityService.saveOrUpdate(item);
-                    }
                     checkAbilityids.add(checkAbilityid);
                 }
 
@@ -160,13 +150,36 @@ public class QualityTaskServiceImpl extends ServiceImpl<QualityTaskMapper, Quali
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                 QualityUser user = (QualityUser)authentication.getPrincipal();
                 qualityTask.setTaskIssuedBy(user.getUsername());
-                qualityTask.setTaskIssuedDate(LocalDate.now());
+                qualityTask.setTaskIssuedDate(new Date());
                 qualityTask.setCrtTime(new Date());
 
             }else{
                 qualityTask.setId(taskId);
             }
             result = this.saveOrUpdate(qualityTask);
+
+            //插入报告数据
+            if(result){
+                if(sampleids.size()>0){
+                    sampleids.forEach(item->{
+                        QualityReport  report = new QualityReport();
+                        report.setAgreementNo(dto.getAgreementNo());
+                        report.setTaskId(dto.getTaskId());
+                        report.setCheckAbilityIDs(Tools.listToString(checkAbilityids));
+                        report.setSampleId(item);
+                        QueryWrapper<QualityReport> spec = new QueryWrapper<>();
+                        spec.eq("taskId",dto.getTaskId());
+                        spec.eq("agreementNo",dto.getAgreementNo());
+                        spec.eq("sampleId",item);
+                        QualityReport rep = reportService.getOne(spec);
+                        if(rep ==null){
+                            reportService.saveOrUpdate(report);
+                        }
+
+                    });
+                }
+
+            }
         }
 
         return result;

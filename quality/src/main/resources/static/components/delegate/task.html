@@ -2,26 +2,15 @@
     <div class="layui-card">
         <div class="layui-card-body">
             <table class="layui-table" id="taskTable" lay-filter="taskTable"></table>
-
         </div>
     </div>
-
 </div>
-
-
-
 
 <!-- 表格操作列 -->
 <script type="text/html" id="taskTableBar">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-
 </script>
-
-
-
-
-
 
 <!-- js部分 -->
 <script>
@@ -36,7 +25,6 @@
         var admin = layui.admin;
         var laydate = layui.laydate;
         var laytpl = layui.laytpl;
-
         // 渲染表格
         var ins1 = table.render({
             elem: '#taskTable',
@@ -55,7 +43,6 @@
             ]]
         });
 
-
         // 添加按钮点击事件
         $('#taskBtnAdd').click(function () {
             openNewTab();
@@ -70,10 +57,8 @@
                 openEditTab(obj);
             }else if (layEvent === 'del') { // 删除
                 doDelete(obj);
-        }
+            }
         });
-
-
 
         // 打开表单TAB
         function openEditTab(obj) {
@@ -93,11 +78,8 @@
                         layer.msg(data.message, {icon: 2});
                     }
                 }
-
             });
-
         }
-
         // 删除
         function doDelete(obj) {
             layer.confirm('确定要删除吗？', function (i) {
@@ -114,7 +96,5 @@
                 }, 'DELETE');
             });
         }
-
-
     });
 </script>

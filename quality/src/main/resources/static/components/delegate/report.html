@@ -1,0 +1,60 @@
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table class="layui-table" id="reportTable" lay-filter="reportTable"></table>
+
+        </div>
+    </div>
+</div>
+
+<!-- 表格操作列 -->
+<script type="text/html" id="reportTableBar">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-default layui-btn-xs" lay-event="report">生成报告</a>
+</script>
+
+<!-- js部分 -->
+<script>
+    layui.use(['layer', 'table', 'form', 'index', 'config', 'admin','util','laydate','laytpl'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
+        var util = layui.util;
+        var index = layui.index;
+        var config = layui.config;
+        var admin = layui.admin;
+        var laydate = layui.laydate;
+        var laytpl = layui.laytpl;
+
+        // 渲染表格
+        var ins1 = table.render({
+            elem: '#reportTable',
+            url: config.base_server + 'QualityReport/query.do',
+            method: 'POST',
+            page: true,
+            cellMinWidth: 100,
+            cols: [[
+                {type: 'numbers'},
+                {field: 'agreementNo', sort: true, title: '协议书编号'},
+                {field: 'delegateUnit', sort: true, title: '委托单位'},
+                {field: 'sampleName', sort: true, title: '样品名称'},
+                {field: 'taskIssuedBy', sort: true, title: '任务签发人'},
+                {field: 'taskIssuedDate', sort: true, title: '任务签发日期'},
+                {field: 'checkAbilityName', sort: true, title: '校验能力'},
+                {align: 'center', toolbar: '#reportTableBar', title: '操作'}
+            ]]
+        });
+
+        // 工具条点击事件
+        table.on('tool(reportTable)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+            if (layEvent === 'edit') { // 修改
+                //TODO
+            }else if (layEvent === 'report') { // 生成报告
+                //TODO
+        }
+        });
+    });
+</script>

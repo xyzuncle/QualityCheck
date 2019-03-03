@@ -1,11 +1,13 @@
 package com.quality.delegate.dto;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.quality.delegate.entity.QualityCheckAbility;
 import com.quality.delegate.entity.QualitySample;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,7 +19,8 @@ public class QualityTaskDto {
 
     private String taskIssuedBy;
 
-    private LocalDate taskIssuedDate;
+    @JSONField(format = "yyyy-MM-dd")
+    private Date taskIssuedDate;
 
     private String delegateUnit;
 
@@ -35,7 +38,8 @@ public class QualityTaskDto {
 
     private String checkAbilityIDs;
 
-    private LocalDate plannedCompletionDate;
+    @JSONField(format = "yyyy-MM-dd")
+    private Date plannedCompletionDate;
 
     private String standardValidityDate;
 
@@ -46,6 +50,7 @@ public class QualityTaskDto {
 
     private String delegateType;
 
+    private String settlement;
 
     private List<QualitySample> qualitySamples;
 
@@ -70,11 +75,11 @@ public class QualityTaskDto {
         this.taskIssuedBy = taskIssuedBy;
     }
 
-    public LocalDate getTaskIssuedDate() {
+    public Date getTaskIssuedDate() {
         return taskIssuedDate;
     }
 
-    public void setTaskIssuedDate(LocalDate taskIssuedDate) {
+    public void setTaskIssuedDate(Date taskIssuedDate) {
         this.taskIssuedDate = taskIssuedDate;
     }
 
@@ -158,11 +163,11 @@ public class QualityTaskDto {
         this.checkAbilityIDs = checkAbilityIDs;
     }
 
-    public LocalDate getPlannedCompletionDate() {
+    public Date getPlannedCompletionDate() {
         return plannedCompletionDate;
     }
 
-    public void setPlannedCompletionDate(LocalDate plannedCompletionDate) {
+    public void setPlannedCompletionDate(Date plannedCompletionDate) {
         this.plannedCompletionDate = plannedCompletionDate;
     }
 
@@ -198,4 +203,11 @@ public class QualityTaskDto {
         this.qualityCheckAbilities = qualityCheckAbilities;
     }
 
+    public String getSettlement() {
+        return settlement;
+    }
+
+    public void setSettlement(String settlement) {
+        this.settlement = settlement;
+    }
 }

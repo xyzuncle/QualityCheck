@@ -1,0 +1,300 @@
+<style>
+    .layui-form-item {
+        margin-bottom: 25px;
+    }
+
+    @media screen and (max-width: 1060px) {
+        .lay-step {
+            padding-left: 50px !important;
+        }
+    }
+</style>
+
+
+<!-- 正文开始 -->
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body" style="padding-top: 40px;">
+
+            <div class="layui-carousel" id="stepForm" lay-filter="stepForm" style="margin: 0 auto;">
+                <div carousel-item>
+                    <div>
+
+                        <form class="layui-form" style="margin: 0 auto;max-width: 660px;padding-top: 60px;">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">单位名称</label>
+                                <div class="layui-input-block">
+                                    <input name="unitName" placeholder="请输入单位名称" type="text" class="layui-input" maxlength="100"
+                                           lay-verify="required"/>
+                                    <button type="button" class="layui-btn layui-btn-primary">查询</button>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">地址</label>
+                                <div class="layui-input-block">
+                                    <input name="address" placeholder="请输入地址" type="text" class="layui-input"
+                                    />
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">邮编</label>
+                                <div class="layui-input-block">
+                                    <input name="zipCode" placeholder="请输入邮编" type="text" class="layui-input" maxlength="100"
+                                    />
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">联系人</label>
+                                <div class="layui-input-block">
+                                    <input name="linkMan" placeholder="请输入联系人" type="text" class="layui-input" maxlength="100"
+                                    />
+                                </div>
+                            </div>
+
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">电话</label>
+                                <div class="layui-input-block">
+                                    <input name="phone" placeholder="请输入电话" type="text" class="layui-input" maxlength="100"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">手机</label>
+                                <div class="layui-input-block">
+                                    <input name="mobile" placeholder="请输入手机" type="text" class="layui-input" maxlength="100"
+                                    />
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">传真</label>
+                                <div class="layui-input-block">
+                                    <input name="fax" placeholder="请输入传真" type="text" class="layui-input" maxlength="100"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" lay-submit lay-filter="delegateunitform">&emsp;下一步&emsp;
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+                    <div>
+
+                        <form class="layui-form" style="margin: 0 auto;max-width: 660px;padding-top: 60px;">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">名称</label>
+                                <div class="layui-input-block">
+                                    <input name="sampleName" placeholder="请输入名称" type="text" class="layui-input" maxlength="100"
+                                           lay-verify="required"/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">编号</label>
+                                <div class="layui-input-block">
+                                    <input name="sampleCode" placeholder="请输入编号" type="text" class="layui-input" maxlength="100"
+                                           lay-verify="required" />
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">型号</label>
+                                <div class="layui-input-block">
+                                    <input name="sampleModel" placeholder="请输入型号" type="text" class="layui-input" maxlength="100"
+                                           lay-verify="required"/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">规格</label>
+                                <div class="layui-input-block">
+                                    <input name="sampleSpecification" placeholder="请输入规格" type="text" class="layui-input" maxlength="100"
+                                    />
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">数量</label>
+                                <div class="layui-input-block">
+                                    <input name="sampleNum" placeholder="请输入数量" type="number" class="layui-input"
+                                           lay-verify="required"/>
+                                </div>
+                            </div>
+
+                            <div class="layui-inline layui-col-md4">
+                                <label class="layui-form-label">收样日期</label>
+                                <div class="layui-input-block">
+                                    <input type="text" class="layui-input" id="formAdvDateRange01" name="receivedDate" placeholder="yyyy-MM-dd HH:mm:ss">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">送样人</label>
+                                <div class="layui-input-block">
+                                    <input name="sender" placeholder="请输入送样人" type="text" class="layui-input" maxlength="100"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">来样方式</label>
+                                <div class="layui-input-block">
+                                    <input name="receivedType" placeholder="请输入来样方式" type="text" class="layui-input" maxlength="100"
+                                    />
+                                </div>
+                            </div>
+
+
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button type="button" class="layui-btn layui-btn-primary pre">上一步</button>
+                                    <button class="layui-btn" lay-submit lay-filter="sampleform">&emsp;下一步&emsp;
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+
+
+                    <div>
+
+                        <form class="layui-form" style="margin: 0 auto;max-width: 660px;padding-top: 60px;">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">测量仪器名称</label>
+                                <div class="layui-input-block">
+                                    <input name="name" placeholder="请输入测量仪器名称" type="text" class="layui-input"
+                                           lay-verify="required"/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">被测量</label>
+                                <div class="layui-input-block">
+                                    <input name="measured" placeholder="请输入被测量" type="text" class="layui-input" maxlength="100"
+                                           lay-verify="required" />
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">标准规范</label>
+                                <div class="layui-input-block">
+                                    <input name="standardSpecification" placeholder="请输入标准规范" type="text" class="layui-input"
+                                    />
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">测量范围</label>
+                                <div class="layui-input-block">
+                                    <input name="measureRange" placeholder="请输入测量范围" type="text" class="layui-input"
+                                    />
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">扩展不确定度</label>
+                                <div class="layui-input-block">
+                                    <input name="extend" placeholder="请输入扩展不确定度" type="text" class="layui-input"
+                                    />
+                                </div>
+                            </div>
+
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">说明</label>
+                                <div class="layui-input-block">
+                                    <input name="remark" placeholder="请输入说明" type="text" class="layui-input"
+                                    />
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button type="button" class="layui-btn layui-btn-primary pre">上一步</button>
+                                    <button class="layui-btn" lay-submit lay-filter="formDemo2">&emsp;保存&emsp;
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                    <div>
+
+                        <div style="text-align: center;margin-top: 90px;">
+                            <i class="layui-icon layui-circle"
+                               style="color: white;font-size:30px;font-weight:bold;background: #52C41A;padding: 20px;line-height: 80px;">&#xe605;</i>
+                            <div style="font-size: 24px;color: #333;font-weight: 500;margin-top: 30px;">操作成功
+                            </div>
+                            <div style="font-size: 14px;color: #666;margin-top: 20px;">预计两小时到账</div>
+                        </div>
+
+                        <div style="text-align: center;margin-top: 50px;">
+                            <button class="layui-btn next">再次填写协议书</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<!-- js部分 -->
+<script>
+    layui.use(['layer', 'form', 'step','laydate'], function () {
+        var $ = layui.jquery;
+        var layer = layui.layer;
+        var form = layui.form;
+        var step = layui.step;
+        var laydate = layui.laydate;
+
+        // 渲染laydate
+        laydate.render({
+            elem: '#formAdvDateRange01',
+            type: 'datetime'
+        });
+
+        form.render();
+
+        step.render({
+            elem: '#stepForm',
+            filter: 'stepForm',
+            width: '100%', //设置容器宽度
+            stepWidth: '750px',
+            height: '650px',
+            stepItems: [{
+                title: '填写委托单位信息'
+            }, {
+                title: '填写样机信息'
+            }, {
+                title: '填写监测依据'
+            }, {
+                title: '完成'
+            }]
+        });
+
+        form.on('submit(delegateunitform)', function (data) {
+            step.next('#stepForm');
+            return false;
+        });
+
+        form.on('submit(sampleform)', function (data) {
+            step.next('#stepForm');
+            return false;
+        });
+
+        form.on('submit(formDemo2)', function (data) {
+            step.next('#stepForm');
+            return false;
+        });
+
+        $('.pre').click(function () {
+            step.pre('#stepForm');
+        });
+
+        $('.next').click(function () {
+            step.next('#stepForm');
+        });
+    });
+</script>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quality.delegate.mapper.QualityReportMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quality.delegate.entity.QualityReport">
+    <result column="id" property="id" />
+    <result column="crtTime" property="crtTime" />
+    <result column="updTime" property="updTime" />
+    <result column="deleted" property="deleted" />
+        <result column="agreementNo" property="agreementNo" />
+        <result column="taskId" property="taskId" />
+        <result column="sampleId" property="sampleId" />
+        <result column="checkAbilityIDs" property="checkAbilityIDs" />
+        <result column="reportName" property="reportName" />
+        <result column="reportType" property="reportType" />
+        <result column="remarks" property="remarks" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        crtTime,
+        updTime,
+        deleted,
+        agreementNo, taskId, sampleId, checkAbilityIDs, reportName, reportType, remarks
+    </sql>
+
+</mapper>

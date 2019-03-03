@@ -30,20 +30,32 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">管理编号</label>
+        <div class="layui-input-block">
+            <input name="managementCode" placeholder="请输入管理编号" type="text" class="layui-input" maxlength="100"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">内部编号</label>
+        <div class="layui-input-block">
+            <input name="internalCode" placeholder="请输入内部编号" type="text" class="layui-input" maxlength="100"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">数量</label>
         <div class="layui-input-block">
             <input name="sampleNum" placeholder="请输入数量" type="number" class="layui-input"
                    lay-verify="required"/>
         </div>
     </div>
-
-    <div class="layui-inline layui-col-md4">
+    <div class="layui-form-item">
         <label class="layui-form-label">收样日期</label>
         <div class="layui-input-block">
-            <input type="text" class="layui-input date-icon" id="formAdvDateRange01" name="receivedDate" placeholder="yyyy-MM-dd HH:mm:ss">
+            <input type="text" class="layui-input date-icon" id="date" name="receivedDate" placeholder="yyyy-MM-dd">
         </div>
     </div>
-
     <div class="layui-form-item">
         <label class="layui-form-label">送样人</label>
         <div class="layui-input-block">
@@ -51,7 +63,6 @@
             />
         </div>
     </div>
-
     <div class="layui-form-item">
         <label class="layui-form-label">来样方式</label>
         <div class="layui-input-block">
@@ -59,8 +70,20 @@
             />
         </div>
     </div>
-
-
+    <div class="layui-form-item">
+        <label class="layui-form-label">生产厂家</label>
+        <div class="layui-input-block">
+            <input name="manufacturer" placeholder="请输入生产厂家" type="text" class="layui-input" maxlength="100"
+            />
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">备注</label>
+        <div class="layui-input-block">
+            <input name="remarks" placeholder="请输入备注" type="text" class="layui-input" maxlength="1000"
+            />
+        </div>
+    </div>
     <div class="layui-form-item text-right">
         <button class="layui-btn layui-btn-primary" ew-event="closeDialog" type="button">取消</button>
         <button class="layui-btn" lay-filter="assignmentSampleFormSubmit" lay-submit>保存</button>
@@ -86,9 +109,7 @@
                 $.ajax({
                     url : '/QualitySample/exists.do',
                     type : 'GET',
-                    data : {
-                        "sampleCode" : sampleCode
-                    },
+                    data : {"sampleCode" : sampleCode},
                     datatype : 'json',
                     async : false,
                     success : function(result) {
@@ -103,25 +124,14 @@
                 return checkResult
             }
         })
-
-
-
-
         // 渲染laydate
         laydate.render({
-            elem: '#formAdvDateRange01',
-            type: 'datetime'
+            elem: '#date'
         });
-
         // 回显数据
-
         $('#sampleForm').attr('method', 'GET');
-
         // 表单提交事件
         form.on('submit(assignmentSampleFormSubmit)', function (data) {
-
-
-
             layer.load(2);
             $.ajax({
                 url: config.base_server + 'QualitySample/save.do',
@@ -139,9 +149,7 @@
                         layer.msg(data.message, {icon: 2});
                     }
                 }
-
             });
-
             return false;
         });
     });

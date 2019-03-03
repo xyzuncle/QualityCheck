@@ -18,7 +18,7 @@ import java.util.List;
 public interface QualityMenuMapper extends BaseMapper<QualityMenu> {
 
 
-    List<QualityMenu>  selectListByParentId(@Param("parentId")Integer parentId);
+    List<QualityMenu>  selectListByParentId(@Param("parentId")String parentId);
 
     List<QualityMenu>  selectListByMenuType(List<String> MenuTypes);
 

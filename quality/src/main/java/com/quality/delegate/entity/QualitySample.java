@@ -1,7 +1,10 @@
 package com.quality.delegate.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.quality.common.entity.BaseEntity;
 import java.time.LocalDate;
+import java.util.Date;
+
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -41,7 +44,8 @@ public class QualitySample extends BaseEntity {
 
     @ApiModelProperty(value = "收样日期")
     @TableField("receivedDate")
-    private LocalDate receivedDate;
+    @JSONField(format = "yyyy-MM-dd")
+    private Date receivedDate;
 
     @ApiModelProperty(value = "送样人")
     @TableField("sender")
@@ -63,6 +67,28 @@ public class QualitySample extends BaseEntity {
     @ApiModelProperty(value = "实验室")
     @TableField("laboratory")
     private String laboratory;
+
+    @ApiModelProperty(value = "管理编号")
+    @TableField("managementCode")
+    private String managementCode;
+
+    @ApiModelProperty(value = "内部编号")
+    @TableField("internalCode")
+    private String internalCode;
+
+    @ApiModelProperty(value = "生产厂家")
+    @TableField("manufacturer")
+    private String manufacturer;
+
+    @ApiModelProperty(value = "备注")
+    @TableField("remarks")
+    private String remarks;
+
+
+
+
+
+
 
 
     public String getSampleName() {
@@ -105,11 +131,11 @@ public class QualitySample extends BaseEntity {
         this.sampleNum = sampleNum;
     }
 
-    public LocalDate getReceivedDate() {
+    public Date getReceivedDate() {
         return receivedDate;
     }
 
-    public void setReceivedDate(LocalDate receivedDate) {
+    public void setReceivedDate(Date receivedDate) {
         this.receivedDate = receivedDate;
     }
 
@@ -153,20 +179,56 @@ public class QualitySample extends BaseEntity {
         this.laboratory = laboratory;
     }
 
+    public String getManagementCode() {
+        return managementCode;
+    }
+
+    public void setManagementCode(String managementCode) {
+        this.managementCode = managementCode;
+    }
+
+    public String getInternalCode() {
+        return internalCode;
+    }
+
+    public void setInternalCode(String internalCode) {
+        this.internalCode = internalCode;
+    }
+
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
     @Override
     public String toString() {
         return "QualitySample{" +
-        "sampleName=" + sampleName +
-        ", sampleCode=" + sampleCode +
-        ", sampleModel=" + sampleModel +
-        ", sampleSpecification=" + sampleSpecification +
-        ", sampleNum=" + sampleNum +
-        ", unitName=" + unitName +
-        ", delegateUnitID=" + delegateUnitID +
-        ", laboratory=" + laboratory +
-        ", receivedDate=" + receivedDate +
-        ", sender=" + sender +
-        ", receivedType=" + receivedType +
-        "}";
+                "sampleName='" + sampleName + '\'' +
+                ", sampleCode='" + sampleCode + '\'' +
+                ", sampleModel='" + sampleModel + '\'' +
+                ", sampleSpecification='" + sampleSpecification + '\'' +
+                ", sampleNum=" + sampleNum +
+                ", receivedDate=" + receivedDate +
+                ", sender='" + sender + '\'' +
+                ", receivedType='" + receivedType + '\'' +
+                ", unitName='" + unitName + '\'' +
+                ", delegateUnitID='" + delegateUnitID + '\'' +
+                ", laboratory='" + laboratory + '\'' +
+                ", managementCode='" + managementCode + '\'' +
+                ", internalCode='" + internalCode + '\'' +
+                ", manufacturer='" + manufacturer + '\'' +
+                ", remarks='" + remarks + '\'' +
+                '}';
     }
 }

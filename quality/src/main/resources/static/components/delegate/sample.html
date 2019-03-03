@@ -1,7 +1,6 @@
 <div class="layui-fluid">
     <div class="layui-card">
         <div class="layui-card-body">
-
             <div class="layui-form toolbar">
                 <div class="layui-form-item">
                     <div class="layui-inline">
@@ -10,7 +9,6 @@
                             <input id="sampleName" class="layui-input" type="text" placeholder="输入样品名称"/>
                         </div>
                     </div>
-
                     <div class="layui-inline" id="sampleSearchDiv"></div>
                     <!--<div class="layui-inline">
                         <button id="sampleBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
@@ -20,16 +18,11 @@
 
                 </div>
             </div>
-
             <table class="layui-table" id="sampleTable" lay-filter="sampleTable"></table>
-
         </div>
     </div>
 
 </div>
-
-
-
 
 <!-- 表格操作列 -->
 <script type="text/html" id="sampleTableBar">
@@ -39,7 +32,6 @@
 
 
 <script id="sampleSearch" type="text/html">
-
     {{#  layui.each(d.permissionkey, function(index, value){ }}
     {{# if(value=="sample:view"){ }}
     <button id="sampleBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
@@ -47,10 +39,7 @@
     {{# if(value=="sample:add"){ }}
     <button id="sampleBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
     {{# } }}
-
-
     {{# }); }}
-
 </script>
 
 
@@ -85,15 +74,18 @@
                     {field: 'sampleName', sort: true, title: '名称'},
                     {field: 'sampleCode', sort: true, title: '编号'},
                     {field: 'sampleModel', sort: true, title: '型号'},
+                    {field: 'managementCode', sort: true, title: '管理编号'},
+                    {field: 'internalCode', sort: true, title: '内部编号'},
                     {field: 'sampleSpecification', sort: true, title: '规格'},
                     {field: 'sampleNum', sort: true, title: '数量'},
                     {field: 'receivedDate', sort: true, title: '收样日期'},
                     {field: 'sender', sort: true, title: '送样人'},
-                    {field: 'receivedType', sort: true, title: '来样方式'},
+                    {field: 'receivedType', title: '来样方式'},
+                    {field: 'manufacturer', title: '生产厂家'},
+                    /*{field: 'remarks', title: '备注'},*/
                     {align: 'center', toolbar: '#sampleTableBar', title: '操作'}
                 ]]
         });
-
 
         // 添加按钮点击事件
         $('#sampleBtnAdd').click(function () {
@@ -104,7 +96,6 @@
         table.on('tool(sampleTable)', function (obj) {
             var data = obj.data;
             var layEvent = obj.event;
-
             if (layEvent === 'edit') { // 修改
                 showEditModel(data);
             } else if (layEvent === 'del') { // 删除
@@ -141,14 +132,11 @@
             });
         }
 
-
         // 搜索按钮点击事件
         $('#sampleBtnSearch').click(function () {
             var sampleName = $('#sampleName').val();
             var userName = $('#userName').val();
-            table.reload('sampleTable', {where: {"search-LIKE-sampleName": sampleName
-
-            }});
+            table.reload('sampleTable', {where: {"search-LIKE-sampleName": sampleName}});
         });
 
     });

@@ -23,6 +23,7 @@
         <result column="remarks" property="remarks" />
         <result column="agreementNo" property="agreementNo" />
         <result column="delegateType" property="delegateType" />
+        <result column="settlement" property="settlement" />
 
     </resultMap>
 
@@ -32,7 +33,7 @@
         crtTime,
         updTime,
         deleted,
-        taskIssuedBy,taskIssuedDate,delegateUnit,sampleIDs,projectLeader,projectParticipant,projectReviewer,environmentalTest,otherTest,checkAbilityIDs,plannedCompletionDate,standardValidityDate,remarks,agreementNo,delegateType
+        taskIssuedBy,taskIssuedDate,delegateUnit,sampleIDs,projectLeader,projectParticipant,projectReviewer,environmentalTest,otherTest,checkAbilityIDs,plannedCompletionDate,standardValidityDate,remarks,agreementNo,delegateType,settlement
     </sql>
 
 </mapper>

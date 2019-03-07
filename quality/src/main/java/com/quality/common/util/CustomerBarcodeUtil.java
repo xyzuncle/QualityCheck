@@ -75,7 +75,7 @@ public class CustomerBarcodeUtil {
         //通过获取配置文件的形式来得到条形码
         try {
             BarcodeUtil util = BarcodeUtil.getInstance();
-            BarcodeGenerator gen = util.createBarcodeGenerator(buildCfg("code39"));
+            BarcodeGenerator gen = util.createBarcodeGenerator(buildCfg("ean-13"));
 
             int resolution = 200;
             BitmapCanvasProvider canvas = new BitmapCanvasProvider(
@@ -109,22 +109,25 @@ public class CustomerBarcodeUtil {
 
         //增加宽度和高度属性
         DefaultConfiguration width = new DefaultConfiguration("module-width");
-        width.setValue("0.21mm");
+        width.setValue("0.33mm");
         child.addChild(width);
 
         //新增code128的类型
-        DefaultConfiguration codesets = new DefaultConfiguration("codesets");
+       /* DefaultConfiguration codesets = new DefaultConfiguration("codesets");
         //设置条形码数字需要对称
         codesets.setValue("C");
-        child.addChild(codesets);
+        child.addChild(codesets);*/
 
 
 
         //Human readable text position
         DefaultConfiguration attr = new DefaultConfiguration("human-readable");
         DefaultConfiguration subAttr = new DefaultConfiguration("placement");
+        DefaultConfiguration subAttr1 = new DefaultConfiguration("font-size");
         subAttr.setValue("bottom");
+        subAttr1.setValue("5pt");
         attr.addChild(subAttr);
+        attr.addChild(subAttr1);
 
         child.addChild(attr);
         return cfg;

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.quality.store.mapper.QualityStoreInMapper">
+<mapper namespace="com.quality.store.mapper.QualityStoreOutMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.quality.store.entity.QualityStoreIn">
+    <resultMap id="BaseResultMap" type="com.quality.store.entity.QualityStoreOut">
     <result column="id" property="id" />
     <result column="crtTime" property="crtTime" />
     <result column="updTime" property="updTime" />
@@ -18,9 +18,9 @@
         <result column="sampleModel" property="sampleModel" />
         <result column="delegateUnitID" property="delegateUnitID" />
         <result column="delegateUnitName" property="delegateUnitName" />
-        <result column="sampleCode" property="sampleCode"/>
-        <result column="sampleStatus" property="sampleStatus"/>
-        <result column="type" property="type"/>
+        <result column="sampleCode" property="sampleCode" />
+        <result column="sampleStatus" property="sampleStatus" />
+        <result column="type" property="type" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -29,7 +29,7 @@
         crtTime,
         updTime,
         deleted,
-        sampleId, sampleCount, receivedType, paySamplePerson, receiveSamplePerson, sampleName, sampleSpecification, sampleModel, delegateUnitID, delegateUnitName
+        sampleId, sampleCount, receivedType, paySamplePerson, receiveSamplePerson, sampleName, sampleSpecification, sampleModel, delegateUnitID, delegateUnitName, sampleCode, sampleStatus, type
     </sql>
 
 </mapper>

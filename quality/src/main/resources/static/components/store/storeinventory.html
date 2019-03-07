@@ -1,15 +1,11 @@
 <div class="layui-fluid">
     <div class="layui-card">
-        <div class="layui-card-header">条形码管理</div>
+        <div class="layui-card-header">库存管理</div>
         <div class="layui-card-body">
 
             <div class="layui-form toolbar">
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <label class="layui-form-label w-auto">条形码标号</label>
-                        <div class="layui-input-inline">
-                            <input id="barCode" class="layui-input" type="text" placeholder="输入条形码"/>
-                        </div>
                         <label class="layui-form-label w-auto">样品名称</label>
                         <div class="layui-input-inline">
                             <input id="sampleName" class="layui-input" type="text" placeholder="输入样品名称"/>
@@ -18,59 +14,54 @@
                         <div class="layui-input-inline">
                             <input id="sampleCode" class="layui-input" type="text" placeholder="输入样品编号"/>
                         </div>
+                        <label class="layui-form-label w-auto">委托单位</label>
+                        <div class="layui-input-inline">
+                            <input id="delegateUnitName" class="layui-input" type="text" placeholder="委托单位"/>
+                        </div>
                         <label class="layui-form-label" w-auto>日期范围</label>
                         <div class="layui-input-inline">
                             <input type="text" class="layui-input date-icon" id="crtTime" placeholder="查询日期范围">
                         </div>
                     </div>
 
-                    <div class="layui-inline" id="searchdiv"></div>
+                    <div class="layui-inline" id="storeintentorydiv"></div>
                     <!--<div class="layui-inline" id="searchdiv">-->
-                        <!--<button id="barcodeBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
+                        <!--<button id="storeintentorytableBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
                         </button>
-                        <button id="barcodeBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
-                        <button id="barcodeBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
-                        <button id="barcodeBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>-->
+                        <button id="storeintentorytableBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                        <button id="storeintentorytableBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
+                        <button id="storeintentorytableBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>-->
                    <!-- </div>-->
                 </div>
             </div>
 
-            <table class="layui-table" id="barTable" lay-filter="barTable"></table>
+            <table class="layui-table" id="storeintentorytable" lay-filter="storeintentorytable"></table>
 
         </div>
     </div>
 </div>
 
-
 <!-- 表格操作列 -->
-<script type="text/html" id="userTableBar">
+<script type="text/html" id="storeintentorytableBar">
         <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
-        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="print">打印</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
 
 </script>
 
-<!-- 表格状态列 -->
-<script type="text/html" id="userTableState">
-    <input type="checkbox" lay-filter="userTableState" value="{{d.userId}}" lay-skin="switch" lay-text="正常|锁定"
-           {{d.state==0?'checked':''}}/>
-</script>
-
-
-<script id="userSearch" type="text/html">
+<script id="storeintentorytableSearch" type="text/html">
 
     {{#  layui.each(d.permissionkey, function(index, value){ }}
     {{# if(value=="user:view"){ }}
-    <button id="barcodeBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+    <button id="storeintentorytableBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
     {{# } }}
     {{# if(value=="user:add"){ }}
-    <button id="barcodeBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+    <button id="storeintentorytableBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
     {{# } }}
     {{# if(value=="user:deleteAll"){ }}
-    <button id="barcodeBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
+    <button id="storeintentorytableBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
     {{# } }}
     {{# if(value=="user:export"){ }}
-    <button id="barcodeBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+    <button id="storeintentorytableBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
     {{# } }}
 
 
@@ -91,52 +82,49 @@
         var laydate = layui.laydate;
         var laytpl = layui.laytpl;
 
+        //注意模板的ID 和DIV的id 不能一样，否则会一起 一个好一个坏的现象
         var btndata =config.getUserAuths();
+        if(btndata){
+            laytpl(storeintentorytableSearch.innerHTML).render(btndata, function(html){
+                $("#storeintentorydiv").html(html);
+            });
+        }
 
-        laytpl(userSearch.innerHTML).render(btndata, function(html){
-           $("#searchdiv").html(html);
-        });
 
         form.render('select');
         // 渲染表格
         var ins1 = table.render({
-            elem: '#barTable',
-            url: config.base_server + 'QualityBarcode/query.do',
+            elem: '#storeintentorytable',
+            url: config.base_server + 'QualityInventory/query.do',
             method: 'GET',
             page: true,
-            /*toolbar: 'default',*/
-            defaultToolbar:['print'],
             cellMinWidth: 100,
             cols: [[
                 {type: 'checkbox'},
                 {field: 'id',hide:true},
-                {field: 'barCode', sort: false, title: '条形码编号',width:100},
                 {field: 'sampleCode', sort: false, title: '样品编号',width:100},
-                {field: 'specifications', sort: false, title: '样品规格编号',width:100},
                 {field: 'sampleName', sort: false, title: '样品名称',width:120},
-                {field: 'manufacturerName', sort: false, title: '所属厂家'},
-                {field: 'crtTime', sort: true, title: '创建时间',templet:"<div>{{layui.util.toDateString(d.crtTime, 'yyyy-MM-dd')}}</div>",width:120},
-               /* {field: 'state', sort: true, templet: '#userTableState', title: '状态'},*/
-                {align: 'center', toolbar: '#userTableBar', title: '操作', minWidth: 150}
+                {field: 'delegateUnitName', sort: false, title: '委托单位'},
+                {field: 'sampleCount', sort: false, title: '总量',width:80},
+                {field: 'type', sort: false, title: '类型',width:80},
+                {field: 'crtTime', sort: true, title: '入库时间',templet:"<div>{{layui.util.toDateString(d.crtTime, 'yyyy-MM-dd')}}</div>",width:120},
+               /* {field: 'state', sort: true, templet: '#storeintentorytableState', title: '状态'},*/
+                {align: 'center', toolbar: '#storeintentorytableBar', title: '操作', minWidth: 150}
             ]]
         });
 
         // 添加按钮点击事件
-        $('#barcodeBtnAdd').click(function () {
+        $('#storeintentorytableBtnAdd').click(function () {
             showEditModel();
         });
 
         // 工具条点击事件
-        table.on('tool(barTable)', function (obj) {
+        table.on('tool(storeintentorytable)', function (obj) {
             var data = obj.data;
             var layEvent = obj.event;
 
             if (layEvent === 'edit') { // 修改
                 showEditModel(data);
-            } else if (layEvent === 'print') { // 打印
-                showPrint(data);
-            }else if(layEvent ==='role'){ //分配角色
-                showRoleModel(data);
             }
             else if(layEvent === 'delete'){
                 layer.confirm('确定删除该条数据吗？', {
@@ -145,13 +133,13 @@
                     layer.close(i);
                     layer.load(2);
                     $.ajax({
-                        url: config.base_server + 'QualityBarcode/removeById.do?entityID='+data.id,
+                        url: config.base_server + 'QualityInventory/removeById.do?entityID='+data.id,
                         type: 'delete',
                         dataType: 'JSON',
                         success: function (data) {
                             layer.closeAll('loading');
                             layer.msg(data.message, {icon: 1});
-                            table.reload('userTable', {});
+                            table.reload('storeintentorytable', {});
                         },
                         error: function (xhr) {
                             layer.closeAll('loading');
@@ -166,28 +154,15 @@
 
         // 显示表单弹窗
         function showEditModel(data) {
-            admin.putTempData('quality_barcode', data);
+            admin.putTempData('quality_storeinventory', data);
             admin.open({
-                title: data ? '修改关联信息' : '添加关联信息',
-                url: 'components/store/barcode_form.html',
+                title: data ? "修改库存信息":"新智库存信息",
+                url: 'components/store/storeinventory_form.html',
                 success: function (layero, index) {
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
                 }
             });
         };
-
-        // 显示打印窗口
-        function showPrint(data){
-            admin.putTempData('quality_barcode', data);
-            admin.open({
-                title: '打印条形码预览',
-                area:["720px","480px"],
-                url: 'components/store/barcode_print.html?v=5.5',
-                success: function (layero, index) {
-                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
-                }
-            });
-        }
 
 
         laydate.render({
@@ -197,15 +172,15 @@
 
 
         // 搜索按钮点击事件
-        $('#barcodeBtnSearch').bind("click",function() {
-            var barcode = $('#barCode').val();
+        $('#storeintentorytableBtnSearch').bind("click",function() {
+            var delegateUnitName = $('#delegateUnitName').val();
             var sampleName = $('#sampleName').val();
             var sampleCode = $('#sampleCode').val();
             var timeValue = $("#crtTime").val().split(" - ");
             var begin = timeValue[0];
             var end = timeValue[1]
 
-            table.reload('barTable', {where: {"search-EQ-barCode": barcode,
+            table.reload('storeintentorytable', {where: {"search-EQ-delegateUnitName": delegateUnitName,
                     "search-LIKE-sampleName": sampleName,
                     "search-EQ-sampleCode": sampleCode,
                     "search-GE-crtTime":begin,
@@ -214,8 +189,8 @@
         });
 
         //批量删除
-        $("#barcodeBtnRM").click(function(){
-            var checkRows = table.checkStatus('barTable');
+        $("#storeintentorytableBtnRM").click(function(){
+            var checkRows = table.checkStatus('storeintentorytable');
             if (checkRows.data.length == 0) {
                 layer.msg('请选择要删除的数据', {icon: 2});
             }else{
@@ -226,12 +201,12 @@
                 if(ids){
                     ids = ids.slice(0,-1);
                 }
-                admin.req("QualityBarcode/removeMore.do",{
+                admin.req("QualityInventory/removeMore.do",{
                     entityIDS: ids
                 },function(data){
                     if (data.status == 200) {
                         layer.msg(data.message, {icon: 1});
-                        table.reload('userTable', {});
+                        table.reload('storeintentorytable', {});
                     } else if(data.status == 500) {
                         layer.msg(data.message, {icon: 2});
                     }
@@ -241,8 +216,8 @@
         })
 
         // 导出excel
-        $('#barcodeBtnExp').click(function () {
-            var checkRows = table.checkStatus('barTable');
+        $('#storeintentorytableBtnExp').click(function () {
+            var checkRows = table.checkStatus('storeintentorytable');
             if (checkRows.data.length == 0) {
                 layer.msg('请选择要导出的数据', {icon: 2});
             } else {

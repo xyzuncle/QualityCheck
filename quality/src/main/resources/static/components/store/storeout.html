@@ -1,12 +1,12 @@
 <div class="layui-fluid">
     <div class="layui-card">
-        <div class="layui-card-header">条形码管理</div>
+        <div class="layui-card-header">出库管理</div>
         <div class="layui-card-body">
 
             <div class="layui-form toolbar">
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <label class="layui-form-label w-auto">条形码标号</label>
+                        <label class="layui-form-label w-auto">条形码</label>
                         <div class="layui-input-inline">
                             <input id="barCode" class="layui-input" type="text" placeholder="输入条形码"/>
                         </div>
@@ -24,53 +24,44 @@
                         </div>
                     </div>
 
-                    <div class="layui-inline" id="searchdiv"></div>
+                    <div class="layui-inline" id="stroeoutidiv"></div>
                     <!--<div class="layui-inline" id="searchdiv">-->
-                        <!--<button id="barcodeBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
+                        <!--<button id="storeoutBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
                         </button>
-                        <button id="barcodeBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
-                        <button id="barcodeBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
-                        <button id="barcodeBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>-->
+                        <button id="storeoutBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                        <button id="storeoutBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
+                        <button id="storeoutBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>-->
                    <!-- </div>-->
                 </div>
             </div>
 
-            <table class="layui-table" id="barTable" lay-filter="barTable"></table>
+            <table class="layui-table" id="storeout" lay-filter="storeout"></table>
 
         </div>
     </div>
 </div>
 
-
 <!-- 表格操作列 -->
-<script type="text/html" id="userTableBar">
+<script type="text/html" id="storeoutTableBar">
         <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
-        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="print">打印</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
 
 </script>
 
-<!-- 表格状态列 -->
-<script type="text/html" id="userTableState">
-    <input type="checkbox" lay-filter="userTableState" value="{{d.userId}}" lay-skin="switch" lay-text="正常|锁定"
-           {{d.state==0?'checked':''}}/>
-</script>
-
-
-<script id="userSearch" type="text/html">
+<script id="storeoutSearch" type="text/html">
 
     {{#  layui.each(d.permissionkey, function(index, value){ }}
     {{# if(value=="user:view"){ }}
-    <button id="barcodeBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+    <button id="storeoutBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
     {{# } }}
     {{# if(value=="user:add"){ }}
-    <button id="barcodeBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+    <button id="storeoutBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
     {{# } }}
     {{# if(value=="user:deleteAll"){ }}
-    <button id="barcodeBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
+    <button id="storeoutBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
     {{# } }}
     {{# if(value=="user:export"){ }}
-    <button id="barcodeBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+    <button id="storeoutBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
     {{# } }}
 
 
@@ -91,52 +82,51 @@
         var laydate = layui.laydate;
         var laytpl = layui.laytpl;
 
+        //注意模板的ID 和DIV的id 不能一样，否则会一起 一个好一个坏的现象
         var btndata =config.getUserAuths();
+        if(btndata){
+            laytpl(storeoutSearch.innerHTML).render(btndata, function(html){
+                $("#stroeoutidiv").html(html);
+            });
+        }
 
-        laytpl(userSearch.innerHTML).render(btndata, function(html){
-           $("#searchdiv").html(html);
-        });
 
         form.render('select');
         // 渲染表格
         var ins1 = table.render({
-            elem: '#barTable',
-            url: config.base_server + 'QualityBarcode/query.do',
+            elem: '#storeout',
+            url: config.base_server + 'QualityStoreOut/query.do',
             method: 'GET',
             page: true,
-            /*toolbar: 'default',*/
-            defaultToolbar:['print'],
             cellMinWidth: 100,
             cols: [[
                 {type: 'checkbox'},
                 {field: 'id',hide:true},
-                {field: 'barCode', sort: false, title: '条形码编号',width:100},
                 {field: 'sampleCode', sort: false, title: '样品编号',width:100},
-                {field: 'specifications', sort: false, title: '样品规格编号',width:100},
                 {field: 'sampleName', sort: false, title: '样品名称',width:120},
-                {field: 'manufacturerName', sort: false, title: '所属厂家'},
-                {field: 'crtTime', sort: true, title: '创建时间',templet:"<div>{{layui.util.toDateString(d.crtTime, 'yyyy-MM-dd')}}</div>",width:120},
+                {field: 'delegateUnitName', sort: false, title: '所属厂家'},
+                {field: 'sampleCount', sort: false, title: '数量',width:80},
+                {field: 'type', sort: false, title: '类型',width:80},
+                {field: 'paySamplePerson', sort: false, title: '交样人'},
+                {field: 'receiveSamplePerson', sort: false, title: '收样人'},
+                {field: 'crtTime', sort: true, title: '出库时间',templet:"<div>{{layui.util.toDateString(d.crtTime, 'yyyy-MM-dd')}}</div>",width:100},
                /* {field: 'state', sort: true, templet: '#userTableState', title: '状态'},*/
-                {align: 'center', toolbar: '#userTableBar', title: '操作', minWidth: 150}
+                {align: 'center', toolbar: '#storeoutTableBar', title: '操作', minWidth: 120}
             ]]
         });
 
         // 添加按钮点击事件
-        $('#barcodeBtnAdd').click(function () {
+        $('#storeoutBtnAdd').click(function () {
             showEditModel();
         });
 
         // 工具条点击事件
-        table.on('tool(barTable)', function (obj) {
+        table.on('tool(storeout)', function (obj) {
             var data = obj.data;
             var layEvent = obj.event;
 
             if (layEvent === 'edit') { // 修改
                 showEditModel(data);
-            } else if (layEvent === 'print') { // 打印
-                showPrint(data);
-            }else if(layEvent ==='role'){ //分配角色
-                showRoleModel(data);
             }
             else if(layEvent === 'delete'){
                 layer.confirm('确定删除该条数据吗？', {
@@ -145,13 +135,13 @@
                     layer.close(i);
                     layer.load(2);
                     $.ajax({
-                        url: config.base_server + 'QualityBarcode/removeById.do?entityID='+data.id,
+                        url: config.base_server + 'Qualitystoreout/removeById.do?entityID='+data.id,
                         type: 'delete',
                         dataType: 'JSON',
                         success: function (data) {
                             layer.closeAll('loading');
                             layer.msg(data.message, {icon: 1});
-                            table.reload('userTable', {});
+                            table.reload('storeout', {});
                         },
                         error: function (xhr) {
                             layer.closeAll('loading');
@@ -166,28 +156,15 @@
 
         // 显示表单弹窗
         function showEditModel(data) {
-            admin.putTempData('quality_barcode', data);
+            admin.putTempData('quality_storeout', data);
             admin.open({
-                title: data ? '修改关联信息' : '添加关联信息',
-                url: 'components/store/barcode_form.html',
+                title: data ? "修改出库信息":"新增出库信息",
+                url: 'components/store/storeout_form.html',
                 success: function (layero, index) {
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
                 }
             });
         };
-
-        // 显示打印窗口
-        function showPrint(data){
-            admin.putTempData('quality_barcode', data);
-            admin.open({
-                title: '打印条形码预览',
-                area:["720px","480px"],
-                url: 'components/store/barcode_print.html?v=5.5',
-                success: function (layero, index) {
-                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
-                }
-            });
-        }
 
 
         laydate.render({
@@ -197,7 +174,7 @@
 
 
         // 搜索按钮点击事件
-        $('#barcodeBtnSearch').bind("click",function() {
+        $('#storeoutBtnSearch').bind("click",function() {
             var barcode = $('#barCode').val();
             var sampleName = $('#sampleName').val();
             var sampleCode = $('#sampleCode').val();
@@ -205,7 +182,7 @@
             var begin = timeValue[0];
             var end = timeValue[1]
 
-            table.reload('barTable', {where: {"search-EQ-barCode": barcode,
+            table.reload('storeout', {where: {"search-EQ-barCode": barcode,
                     "search-LIKE-sampleName": sampleName,
                     "search-EQ-sampleCode": sampleCode,
                     "search-GE-crtTime":begin,
@@ -214,8 +191,8 @@
         });
 
         //批量删除
-        $("#barcodeBtnRM").click(function(){
-            var checkRows = table.checkStatus('barTable');
+        $("#storeoutBtnRM").click(function(){
+            var checkRows = table.checkStatus('storeout');
             if (checkRows.data.length == 0) {
                 layer.msg('请选择要删除的数据', {icon: 2});
             }else{
@@ -226,12 +203,12 @@
                 if(ids){
                     ids = ids.slice(0,-1);
                 }
-                admin.req("QualityBarcode/removeMore.do",{
+                admin.req("Qualitystoreout/removeMore.do",{
                     entityIDS: ids
                 },function(data){
                     if (data.status == 200) {
                         layer.msg(data.message, {icon: 1});
-                        table.reload('userTable', {});
+                        table.reload('storeout', {});
                     } else if(data.status == 500) {
                         layer.msg(data.message, {icon: 2});
                     }
@@ -241,8 +218,8 @@
         })
 
         // 导出excel
-        $('#barcodeBtnExp').click(function () {
-            var checkRows = table.checkStatus('barTable');
+        $('#storeoutBtnExp').click(function () {
+            var checkRows = table.checkStatus('storeout');
             if (checkRows.data.length == 0) {
                 layer.msg('请选择要导出的数据', {icon: 2});
             } else {

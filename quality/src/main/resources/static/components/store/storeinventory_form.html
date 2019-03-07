@@ -2,13 +2,6 @@
 <form id="storeinform" lay-filter="storeinform" class="layui-form model-form">
     <input name="id" type="hidden"/>
     <div class="layui-form-item">
-        <label class="layui-form-label">条形码</label>
-        <div class="layui-input-block">
-            <input name="barCode" id="bar_code" placeholder="请输入条形码" type="text" class="layui-input" maxlength="20"
-                   lay-verify="required"/>
-        </div>
-    </div>
-    <div class="layui-form-item">
         <label class="layui-form-label">样品名称</label>
         <div class="layui-input-block">
             <input name="sampleName" id="sample_name" placeholder="请选择样品" type="text" class="layui-input" maxlength="20"
@@ -44,16 +37,16 @@
 
 
     <div class="layui-form-item">
-        <label class="layui-form-label">所属厂家</label>
+        <label class="layui-form-label">委托单位</label>
         <div class="layui-input-block">
-            <input name="delegateUnitName" id="manufacturer_name" placeholder="所属厂家" type="text" class="layui-input" maxlength="20"
+            <input name="delegateUnitName" id="manufacturer_name" placeholder="委托单位" type="text" class="layui-input" maxlength="20"
                    readonly />
             <input  name="sampleId" id="sample_id" type="hidden">
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">入库数量</label>
+        <label class="layui-form-label">库存总量</label>
         <div class="layui-input-block">
             <input name="sampleCount" id="sample_count" placeholder="入库数量" type="text" class="layui-input" maxlength="20"
                      lay-verify="count" />
@@ -77,38 +70,9 @@
         var formSelects = layui.formSelects;
         var upload = layui.upload;
 
-        $("#bar_code").blur(function(){
-            var barcode = this.value;
-            //根据条形码回填信息
-            $.ajax({
-                url: config.base_server + 'QualityBarcode/getInfoByBarCode.do',
-                data:{"barcode": barcode},
-                type: "GET",
-                dataType: 'json',
-                contentType:"application/json",
-                success: function (data) {
-                    layer.closeAll('loading');
-                    if (data.status == 200) {
-                        //开始填充数据
-                        $("#sample_name").val(data.data.sampleName);
-                        $("#myCode").val(data.data.sampleCode);
-                        $("#sample_model").val(data.data.sampleModel);
-                        $("#samplespec").val(data.data.sampleSpecification);
-                        $("#manufacturer_name").val(data.data.manufacturerName);
-                        $("#sample_id").val(data.data.id);
-                    }
-                    else if(data.status == 500){
-                        layer.msg(data.message, {icon: 2});
-                    }
-                }
-
-            });
-        })
-
-
 
         // 回显user数据
-        var user = admin.getTempData('quality_storein');
+        var user = admin.getTempData('quality_storeinventory');
         $('#storeinform').attr('method', 'POST');
         if (user) {
             form.val('storeinform', user);

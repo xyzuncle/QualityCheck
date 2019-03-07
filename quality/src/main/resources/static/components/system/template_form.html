@@ -21,7 +21,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">模板类型</label>
         <div class="layui-input-block">
-            <select name="type" placeholder="模板类型" lay-verify=""/>
+            <select name="type" placeholder="模板类型" lay-verify=""></select>
         </div>
     </div>
 
@@ -80,10 +80,10 @@
             ,before: function(obj){
                 //预读本地文件示例，不支持ie8
                 obj.preview(function(index, file, result){
+
+                    var type = file.type;
                     debugger
-                    var typeindex = file.name.indexOf(".");
-                    var type = file.name.substr(typeindex+1);
-                    if(type){
+                    if(type &&  type.toLowerCase()!="image/jpeg"){
                         if(type.toLowerCase()=="ppt" || type.toLowerCase()=="pptx"){
                             result = "assets/images/fti/ppt.png"
                         }else if(type.toLowerCase()=="doc" || type.toLowerCase()=="docx"){
@@ -107,7 +107,7 @@
                         }
                     }
 
-                    $('#demo1').attr('src', result); //图片链接（base64）
+                    $('#demo1').attr('src', result).attr("width","56px").attr("height","56px"); //图片链接（base64）
                     $('#demoText').html(file.name);
                 });
             }
@@ -154,6 +154,7 @@
                     dataType: 'json',
                     contentType:"application/json",
                     success: function (data) {
+                        debugger
                         if(data.data.type!="jpg"){
                             var url = data.data.smpath;
                             $("#demo1").attr("src", url)
@@ -161,6 +162,7 @@
                                 .attr("height",data.data.smImgHeight);
                             $('#demoText').html(data.data.fileName);
                         }else{
+
                             var url = config.base_server + "QualityAttachment/download/image.do?attachmentId="+user.attachmentId;
                             $("#demo1").attr("src", url)
                                 .attr("width",data.data.smImgWidth)

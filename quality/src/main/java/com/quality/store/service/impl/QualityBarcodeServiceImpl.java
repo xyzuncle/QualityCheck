@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.swing.text.html.parser.Entity;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -62,7 +63,16 @@ public class QualityBarcodeServiceImpl extends ServiceImpl<QualityBarcodeMapper,
              }else if(indexEntity==null){
                  //证明是新的附件上传，先删除已经存在的。在上传新的
                  String filePath = qualityBarcode.getBarCodeImgPath();
-                 fastDFSClient.deleteFile(filePath);
+                 //先看看是否能查询到信息，以防止异常引起的图片已经删除
+                 try{
+                     fastDFSClient.deleteFile(filePath);}
+                 catch(Exception e){
+                     if(e.getMessage().startsWith("recv package size -1 != 10")){
+                         System.out.println("改图片已经被删除！！");
+                     }
+
+                 }
+
                  //重新生成图片路径放入fastdfs
                  String path = genBarCode4Fds(qualityBarcode);
                  qualityBarcode.setBarCodeImgPath(path);

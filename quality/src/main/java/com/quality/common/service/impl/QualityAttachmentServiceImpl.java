@@ -102,6 +102,7 @@ public class QualityAttachmentServiceImpl extends ServiceImpl<QualityAttachmentM
                     qualityAttachment2.setSmpath("sm/" + path);
                     qualityAttachment2.setSmImgHeight("110");
                     qualityAttachment2.setSmImgWidth("100");
+                    qualityAttachment2.setType("jpg");
                 }else{
                     String suffix = name.substring(name.lastIndexOf(".") + 1);
                     String type;

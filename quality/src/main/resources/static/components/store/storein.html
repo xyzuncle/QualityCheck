@@ -26,11 +26,11 @@
 
                     <div class="layui-inline" id="stroeindiv"></div>
                     <!--<div class="layui-inline" id="searchdiv">-->
-                        <!--<button id="userBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
+                        <!--<button id="storeinBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索
                         </button>
-                        <button id="userBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
-                        <button id="userBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
-                        <button id="userBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>-->
+                        <button id="storeinBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                        <button id="storeinBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
+                        <button id="storeinBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>-->
                    <!-- </div>-->
                 </div>
             </div>
@@ -42,9 +42,8 @@
 </div>
 
 <!-- 表格操作列 -->
-<script type="text/html" id="userTableBar">
+<script type="text/html" id="storeinBar">
         <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
-        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="print">打印</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
 
 </script>
@@ -53,16 +52,16 @@
 
     {{#  layui.each(d.permissionkey, function(index, value){ }}
     {{# if(value=="user:view"){ }}
-    <button id="userBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+    <button id="storeinBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
     {{# } }}
     {{# if(value=="user:add"){ }}
-    <button id="userBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+    <button id="storeinBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
     {{# } }}
     {{# if(value=="user:deleteAll"){ }}
-    <button id="userBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
+    <button id="storeinBtnRM" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>批量删除</button>
     {{# } }}
     {{# if(value=="user:export"){ }}
-    <button id="userBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
+    <button id="storeinBtnExp" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>导出</button>
     {{# } }}
 
 
@@ -106,17 +105,18 @@
                 {field: 'sampleCode', sort: false, title: '样品编号',width:100},
                 {field: 'sampleName', sort: false, title: '样品名称',width:120},
                 {field: 'delegateUnitName', sort: false, title: '所属厂家'},
-                {field: 'sampleCount', sort: false, title: '入库数量'},
+                {field: 'sampleCount', sort: false, title: '数量',width:80},
+                {field: 'type', sort: false, title: '类型',width:80},
                 {field: 'paySamplePerson', sort: false, title: '交样人'},
                 {field: 'receiveSamplePerson', sort: false, title: '收样人'},
                 {field: 'crtTime', sort: true, title: '入库时间',templet:"<div>{{layui.util.toDateString(d.crtTime, 'yyyy-MM-dd')}}</div>",width:120},
-               /* {field: 'state', sort: true, templet: '#userTableState', title: '状态'},*/
-                {align: 'center', toolbar: '#userTableBar', title: '操作', minWidth: 150}
+               /* {field: 'state', sort: true, templet: '#storeinState', title: '状态'},*/
+                {align: 'center', toolbar: '#storeinBar', title: '操作', minWidth: 150}
             ]]
         });
 
         // 添加按钮点击事件
-        $('#userBtnAdd').click(function () {
+        $('#storeinBtnAdd').click(function () {
             showEditModel();
         });
 
@@ -141,7 +141,7 @@
                         success: function (data) {
                             layer.closeAll('loading');
                             layer.msg(data.message, {icon: 1});
-                            table.reload('userTable', {});
+                            table.reload('storein', {});
                         },
                         error: function (xhr) {
                             layer.closeAll('loading');
@@ -158,7 +158,7 @@
         function showEditModel(data) {
             admin.putTempData('quality_storein', data);
             admin.open({
-                title: data ? "新增入库信息":"修改入库信息",
+                title: data ? "修改入库信息":"新增入库信息",
                 url: 'components/store/storein_form.html',
                 success: function (layero, index) {
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
@@ -174,7 +174,7 @@
 
 
         // 搜索按钮点击事件
-        $('#userBtnSearch').bind("click",function() {
+        $('#storeinBtnSearch').bind("click",function() {
             var barcode = $('#barCode').val();
             var sampleName = $('#sampleName').val();
             var sampleCode = $('#sampleCode').val();
@@ -191,7 +191,7 @@
         });
 
         //批量删除
-        $("#userBtnRM").click(function(){
+        $("#storeinBtnRM").click(function(){
             var checkRows = table.checkStatus('storein');
             if (checkRows.data.length == 0) {
                 layer.msg('请选择要删除的数据', {icon: 2});
@@ -208,7 +208,7 @@
                 },function(data){
                     if (data.status == 200) {
                         layer.msg(data.message, {icon: 1});
-                        table.reload('userTable', {});
+                        table.reload('storein', {});
                     } else if(data.status == 500) {
                         layer.msg(data.message, {icon: 2});
                     }
@@ -218,7 +218,7 @@
         })
 
         // 导出excel
-        $('#userBtnExp').click(function () {
+        $('#storeinBtnExp').click(function () {
             var checkRows = table.checkStatus('storein');
             if (checkRows.data.length == 0) {
                 layer.msg('请选择要导出的数据', {icon: 2});

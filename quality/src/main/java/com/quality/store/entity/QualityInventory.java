@@ -2,7 +2,6 @@ package com.quality.store.entity;
 
 import com.quality.common.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -12,10 +11,10 @@ import io.swagger.annotations.ApiModelProperty;
  * </p>
  *
  * @author yerui
- * @since 2019-01-31
+ * @since 2019-03-05
  */
-@ApiModel(value="QualityStoreIn对象", description="")
-public class QualityStoreIn extends BaseEntity {
+@ApiModel(value="QualityInventory对象", description="")
+public class QualityInventory extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,11 +22,7 @@ public class QualityStoreIn extends BaseEntity {
     @TableField("sampleId")
     private String sampleId;
 
-    @ApiModelProperty(value = "样品编号")
-    @TableField("sampleCode")
-    private String sampleCode;
-
-    @ApiModelProperty(value = "样品数量")
+    @ApiModelProperty(value = "样品总量")
     @TableField("sampleCount")
     private Integer sampleCount;
 
@@ -63,39 +58,18 @@ public class QualityStoreIn extends BaseEntity {
     @TableField("delegateUnitName")
     private String delegateUnitName;
 
-    @ApiModelProperty(value = "样品状态，0 损坏，1正常，2 返修")
-    @TableField("sampleStatus")
-    private String sampleStatus;
+    @ApiModelProperty(value = "样品编号")
+    @TableField("sampleCode")
+    private String sampleCode;
 
-    @ApiModelProperty(value = "样品类型 1 标注器 2 委托样品")
+    @ApiModelProperty(value = "1 标准器 2 委托样品")
     @TableField("type")
-    private String type;
+    private Integer type;
 
-    public String getType() {
-        return type;
-    }
+    @ApiModelProperty(value = "仓库名称")
+    @TableField("storeName")
+    private String storeName;
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-
-
-    public String getSampleStatus() {
-        return sampleStatus;
-    }
-
-    public void setSampleStatus(String sampleStatus) {
-        this.sampleStatus = sampleStatus;
-    }
-
-    public String getSampleCode() {
-        return sampleCode;
-    }
-
-    public void setSampleCode(String sampleCode) {
-        this.sampleCode = sampleCode;
-    }
 
     public String getSampleId() {
         return sampleId;
@@ -177,9 +151,33 @@ public class QualityStoreIn extends BaseEntity {
         this.delegateUnitName = delegateUnitName;
     }
 
+    public String getSampleCode() {
+        return sampleCode;
+    }
+
+    public void setSampleCode(String sampleCode) {
+        this.sampleCode = sampleCode;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
     @Override
     public String toString() {
-        return "QualityStoreIn{" +
+        return "QualityInventory{" +
         "sampleId=" + sampleId +
         ", sampleCount=" + sampleCount +
         ", receivedType=" + receivedType +
@@ -190,6 +188,9 @@ public class QualityStoreIn extends BaseEntity {
         ", sampleModel=" + sampleModel +
         ", delegateUnitID=" + delegateUnitID +
         ", delegateUnitName=" + delegateUnitName +
+        ", sampleCode=" + sampleCode +
+        ", type=" + type +
+        ", storeName=" + storeName +
         "}";
     }
 }

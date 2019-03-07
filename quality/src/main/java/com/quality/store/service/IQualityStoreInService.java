@@ -13,4 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IQualityStoreInService extends IService<QualityStoreIn> {
 
+    public void customSave(QualityStoreIn qualityStoreIn);
+
 }

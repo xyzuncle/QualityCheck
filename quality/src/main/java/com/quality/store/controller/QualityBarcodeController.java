@@ -93,7 +93,12 @@ public Object saveOrUpdate(@RequestBody QualityBarcode QualityBarcode){
             result=this.defaultDAO.SaveBarCodeAndImg(QualityBarcode);
         }catch(Exception e){
             e.printStackTrace();
-            throw new BaseException("保存失败",500);
+            if(e.getMessage().startsWith("Message must be 12 or 13 characters long.")){
+                throw new BaseException("条形码必须是12位或13位",500);
+            }else{
+                throw new BaseException("保存失败",500);
+            }
+
         }
             return super.jsonObjectResult(result,"保存成功");
     }

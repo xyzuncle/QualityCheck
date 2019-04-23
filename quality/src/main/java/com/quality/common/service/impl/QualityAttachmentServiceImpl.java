@@ -1,6 +1,5 @@
 package com.quality.common.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.quality.common.entity.QualityAttachment;
 import com.quality.common.exception.BaseException;
 import com.quality.common.fastdfs.FastDFSClient;
@@ -19,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -76,7 +74,7 @@ public class QualityAttachmentServiceImpl extends ServiceImpl<QualityAttachmentM
                         this.deleteFile(path);
                     }
                 }
-                this.baseMapper.deleteById(attid);
+                //this.baseMapper.deleteById(attid);
             }
         }
 
@@ -85,6 +83,10 @@ public class QualityAttachmentServiceImpl extends ServiceImpl<QualityAttachmentM
         String path = fileResponseData.getFilePath();
         String name = fileResponseData.getFileName();
         QualityAttachment qualityAttachment2 = new QualityAttachment();
+        if(StringUtils.isNotBlank(attid)){
+            //attachement附件表 只变更path路径，不删除附件
+            qualityAttachment2.setId(attid);
+        }
         qualityAttachment2.setPath(path);
         qualityAttachment2.setFileName(name);
         if (useSm != null && useSm) {

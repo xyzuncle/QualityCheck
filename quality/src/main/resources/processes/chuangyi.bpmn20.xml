@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="www.chuangyi.com">
   <process id="changyi" name="创翼模型" isExecutable="true">
-    <documentation>委托书的流程设计图</documentation>
-    <startEvent id="start" name="开始" flowable:formKey="${foemkeyId}"></startEvent>
-    <userTask id="apply" name="申请" flowable:assignee="${applyPerson}" flowable:formKey="${foemkeyId}">
-      <extensionElements>
-        <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:initiator-can-complete>
-      </extensionElements>
-    </userTask>
+  <documentation>委托书的流程设计图</documentation>
+  <startEvent id="start" name="开始" flowable:formKey="${foemkeyId}"></startEvent>
+  <userTask id="apply" name="申请" flowable:assignee="${applyPerson}" flowable:formKey="${foemkeyId}">
+    <extensionElements>
+    <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:initiator-can-complete>
+  </extensionElements>
+  </userTask>
     <userTask id="check" name="审核" flowable:assignee="${checkPerson}" flowable:formKey="${foemkeyId}">
       <extensionElements>
         <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:initiator-can-complete>

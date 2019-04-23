@@ -15,6 +15,18 @@
         <result column="reportName" property="reportName" />
         <result column="reportType" property="reportType" />
         <result column="remarks" property="remarks" />
+        <result column="delegateUnitID" property="delegateUnitID"/>
+        <result column="unitName" property="unitName"/>
+        <result column="sampleName" property="sampleName"/>
+        <result column="taskIssuedBy" property="taskIssuedBy"/>
+        <result column="sampleCode" property="sampleCode"/>
+        <result column="calculateTemplateId" property="calculateTemplateId"/>
+        <result property="printTemplateId" column="printTemplateId"/>
+        <result property="genReportId" column="genReportId"/>
+        <result property="calculateTemplateName" column="calculateTemplateName"/>
+        <result property="printTemplateName" column="printTemplateName"/>
+        <result property="genReportName" column="genReportName"/>
+
     </resultMap>
 
     <!-- 通用查询结果列 -->

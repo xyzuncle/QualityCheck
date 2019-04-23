@@ -136,6 +136,7 @@
         $('#sampleBtnSearch').click(function () {
             var sampleName = $('#sampleName').val();
             var userName = $('#userName').val();
+
             table.reload('sampleTable', {where: {"search-LIKE-sampleName": sampleName}});
         });
 

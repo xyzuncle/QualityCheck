@@ -1,6 +1,36 @@
 <div class="layui-fluid">
     <div class="layui-card">
         <div class="layui-card-body">
+            <div class="layui-card-body">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">报告名称</label>
+                        <div class="layui-input-inline">
+                            <input id="report_name" NAME="unitName" class="layui-input" type="text" placeholder="报告名称"/>
+                        </div>
+                        <label class="layui-form-label w-auto">委托单位</label>
+                        <div class="layui-input-inline">
+                            <input id="unit_name" name="unitName" class="layui-input" type="text" placeholder="输入登录名"/>
+                        </div>
+                        <label class="layui-form-label" w-auto>日期范围</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input date-icon" id="crtTime" placeholder="查询日期范围" name="crtTime">
+                        </div>
+                        <label class="layui-form-label" w-auto>样品名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input " id="sample_name" name="sampleName"  placeholder="样品名称" >
+                        </div>
+                        <label class="layui-form-label" w-auto>样品编号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="sample_code" name="sampleCode"  placeholder="样品编号">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-inline" id="reportSearchDiv"></div>
+            </div>
+
+
             <table class="layui-table" id="reportTable" lay-filter="reportTable"></table>
 
         </div>
@@ -10,7 +40,20 @@
 <!-- 表格操作列 -->
 <script type="text/html" id="reportTableBar">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
-    <a class="layui-btn layui-btn-default layui-btn-xs" lay-event="report">生成报告</a>
+    <a class="layui-btn layui-btn-default layui-btn-xs" lay-event="calculate">上传计算模板</a>
+    <a class="layui-btn layui-btn-default layui-btn-xs" lay-event="report">上传报告模板</a>
+    <a class="layui-btn layui-btn-default layui-btn-xs" lay-event="gen">生成报告</a>
+</script>
+
+<script id="report" type="text/html">
+    {{#  layui.each(d.permissionkey, function(index, value){ }}
+    {{# if(value=="report:view"){ }}
+    <button id="report_search" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+    {{# } }}
+    {{# if(value=="report:add"){ }}
+    <button id="reportBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+    {{# } }}
+    {{# }); }}
 </script>
 
 <!-- js部分 -->
@@ -39,22 +82,84 @@
                 {field: 'agreementNo', sort: true, title: '协议书编号'},
                 {field: 'delegateUnit', sort: true, title: '委托单位'},
                 {field: 'sampleName', sort: true, title: '样品名称'},
-                {field: 'taskIssuedBy', sort: true, title: '任务签发人'},
-                {field: 'taskIssuedDate', sort: true, title: '任务签发日期'},
-                {field: 'checkAbilityName', sort: true, title: '校验能力'},
+                {field: 'calculateTemplateName', sort: true, title: '计算模板名称'},
+                {field: 'calculateTemplateId', sort: true, title: '计算模板ID',hide:true},
+                {field: 'checkAbilityName', sort: true, title: '校验能力',hide:true},
                 {align: 'center', toolbar: '#reportTableBar', title: '操作'}
             ]]
+        });
+
+        var btndata =config.getUserAuths();
+        laytpl(report.innerHTML).render(btndata, function(html){
+            $("#reportSearchDiv").html(html);
         });
 
         // 工具条点击事件
         table.on('tool(reportTable)', function (obj) {
             var data = obj.data;
             var layEvent = obj.event;
-            if (layEvent === 'edit') { // 修改
+          debugger
+            if(layEvent === 'edit') { // 修改
                 //TODO
-            }else if (layEvent === 'report') { // 生成报告
+            }else if (layEvent === 'calculate') { // 计算模板
                 //TODO
-        }
+                showEditModel(data);
+            }else if (layEvent === 'report') { // 上传报告模板
+                //TODO
+                showReportModel(data);
+            }else if (layEvent === 'gen') { // 生成报告
+                var downloadUrl = config.base_server + 'QualityReport/genReport.do?reportId='+data.id;
+                window.location.href = downloadUrl;
+            }
+        });
+
+        // 显示表单弹窗
+        function showEditModel(data) {
+            admin.putTempData('calculate', data);
+            admin.open({
+                title: data ? "修改计算模板":"新增计算模板",
+                url: 'components/delegate/report_cal_form.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
+                }
+            });
+        };
+
+        // 显示报告模板弹窗
+        function showReportModel(data) {
+            admin.putTempData('reportTemplate', data);
+            admin.open({
+                title: data ? "修改报告模板":"新增报告模板",
+                url: 'components/delegate/report_print_form.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
+                }
+            });
+        };
+
+
+        laydate.render({
+            elem: '#crtTime'
+            ,range: true
+        });
+
+        // 搜索按钮点击事件
+        $('#report_search').click(function () {
+            var reportName = $('#report_name').val();
+            var unit_name = $('#unit_name').val();
+            var timeValue = $("#crtTime").val().split(" - ");
+            var begin = timeValue[0];
+            var end = timeValue[1];
+            var sampleName = $("#sample_name").val();
+            var sampleCode = $("#sample_code").val();
+            table.reload('reportTable', {where: {
+                "search-LIKE-reportName": reportName,
+                "search-GE-crtTime": begin,
+                "search-LT-crtTime": end,
+                "search-LIKE-sampleName" :sampleName,
+                "search-LIKE-sampleCode" :sampleCode,
+                }
+            });
         });
     });
 </script>

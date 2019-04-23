@@ -6,6 +6,9 @@ import com.quality.delegate.service.IQualityDelegateunitService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  * 委托单位 服务实现类
@@ -17,4 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class QualityDelegateunitServiceImpl extends ServiceImpl<QualityDelegateunitMapper, QualityDelegateunit> implements IQualityDelegateunitService {
 
+    @Override
+    public List<Map<String, String>> queryByMap() {
+        return baseMapper.queryByMap();
+    }
 }

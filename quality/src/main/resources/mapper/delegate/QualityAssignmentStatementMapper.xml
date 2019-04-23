@@ -34,6 +34,7 @@
         <result column="acceptDate" property="acceptDate" />
         <result column="reviewer" property="reviewer" />
         <result column="reviewDate" property="reviewDate" />
+        <result column="distributor" property="distributor"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -43,7 +44,7 @@
         updTime,
         deleted,
         agreementNo, delegateType, delegateUnitID, referenceStandardIds, sampleIDs, designatedMonitoringBasis, designatedMonitoringItems, designatedMonitoringRequirement, acceptanceReviewType, plannedCompletionTime, secret, standardEffectivePeriod, standardconClusion, uncertainty, confirmMonitoringBasis, reference, acceptOpinion, procdefId, executionId, state, agreementAttachment, remarks,
-        acceptor,acceptDate,reviewer,reviewDate
+        acceptor,acceptDate,reviewer,reviewDate,distributor
     </sql>
 
     <select id="getByAgreementNo" resultType="com.quality.delegate.entity.QualityAssignmentStatement">

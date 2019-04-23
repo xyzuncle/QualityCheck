@@ -76,6 +76,15 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">所属能力</label>
+        <input type="hidden" name="checkAbilityName" id="checkAbilityName">
+        <div class="layui-input-block">
+            <select  name="checkAbilityId" id="checkAbilityId" lay-filter="checkAbilityId" lay-search="">
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label">备注</label>
         <div class="layui-input-block">
             <input name="remarks" placeholder="请输入备注" type="text" class="layui-input"
@@ -100,6 +109,34 @@
         var config = layui.config;
         var laydate = layui.laydate;
         var upload = layui.upload;
+
+        $.ajax({
+            url: config.base_server + 'QualityCheckAbility/queryByMap.do',
+            type: "GET",
+            async:false,
+            dataType: 'json',
+            contentType:"application/json",
+            success: function (json) {
+                var html='<option value="">直接选择或搜索选择</option>';
+                debugger
+                if (json.status == 200) {
+                    for(var i=0;i<json.data.length;i++){
+                        var type =json.data[i];
+                        html+='<option value='+type.checkAbilityId+'>'+type.checkAbilityName+'</option>'
+                    }
+                }
+                $("#checkAbilityId").append(html);
+            }
+
+        });
+
+        form.render('select');
+        form.on('select(checkAbilityId)', function (data) {
+            category = data.value;
+            categoryName = data.elem[data.elem.selectedIndex].text;
+            $("#checkAbilityName").val(categoryName);
+
+        });
 
         // 渲染laydate
         laydate.render({

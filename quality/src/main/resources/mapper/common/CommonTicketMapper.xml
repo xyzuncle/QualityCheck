@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quality.common.mapper.CommonTicketMapper">
+
+    <select id="selectAssignmentCode">
+       REPLACE INTO quality_assignment_statement_ticket(stub) VALUES ('assignment')
+    </select>
+
+    <select id="selectLastAssignmentId"  resultType="string">
+        select max(id) from quality_assignment_statement_ticket
+    </select>
+
+    <select id="selectUnitCode">
+        REPLACE INTO quality_delegateUnit_ticket(stub) VALUES ('unit')
+    </select>
+
+    <select id="selectLastUnitId"  resultType="string">
+        select max(id) from quality_delegateUnit_ticket
+    </select>
+
+
+    <select id="selectSampleCode">
+        REPLACE INTO quality_sample_ticket(stub) VALUES ('sample')
+    </select>
+
+    <select id="selectLastSampleId"  resultType="string">
+        select max(id) from quality_sample_ticket
+    </select>
+
+
+    <select id="selectTaskCode">
+        REPLACE INTO quality_task_ticket(stub) VALUES ('task')
+    </select>
+
+
+    <select id="selectLastTaskId"  resultType="string">
+        select max(id) from quality_task_ticket
+    </select>
+
+</mapper>

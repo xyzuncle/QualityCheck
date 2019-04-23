@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -22,5 +23,10 @@ public class QualityCheckAbilityServiceImpl extends ServiceImpl<QualityCheckAbil
     @Override
     public List<QualityCheckAbility> queryByCheckAbilityIds(String[] checkAbilityIds) {
         return baseMapper.queryByCheckAbilityIds(checkAbilityIds);
+    }
+
+    @Override
+    public List<Map<String, String>> queryByMap() {
+        return baseMapper.queryByMap();
     }
 }

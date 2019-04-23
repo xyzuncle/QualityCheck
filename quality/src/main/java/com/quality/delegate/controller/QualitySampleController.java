@@ -3,15 +3,20 @@ package com.quality.delegate.controller;
 
 import com.quality.common.dto.PageResult;
 import com.quality.common.exception.BaseException;
+import com.quality.common.service.ICommonTicketService;
 import com.quality.common.util.Servlets;
 import com.quality.common.util.Sort;
 import com.quality.common.util.Tools;
 import com.quality.common.controller.BaseController;
+import com.quality.delegate.entity.QualityDelegateunit;
 import com.quality.delegate.entity.QualitySample;
+import com.quality.delegate.service.IQualityDelegateunitService;
 import com.quality.delegate.service.IQualitySampleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -42,6 +47,12 @@ public class QualitySampleController extends BaseController<QualitySample, IQual
 
     private final Logger logger = LoggerFactory.getLogger(QualitySampleController.class);
 
+    @Autowired
+    private ICommonTicketService commonTicketService;
+
+    @Autowired
+    private IQualityDelegateunitService delegateunitService;
+
     /**
      * 带分页的查询条件
      *
@@ -71,10 +82,21 @@ public class QualitySampleController extends BaseController<QualitySample, IQual
             notes = "保存和修改QualitySample信息")
     @RequestMapping(value = "/save.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Object saveOrUpdate(@RequestBody QualitySample QualitySample) {
+    public Object saveOrUpdate(@RequestBody QualitySample qualitySample) {
         boolean result = false;
         try {
-            result = this.defaultDAO.saveOrUpdate(QualitySample);
+
+            String id = qualitySample.getId();
+            if(StringUtils.isBlank(id)){
+                String unitId = qualitySample.getDelegateUnitID();
+                if(StringUtils.isNotBlank(unitId)){
+                    QualityDelegateunit delegateunit = delegateunitService.getById(unitId);
+                    String unitCode = delegateunit.getUnitCode();
+                    String sampleCode = commonTicketService.selectSampleCode(unitCode);
+                    qualitySample.setSampleCode(sampleCode);
+                }
+            }
+            result = this.defaultDAO.saveOrUpdate(qualitySample);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("保存失败", 500);

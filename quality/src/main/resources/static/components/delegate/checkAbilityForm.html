@@ -29,6 +29,15 @@
                    lay-verify="required"/>
         </div>
     </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">所属类别</label>
+        <input type="hidden" name="abilityTypeName" id="abilityTypeName">
+        <div class="layui-input-block">
+            <select  name="abilityTypeValue" id="abilityType" lay-filter="abilityType" lay-search="">
+            </select>
+        </div>
+    </div>
     <div class="layui-form-item text-right">
         <button class="layui-btn layui-btn-primary" ew-event="closeDialog" type="button">取消</button>
         <button class="layui-btn" lay-filter="checkAbilityFormSubmit" lay-submit>保存</button>
@@ -45,6 +54,39 @@
         var admin = layui.admin;
         var config = layui.config;
         var laydate = layui.laydate;
+
+
+        //初始化下拉数据
+
+        $.ajax({
+            url: config.base_server + 'QualityDictionaries/queryByTypes.do',
+            data: {'dictTypes':'ability_type'},
+            type: "GET",
+            async:false,
+            dataType: 'json',
+            contentType:"application/json",
+            success: function (json) {
+                var html='<option value="">直接选择或搜索选择</option>';
+                if (json.status == 200) {
+                    for(var i=0;i<json.data.length;i++){
+                        var type =json.data[i];
+                         html+='<option value='+type.dictValue+'>'+type.dictName+'</option>'
+                    }
+                }
+                $("#abilityType").append(html);
+            }
+
+        });
+
+
+        form.render('select');
+        form.on('select(abilityType)', function (data) {
+            category = data.value;
+            categoryName = data.elem[data.elem.selectedIndex].text;
+            $("#abilityTypeName").val(categoryName);
+
+        });
+
 
 
         // 渲染laydate

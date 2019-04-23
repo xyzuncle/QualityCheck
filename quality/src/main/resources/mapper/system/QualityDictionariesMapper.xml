@@ -25,4 +25,10 @@
         dictName, dictValue, dictType, parentId, sort, remark
     </sql>
 
+    <select id="queryByTypes" parameterType="list" resultType="map">
+        SELECT dictName,dictValue FROM  quality_dictionaries where dictType IN
+        <foreach item="item" collection="list" separator="," open="(" close=")" index="">
+            #{item}
+        </foreach>
+    </select>
 </mapper>

@@ -20,27 +20,35 @@
             <div class="layui-form">
                 <div class="layui-form-item layui-row">
 
-                    <div class="layui-inline layui-col-md4">
+                    <!--<div class="layui-inline layui-col-md4">
                         <label class="layui-form-label">协议书编号:</label>
                         <div class="layui-input-block">
                             <input name="agreementNo" id="agreementNo" placeholder="请输入协议书编号" type="text" class="layui-input" lay-verify="required"/>
                         </div>
-                    </div>
+                    </div>-->
+                    <input name="agreementNo" id="agreementNo" type="hidden"/>
                     <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label">委托类型:</label>
                         <div class="layui-input-block">
                             <input name="delegateType" id="delegateType" type="text" placeholder="请输入委托类型" class="layui-input" lay-verify="required"/>
                         </div>
                     </div>
+                    <div class="layui-inline layui-col-md4">
+                        <label class="layui-form-label">选择派发人:</label>
+                        <div class="layui-input-block">
+                            <select  name="distributor" id="distributor" lay-filter="distributor" lay-search="">
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="layui-form-item layui-row">
                     <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label">受理人:</label>
                         <div class="layui-input-block">
                             <input type="hidden" id="acceptorID">
-                            <select name="acceptor" id="acceptor" xm-select="acceptor">
-                                <option value="">请选择</option>
-                            </select>
+                            <input name="acceptor" id="acceptor" type="text" readonly class="layui-input"/>
+
                         </div>
                     </div>
                     <div class="layui-inline layui-col-md4">
@@ -83,11 +91,19 @@
                 </div>
             </div>
 
+
+            <div class="layui-form">
+                <label class="layui-form-label">受理人意见</label>
+                <div class="layui-input-block">
+                    <textarea name="acceptOpinion" id="acceptOpinion"  placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <br/>
             <div class="layui-form">
                 <label class="layui-form-label">备注</label>
                 <div class="layui-input-block">
-                    <input name="remarks" id="remarks" placeholder="请输入备注" type="text" class="layui-input"
-                    />
+                    <textarea name="remarks" id="remarks" placeholder="请输入备注" type="text" class="layui-textarea"></textarea>
                 </div>
             </div>
 
@@ -194,6 +210,31 @@
         });
 
 
+        $.ajax({
+            url: config.base_server + 'QualityUser/queryByMap.do',
+            type: "GET",
+            async:false,
+            dataType: 'json',
+            contentType:"application/json",
+            success: function (json) {
+                var html='<option value="">直接选择或搜索选择</option>';
+                if (json.status == 200) {
+                    for(var i=0;i<json.data.length;i++){
+                        var type =json.data[i];
+                        html+='<option value='+type.userID+'>'+type.userName+'</option>'
+                    }
+                }
+                $("#distributor").append(html);
+            }
+
+        });
+
+
+        form.render('select');
+
+
+
+        $("#acceptor").val($('#huName').text());
         //监听下拉框的打开
         var options ={
             type: 'POST',                //请求方式: post, get, put, delete...
@@ -217,10 +258,6 @@
             },
             success: function(id, url, searchVal, result){      //使用远程方式的success回调
                 debugger
-                var  acceptor = $("#acceptorID").val();
-                if(acceptor){
-                    formSelects.value('acceptor',acceptor.split(','),true);
-                }
                 var  reviewer = $("#reviewerID").val();
                 if(reviewer){
                     formSelects.value('reviewer',reviewer.split(','),true);
@@ -241,7 +278,6 @@
             },
             clearInput: false,          //当有搜索内容时, 点击选项是否清空搜索内容, 默认不清空
         };
-        formSelects.config('acceptor',options);
         formSelects.config('reviewer',options);
 
         //上传文件
@@ -358,10 +394,12 @@
             filed["delegateType"]= $("#delegateType").val();
             filed["remarks"] = $("#remarks").val();
             filed["agreementAttachment"] = $("#attid").val();
-            filed["acceptor"]= formSelects.value('acceptor','valStr');
+            filed["acceptor"]= $("#acceptorID").val();
             filed["reviewer"]= formSelects.value('reviewer','valStr');
             filed["reviewDate"]= $("#reviewDate").val();
             filed["acceptDate"]= $("#acceptDate").val();
+            filed["acceptOpinion"] =$("#acceptOpinion").val();
+            filed["distributor"] =$("#distributor").val();
             //代理机构
             filed["unitId"] = $("#unitId").val();
             filed["unitName"]= $("#unitName").val();
@@ -403,18 +441,21 @@
         if (data) {
             layer.closeAll('loading');
             //协议书信息
+            debugger
             $("#assignmentId").val(data.assignmentId);
             $("#agreementNo").val(data.agreementNo);
             $("#delegateType").val(data.delegateType);
             $("#remarks").val(data.remarks);
             $("#attid").val(data.agreementAttachment);
-
+            $("#distributor").val(data.distributor);
+            form.render('select');
             $("#acceptorID").val(data.acceptor);
+            $("#acceptor").val($('#huName').text());
             $("#reviewerID").val(data.reviewer);
             formSelects.render();
             $("#reviewDate").val(data.reviewDate);
             $("#acceptDate").val(data.acceptDate);
-
+            $("#acceptOpinion").val(data.acceptOpinion);
             //代理机构
             $("#unitName").val(data.unitName);
             $("#address").val(data.address);

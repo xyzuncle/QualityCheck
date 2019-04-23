@@ -14,6 +14,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  * 用户表 服务实现类
@@ -100,5 +103,10 @@ public class QualityUserServiceImpl extends ServiceImpl<QualityUserMapper, Quali
         }else{
             return false;
         }
+    }
+
+    @Override
+    public List<Map<String, String>> queryByMap() {
+        return baseMapper.queryByMap();
     }
 }

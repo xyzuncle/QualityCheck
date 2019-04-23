@@ -32,4 +32,8 @@
         </foreach>
     </select>
 
+
+    <select id="queryByMap"  resultType="map">
+        SELECT id as checkAbilityId,specificationCName as checkAbilityName  FROM  quality_check_ability
+    </select>
 </mapper>

@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  * 用户表 Mapper 接口
@@ -21,4 +24,5 @@ public interface QualityUserMapper extends BaseMapper<QualityUser> {
 
     int deleteUserRole(@Param("userId") String userId);
 
+    List<Map<String,String>> queryByMap();
 }

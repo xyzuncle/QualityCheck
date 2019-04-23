@@ -27,4 +27,19 @@ public class CommonConstants {
     public static final String LOGIN_USERNAME = "username";
     public static final String LOGIN_EMAIL = "email";
 
+
+
+    public static final int START_ENTRY = 0;// 初始状态
+
+    public static final int AUDIT_ING = 1;// 审核中
+
+    public static final int AUDIT_COMPLETE = 2;// 审核完成
+
+    public static final String WT="WT";
+
+    public static final String RW="RW";
+
+    public static final String YP="YP";
+
+
 }

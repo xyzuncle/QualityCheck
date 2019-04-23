@@ -363,6 +363,19 @@ public class QualityUserController extends BaseController<QualityUser, IQualityU
     }
 
 
+    @ApiOperation(value = "获取所有的下拉数据")
+    @RequestMapping(value = "/queryByMap.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Object queryByMap() {
+        List<Map<String,String>> result = null;
+        try {
 
+            result = this.defaultDAO.queryByMap();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BaseException("查询失败", 500);
+        }
+        return super.jsonObjectResult(result, "查询成功");
+    }
 }
 

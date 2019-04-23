@@ -1,7 +1,9 @@
 package com.quality.delegate.service.impl;
 
+import com.quality.common.constants.CommonConstants;
 import com.quality.common.dto.PageResult;
 import com.quality.common.exception.BaseException;
+import com.quality.common.service.ICommonTicketService;
 import com.quality.common.util.BeanCopierUtils;
 import com.quality.common.util.Tools;
 import com.quality.delegate.dto.QualityAssignmentStatementDto;
@@ -44,6 +46,11 @@ public class QualityAssignmentStatementServiceImpl extends ServiceImpl<QualityAs
     @Autowired
     private IQualityReferenceStandardService  referenceStandardService;
 
+
+    @Autowired
+    private ICommonTicketService commonTicketService;
+
+
     /**
      * 转换
      *
@@ -66,8 +73,11 @@ public class QualityAssignmentStatementServiceImpl extends ServiceImpl<QualityAs
             //查询委托单位信息
             String delegateUnitID = assignmentStatement.getDelegateUnitID();
             QualityDelegateunit delegateunit = delegateunitService.getById(delegateUnitID);
-            BeanCopierUtils.copyProperties(delegateunit, dto);
-            dto.setUnitId(delegateunit.getId());
+            if(delegateunit!=null){
+                BeanCopierUtils.copyProperties(delegateunit, dto);
+                dto.setUnitId(delegateunit.getId());
+
+            }
 
             dtolist.add(dto);
 
@@ -100,6 +110,7 @@ public class QualityAssignmentStatementServiceImpl extends ServiceImpl<QualityAs
     public boolean saveOrUpdateDto(QualityAssignmentStatementDto dto) {
         boolean result = true;
         QualityAssignmentStatement qualityAssignmentStatement = new QualityAssignmentStatement();
+        qualityAssignmentStatement.setState(CommonConstants.START_ENTRY);  //插入初始状态
         BeanCopierUtils.copyProperties(dto, qualityAssignmentStatement);
 
         QualityDelegateunit delegateunit = new QualityDelegateunit();
@@ -116,11 +127,20 @@ public class QualityAssignmentStatementServiceImpl extends ServiceImpl<QualityAs
         if(result){
 
             qualityAssignmentStatement.setDelegateUnitID(dto.getUnitId());
-
             String assignmentId = dto.getAssignmentId();
             if(StringUtils.isNotBlank(assignmentId)){
                 qualityAssignmentStatement.setId(assignmentId);
+            }else{
+                String unitId = qualityAssignmentStatement.getDelegateUnitID();
+                if(StringUtils.isNotBlank(unitId)){
+                    QualityDelegateunit delegeunit = delegateunitService.getById(unitId);
+                    String unitCode = delegeunit.getUnitCode();
+                    String sampleCode = commonTicketService.selectAssignmentCode(unitCode);
+                    qualityAssignmentStatement.setAgreementNo(sampleCode);
+                }
             }
+
+
             result = this.saveOrUpdate(qualityAssignmentStatement);
         }
 

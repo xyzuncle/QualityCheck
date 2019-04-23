@@ -127,6 +127,18 @@ public class QualityAssignmentStatement extends BaseEntity {
     private Date reviewDate;
 
 
+    @ApiModelProperty(value = "派发人")
+    @TableField("distributor")
+    private String distributor;
+
+
+    public String getDistributor() {
+        return distributor;
+    }
+
+    public void setDistributor(String distributor) {
+        this.distributor = distributor;
+    }
 
     public String getAgreementNo() {
         return agreementNo;
@@ -364,6 +376,7 @@ public class QualityAssignmentStatement extends BaseEntity {
                 ", acceptor='" + acceptor + '\'' +
                 ", acceptDate=" + acceptDate +
                 ", reviewer='" + reviewer + '\'' +
+                ", distributor='" + distributor + '\'' +
                 ", reviewDate=" + reviewDate +
                 '}';
     }

@@ -10,9 +10,12 @@ import com.quality.common.controller.BaseController;
 import com.quality.delegate.dto.QualityAssignmentStatementDto;
 import com.quality.delegate.entity.QualityAssignmentStatement;
 import com.quality.delegate.service.IQualityAssignmentStatementService;
+import com.quality.flow.entity.WorkflowBean;
+import com.quality.flow.service.IWorkflowService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
@@ -39,6 +42,9 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/QualityAssignmentStatement")
 public class QualityAssignmentStatementController extends BaseController<QualityAssignmentStatement, IQualityAssignmentStatementService> {
+
+    @Autowired
+    private IWorkflowService workflowService;
 
     private final Logger logger = LoggerFactory.getLogger(QualityAssignmentStatementController.class);
 
@@ -72,19 +78,13 @@ public class QualityAssignmentStatementController extends BaseController<Quality
 
 
 
-    @ApiOperation(value = "增加/修改QualityAssignmentStatement信息",
-            notes = "保存和修改QualityAssignmentStatement信息")
-    @RequestMapping(value = "/save.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+
+    @ApiOperation(value = "启动流程")
+    @RequestMapping(value = "/startProcess.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Object saveOrUpdate(@RequestBody QualityAssignmentStatementDto QualityAssignmentStatementDto) {
-        boolean result = false;
-        try {
-            result = this.defaultDAO.saveOrUpdateDto(QualityAssignmentStatementDto);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BaseException("保存失败", 500);
-        }
-        return super.jsonObjectResult(result, "保存成功");
+    public Object startProcess(@ApiParam(value = "QualityAssignmentStatement唯一标识") @RequestParam(name = "id") String id) {
+        boolean result = workflowService.saveStartProcess(id);
+        return super.jsonObjectResult(result, "提交成功");
     }
 
 
@@ -144,5 +144,20 @@ public class QualityAssignmentStatementController extends BaseController<Quality
     }
 
 
+
+    @ApiOperation(value = "提交，启动流程",
+            notes = "提交，启动流程")
+    @RequestMapping(value = "/save.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public Object saveOrUpdate(@RequestBody QualityAssignmentStatementDto QualityAssignmentStatementDto) {
+        boolean result = false;
+        try {
+            result = this.defaultDAO.saveOrUpdateDto(QualityAssignmentStatementDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BaseException("保存失败", 500);
+        }
+        return super.jsonObjectResult(result, "保存成功");
+    }
 }
 

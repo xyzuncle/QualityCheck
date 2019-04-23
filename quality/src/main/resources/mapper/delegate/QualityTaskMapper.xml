@@ -25,6 +25,8 @@
         <result column="delegateType" property="delegateType" />
         <result column="settlement" property="settlement" />
 
+        <result column="taskCode" property="taskCode"/>
+        <result column="delegateUnitID" property="delegateUnitID"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -33,7 +35,7 @@
         crtTime,
         updTime,
         deleted,
-        taskIssuedBy,taskIssuedDate,delegateUnit,sampleIDs,projectLeader,projectParticipant,projectReviewer,environmentalTest,otherTest,checkAbilityIDs,plannedCompletionDate,standardValidityDate,remarks,agreementNo,delegateType,settlement
+        taskIssuedBy,taskIssuedDate,delegateUnit,sampleIDs,projectLeader,projectParticipant,projectReviewer,environmentalTest,otherTest,checkAbilityIDs,plannedCompletionDate,standardValidityDate,remarks,agreementNo,delegateType,settlement,taskCode,delegateUnitID
     </sql>
 
 </mapper>

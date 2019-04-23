@@ -67,6 +67,30 @@ public class QualityStandard extends BaseEntity {
     @TableField("remarks")
     private String remarks;
 
+
+    @ApiModelProperty(value = "能力名称")
+    private String checkAbilityName;
+
+    @ApiModelProperty(value = "能力ID")
+    private String checkAbilityId;
+
+
+    public String getCheckAbilityName() {
+        return checkAbilityName;
+    }
+
+    public void setCheckAbilityName(String checkAbilityName) {
+        this.checkAbilityName = checkAbilityName;
+    }
+
+    public String getCheckAbilityId() {
+        return checkAbilityId;
+    }
+
+    public void setCheckAbilityId(String checkAbilityId) {
+        this.checkAbilityId = checkAbilityId;
+    }
+
     public String getStandardName() {
         return standardName;
     }

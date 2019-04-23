@@ -26,6 +26,10 @@ public class QualityTask extends BaseEntity {
     @TableField("taskIssuedBy")
     private String taskIssuedBy;
 
+    @ApiModelProperty(value = "任务编码")
+    @TableField("taskCode")
+    private String taskCode;
+
     @ApiModelProperty(value = "任务签发日期")
     @TableField("taskIssuedDate")
     @JSONField(format = "yyyy-MM-dd")
@@ -34,6 +38,9 @@ public class QualityTask extends BaseEntity {
     @ApiModelProperty(value = "委托单位")
     @TableField("delegateUnit")
     private String delegateUnit;
+    @ApiModelProperty(value = "委托单位ID")
+    @TableField("delegateUnitID")
+    private String delegateUnitID;
 
     @ApiModelProperty(value = "样品ID集合")
     @TableField("sampleIDs")
@@ -216,12 +223,30 @@ public class QualityTask extends BaseEntity {
         this.settlement = settlement;
     }
 
+    public String getTaskCode() {
+        return taskCode;
+    }
+
+    public void setTaskCode(String taskCode) {
+        this.taskCode = taskCode;
+    }
+
+    public String getDelegateUnitID() {
+        return delegateUnitID;
+    }
+
+    public void setDelegateUnitID(String delegateUnitID) {
+        this.delegateUnitID = delegateUnitID;
+    }
+
     @Override
     public String toString() {
         return "QualityTask{" +
                 "taskIssuedBy='" + taskIssuedBy + '\'' +
+                ", taskCode='" + taskCode + '\'' +
                 ", taskIssuedDate=" + taskIssuedDate +
                 ", delegateUnit='" + delegateUnit + '\'' +
+                ", delegateUnitID='" + delegateUnitID + '\'' +
                 ", sampleIDs='" + sampleIDs + '\'' +
                 ", projectLeader='" + projectLeader + '\'' +
                 ", projectParticipant='" + projectParticipant + '\'' +

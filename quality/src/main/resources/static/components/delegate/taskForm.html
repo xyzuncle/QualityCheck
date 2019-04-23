@@ -36,6 +36,7 @@
                     <div class="layui-inline layui-col-md10">
                         <label class="layui-form-label">单位名称:</label>
                         <div class="layui-input-block">
+                            <input  hidden id="delegateUnitID"/>
                             <input name="delegateUnit" id="delegateUnit" placeholder="请输入单位名称" type="text" class="layui-input"/>
                         </div>
                     </div>
@@ -51,14 +52,14 @@
                             <input name="delegateType" id="delegateType" type="text" placeholder="请输入委托类型" class="layui-input" lay-verify="required"/>
                         </div>
                     </div>
-                    <div class="layui-inline layui-col-md4">
+             <!--       <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label">结算:</label>
                         <div class="layui-input-block">
                             <input type="checkbox"  name="settlement" id="settlement" lay-skin="switch" lay-filter="switchTest" lay-text="是|否">
                         </div>
 
                     </div>
-
+-->
                     <div class="layui-inline layui-col-md4">
                         <label class="layui-form-label">项目负责人:</label>
                         <div class="layui-input-block">
@@ -294,13 +295,22 @@
         // 样品添加按钮点击事件
         $('#assignmentSampleFromBtnAdd').click(function () {
 
-            admin.open({
-                title: '添加样品信息',
-                url: 'components/delegate/assignmentSampleForm.html',
+            var filed = new Object();
+            filed["unitName"]= $("#delegateUnit").val();
+            filed["delegateUnitID"]= $("#delegateUnitID").val();
+
+            admin.putTempData('quality_task_sample',filed);
+            var data ={title: '添加样品信息',url:"#/delegate/assignmentSampleForm"}
+            index.openNewTab(data)
+
+      /*      admin.open({
+                title: '',
+                url: 'components/delegate/.html',
                 success: function (layero, index) {
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
                 }
-            });
+            });*/
+
         });
 
 
@@ -435,12 +445,7 @@
             filed["agreementNo"]= $("#agreementNo").val();
             filed["delegateType"]= $("#delegateType").val();
             filed["delegateUnit"]= $("#delegateUnit").val();
-            if($("#settlement").prop("checked")){
-                filed["settlement"]= '1';
-            }else{
-                filed["settlement"]= '0';
-            }
-
+            filed["delegateUnitID"]= $("#delegateUnitID").val();
             filed["projectLeader"]= formSelects.value('projectLeader','valStr');
             filed["projectParticipant"]= formSelects.value('projectParticipant','valStr');
             filed["projectReviewer"]= formSelects.value('projectReviewer','valStr');
@@ -489,12 +494,8 @@
             $("#agreementNo").val(data.agreementNo);
             $("#delegateType").val(data.delegateType);
             $("#delegateUnit").val(data.delegateUnit);
-             var settlement = data.settlement;
-            if(settlement=="1"){
-                $("#settlement").prop("checked",true);
-            }else{
-                $("#settlement").prop("checked",false);
-            }
+            $("#delegateUnitID").val(data.delegateUnitID);
+
             form.render();
             $("#projectLeaderID").val(data.projectLeader);
             $("#projectParticipantID").val(data.projectParticipant);

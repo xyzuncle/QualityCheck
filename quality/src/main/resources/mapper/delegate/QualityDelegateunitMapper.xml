@@ -9,6 +9,7 @@
     <result column="updTime" property="updTime" />
     <result column="deleted" property="deleted" />
         <result column="unitName" property="unitName" />
+        <result column="unitCode" property="unitCode" />
         <result column="address" property="address" />
         <result column="zipCode" property="zipCode" />
         <result column="linkMan" property="linkMan" />
@@ -23,7 +24,11 @@
         crtTime,
         updTime,
         deleted,
-        unitName, address, zipCode, linkMan, phone, mobile, fax
+        unitName,unitCode, address, zipCode, linkMan, phone, mobile, fax
     </sql>
+
+    <select id="queryByMap"  resultType="map">
+        SELECT id as delegateUnitID,unitName  FROM  quality_delegateUnit
+    </select>
 
 </mapper>

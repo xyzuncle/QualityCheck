@@ -75,6 +75,8 @@ public class QualityAssignmentStatementDto {
     @JSONField(format = "yyyy-MM-dd")
     private Date reviewDate;
 
+    private String distributor;
+
     private String unitId;
 
     private String unitName;
@@ -90,6 +92,14 @@ public class QualityAssignmentStatementDto {
     private String mobile;
 
     private String fax;
+
+    public String getDistributor() {
+        return distributor;
+    }
+
+    public void setDistributor(String distributor) {
+        this.distributor = distributor;
+    }
 
     public Integer getState() {
         return state;

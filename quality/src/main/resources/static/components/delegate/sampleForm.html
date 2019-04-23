@@ -2,6 +2,15 @@
 <form id="sampleForm" lay-filter="sampleForm" class="layui-form model-form">
     <input name="id" type="hidden"/>
     <div class="layui-form-item">
+        <label class="layui-form-label">选择委托单位</label>
+        <input type="hidden" name="unitName" id="unitName">
+        <div class="layui-input-block">
+            <select  name="delegateUnitID" id="delegateUnitID" lay-filter="delegateUnitID" lay-search="">
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label">名称</label>
         <div class="layui-input-block">
             <input name="sampleName" placeholder="请输入名称" type="text" class="layui-input" maxlength="100"
@@ -106,6 +115,35 @@
         var config = layui.config;
         var laydate = layui.laydate;
         // 渲染laydate
+
+
+        $.ajax({
+            url: config.base_server + 'QualityDelegateunit/queryByMap.do',
+            type: "GET",
+            async:false,
+            dataType: 'json',
+            contentType:"application/json",
+            success: function (json) {
+                var html='<option value="">直接选择或搜索选择</option>';
+                if (json.status == 200) {
+                    for(var i=0;i<json.data.length;i++){
+                        var type =json.data[i];
+                        html+='<option value='+type.delegateUnitID+'>'+type.unitName+'</option>'
+                    }
+                }
+                $("#delegateUnitID").append(html);
+            }
+
+        });
+
+
+        form.render('select');
+        form.on('select(delegateUnitID)', function (data) {
+            category = data.value;
+            unitName = data.elem[data.elem.selectedIndex].text;
+            $("#unitName").val(unitName);
+
+        });
 
         laydate.render({
             elem: '#date'

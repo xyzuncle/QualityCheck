@@ -3,6 +3,7 @@ package com.quality.delegate.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.quality.common.dto.PageResult;
 import com.quality.common.exception.BaseException;
+import com.quality.common.service.ICommonTicketService;
 import com.quality.common.util.BeanCopierUtils;
 import com.quality.common.util.Tools;
 import com.quality.delegate.dto.QualityTaskDto;
@@ -50,6 +51,9 @@ public class QualityTaskServiceImpl extends ServiceImpl<QualityTaskMapper, Quali
     @Autowired
     private IQualityUserService userService;
 
+
+    @Autowired
+    private ICommonTicketService commonTicketService;
     /**
      * 转换
      *
@@ -152,6 +156,9 @@ public class QualityTaskServiceImpl extends ServiceImpl<QualityTaskMapper, Quali
                 qualityTask.setTaskIssuedBy(user.getUsername());
                 qualityTask.setTaskIssuedDate(new Date());
                 qualityTask.setCrtTime(new Date());
+                String taskCode = commonTicketService.selectAssignmentCode(dto.getAgreementNo());
+                qualityTask.setTaskCode(taskCode);
+
 
             }else{
                 qualityTask.setId(taskId);

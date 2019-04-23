@@ -34,6 +34,17 @@ public class QualityCheckAbility extends BaseEntity {
     @TableField("codeEName")
     private String codeEName;
 
+
+    @ApiModelProperty(value = "所属类型")
+    @TableField("abilityTypeValue")
+    private String abilityTypeValue;
+
+
+
+    @ApiModelProperty(value = "所属类型名称")
+    @TableField("abilityTypeName")
+    private String abilityTypeName;
+
     public String getCodeEName() {
         return codeEName;
     }
@@ -64,5 +75,22 @@ public class QualityCheckAbility extends BaseEntity {
 
     public void setCodeCName(String codeCName) {
         this.codeCName = codeCName;
+    }
+
+
+    public String getAbilityTypeValue() {
+        return abilityTypeValue;
+    }
+
+    public void setAbilityTypeValue(String abilityTypeValue) {
+        this.abilityTypeValue = abilityTypeValue;
+    }
+
+    public String getAbilityTypeName() {
+        return abilityTypeName;
+    }
+
+    public void setAbilityTypeName(String abilityTypeName) {
+        this.abilityTypeName = abilityTypeName;
     }
 }

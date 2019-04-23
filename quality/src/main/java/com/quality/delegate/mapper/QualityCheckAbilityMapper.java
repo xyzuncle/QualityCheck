@@ -4,6 +4,7 @@ import com.quality.delegate.entity.QualityCheckAbility;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -16,4 +17,6 @@ import java.util.List;
 public interface QualityCheckAbilityMapper extends BaseMapper<QualityCheckAbility> {
 
     List<QualityCheckAbility> queryByCheckAbilityIds(String[] checkAbilityIds);
+
+    List<Map<String,String>>  queryByMap();
 }

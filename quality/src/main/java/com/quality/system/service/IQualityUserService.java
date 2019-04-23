@@ -4,6 +4,9 @@ import com.quality.system.entity.QualityUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  * 用户表 服务类
@@ -44,4 +47,5 @@ public interface IQualityUserService extends IService<QualityUser>{
      */
     boolean deleteUserRole(String userId);
 
+    List<Map<String,String>> queryByMap();
 }

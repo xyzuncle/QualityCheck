@@ -20,6 +20,8 @@
         <result column="crtUser" property="crtUser" />
         <result column="updUser" property="updUser" />
         <result column="remarks" property="remarks" />
+        <result column="checkAbilityName" property="checkAbilityName" />
+        <result column="checkAbilityId" property="checkAbilityId" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -28,7 +30,9 @@
         crtTime,
         updTime,
         deleted,
-        standardName, specifications, instrumentCode, certificateAttachment, certificateCode, uncertainty, measurementDate, validityDate, status, crtUser, updUser,remarks
+        standardName, specifications, instrumentCode,
+         certificateAttachment, certificateCode, uncertainty, measurementDate,
+          validityDate, status, crtUser, updUser,remarks,checkAbilityName,checkAbilityId
     </sql>
 
 </mapper>

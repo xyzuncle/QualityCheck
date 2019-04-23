@@ -24,6 +24,8 @@ public class QualityTaskDto {
 
     private String delegateUnit;
 
+    private String delegateUnitID;
+
     private String sampleIDs;
 
     private String projectLeader;
@@ -56,7 +58,23 @@ public class QualityTaskDto {
 
     private List<QualityCheckAbility> qualityCheckAbilities;
 
+    private String taskCode;
 
+    public String getDelegateUnitID() {
+        return delegateUnitID;
+    }
+
+    public void setDelegateUnitID(String delegateUnitID) {
+        this.delegateUnitID = delegateUnitID;
+    }
+
+    public String getTaskCode() {
+        return taskCode;
+    }
+
+    public void setTaskCode(String taskCode) {
+        this.taskCode = taskCode;
+    }
 
 
     public String getTaskId() {

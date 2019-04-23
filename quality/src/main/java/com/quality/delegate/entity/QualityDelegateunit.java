@@ -24,6 +24,12 @@ public class QualityDelegateunit extends BaseEntity {
     @TableField("unitName")
     private String unitName;
 
+
+    @ApiModelProperty(value = "单位编码")
+    @TableField("unitCode")
+    private String unitCode;
+
+
     @ApiModelProperty(value = "地址")
     @TableField("address")
     private String address;
@@ -48,6 +54,13 @@ public class QualityDelegateunit extends BaseEntity {
     @TableField("fax")
     private String fax;
 
+    public String getUnitCode() {
+        return unitCode;
+    }
+
+    public void setUnitCode(String unitCode) {
+        this.unitCode = unitCode;
+    }
 
     public String getUnitName() {
         return unitName;

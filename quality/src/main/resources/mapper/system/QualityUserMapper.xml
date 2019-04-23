@@ -51,6 +51,9 @@
         select count(1) from quality_user where loginName=#{loginName} and deleted=0
     </select>
 
+    <select id="queryByMap"  resultType="map">
+        SELECT id as userID,userName  FROM  quality_user
+    </select>
 
 
 

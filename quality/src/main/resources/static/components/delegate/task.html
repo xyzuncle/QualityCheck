@@ -1,47 +1,117 @@
 <div class="layui-fluid">
     <div class="layui-card">
         <div class="layui-card-body">
+
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">搜索：</label>
+                        <div class="layui-input-inline mr0">
+                            <input id="taskEdtSearch" class="layui-input" type="text" placeholder="输入关键字"/>
+                        </div>
+                    </div>
+                    <div class="layui-inline" id="taskSearchDiv"></div>
+
+                </div>
+            </div>
+
             <table class="layui-table" id="taskTable" lay-filter="taskTable"></table>
+
         </div>
     </div>
+
 </div>
+
+
+
+
+<script id="taskSearch" type="text/html">
+
+    {{#  layui.each(d.permissionkey, function(index, value){ }}
+    {{# if(value=="task:view"){ }}
+    <button id="taskBtnSearch" class="layui-btn icon-btn"><i class="layui-icon">&#xe615;</i>搜索</button>
+    {{# } }}
+    {{# if(value=="task:expand"){ }}
+    <button id="taskTreeAdvBtnExpand" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>全部展开</button>
+    {{# } }}
+    {{# if(value=="task:fold"){ }}
+    <button id="taskTreeAdvBtnFold" class="layui-btn icon-btn"><i class="layui-icon">&#xe67d;</i>全部折叠</button>
+    {{# } }}
+
+
+    {{# }); }}
+
+</script>
 
 <!-- 表格操作列 -->
 <script type="text/html" id="taskTableBar">
+    {{#  if(d.parentId == '0'){ }}
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">修改</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    {{# } }}
 </script>
+
+
 
 <!-- js部分 -->
 <script>
-    layui.use(['layer', 'table', 'form', 'index', 'config', 'admin','util','laydate','laytpl'], function () {
+
+    layui.use(['layer', 'table', 'admin', 'config','form','treetable', 'index','util','laydate','laytpl','laypage'], function () {
         var $ = layui.jquery;
         var layer = layui.layer;
-        var table = layui.table;
         var form = layui.form;
+        var table = layui.table;
+        var admin = layui.admin;
+        var config = layui.config;
+        var treetable = layui.treetable;
+        var laytpl = layui.laytpl;
+        var laydate = layui.laydate;
         var util = layui.util;
         var index = layui.index;
-        var config = layui.config;
-        var admin = layui.admin;
-        var laydate = layui.laydate;
-        var laytpl = layui.laytpl;
-        // 渲染表格
-        var ins1 = table.render({
-            elem: '#taskTable',
-            url: config.base_server + 'QualityTask/query.do',
-            method: 'POST',
-            page: true,
-            cellMinWidth: 100,
-            cols: [[
-                {type: 'numbers'},
-                {field: 'taskIssuedBy', sort: true, title: '任务签发人'},
-                {field: 'agreementNo', sort: true, title: '协议书编号'},
-                {field: 'delegateType', sort: true, title: '委托类型'},
-                {field: 'delegateUnit', sort: true, title: '委托单位'},
-                /*{field: 'sample', sort: true, title: '样机'},*/
-                {align: 'center', toolbar: '#taskTableBar', title: '操作'}
-            ]]
+        var laypage = layui.laypage;
+
+        debugger
+        var btndata =config.getUserAuths();
+        laytpl(taskSearch.innerHTML).render(btndata, function(html){
+            $("#taskSearchDiv").html(html);
         });
+
+        // 渲染表格
+        function renderTaskTable() {
+            treetable.render({
+                treeColIndex: 1,
+                treeSpid: 0,
+                treeIdName: 'id',
+                treePidName: 'parentId',
+                elem: '#taskTable',
+                url: config.base_server + 'QualityTask/queryByPage.do',
+                where:{"page":1,"limit":100},
+                cellMinWidth: 100,
+                cols: [[
+                    {type: 'numbers'},
+                    {field: 'delegateUnit', sort: true, title: '委托单位'},
+                    {field: 'taskIssuedBy', sort: true, title: '任务签发人'},
+                    {field: 'agreementNo', sort: true, title: '协议书编号'},
+                    {field: 'delegateType', sort: true, title: '委托类型'},
+
+                    /*{field: 'sample', sort: true, title: '样机'},*/
+                    {align: 'center', toolbar: '#taskTableBar', title: '操作'}
+
+                ]]
+            });
+        }
+        renderTaskTable();
+        /*$("#taskTable").append("<div id='demo7'></div>");
+
+        //完整功能
+        laypage.render({
+            elem: 'demo7'
+            ,count: 100
+            ,layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
+            ,jump: function(obj){
+                console.log(obj)
+            }
+        });*/
 
         // 添加按钮点击事件
         $('#taskBtnAdd').click(function () {
@@ -96,5 +166,59 @@
                 }, 'DELETE');
             });
         }
+
+        // 显示表单弹窗
+        function showEditModel(data) {
+            admin.putTempData('quality_menu',data);
+            admin.open({
+                title: data ? '修改菜单' : '添加菜单',
+                area:["500px","700px"],
+                url: 'components/system/menuForm.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
+                }
+            });
+        }
+
+        // 搜索按钮点击事件
+        $('#taskBtnSearch').click(function () {
+            var keyword = $('#taskEdtSearch').val();
+            var $tds = $('#taskTable').next('.treeTable').find('.layui-table-body tbody tr td');
+            if (!keyword) {
+                $tds.css('background-color', 'transparent');
+                layer.msg("请输入关键字", {icon: 5});
+                return;
+            }
+            var searchCount = 0;
+            $tds.each(function () {
+                $(this).css('background-color', 'transparent');
+                if ($(this).text().indexOf(keyword) >= 0) {
+                    $(this).css('background-color', 'rgba(250,230,160,0.5)');
+                    if (searchCount == 0) {
+                        $('.layui-tab-item.layui-show').stop(true);
+                        $('.layui-tab-item.layui-show').animate({scrollTop: $(this).offset().top - 150}, 500);
+                    }
+                    searchCount++;
+                }
+            });
+            if (searchCount == 0) {
+                layer.msg("没有匹配结果", {icon: 5});
+            } else {
+                treetable.expandAll('#taskTable');
+            }
+        });
+
+        // 展开
+        $('#taskTreeAdvBtnExpand').click(function () {
+            treetable.expandAll('#taskTable');
+        });
+        // 折叠
+        $('#taskTreeAdvBtnFold').click(function () {
+            treetable.foldAll('#taskTable');
+        });
+
     });
 </script>
+
+
+

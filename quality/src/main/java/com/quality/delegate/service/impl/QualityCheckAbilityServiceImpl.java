@@ -26,7 +26,9 @@ public class QualityCheckAbilityServiceImpl extends ServiceImpl<QualityCheckAbil
     }
 
     @Override
-    public List<Map<String, String>> queryByMap() {
-        return baseMapper.queryByMap();
+    public List<Map<String, String>> queryByMap(String specificationCName) {
+        return baseMapper.queryByMap(specificationCName);
     }
+
+
 }

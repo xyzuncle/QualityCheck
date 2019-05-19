@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.quality.delegate.mapper.QualitySampleAbilityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.quality.delegate.entity.QualitySampleAbility">
+    <result column="id" property="id" />
+        <result column="checkAbilityId" property="checkAbilityId" />
+        <result column="sampleId" property="sampleId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        checkAbilityId, sampleId
+    </sql>
+
+    <delete id="deleteBySampleId" parameterType="string">
+      DELETE  FROM   quality_sample_ability  where  sampleId =#{sampleId}
+    </delete>
+    
+    <select id="queryBySampleId" parameterType="string" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM   quality_sample_ability  where  sampleId =#{sampleId}
+    </select>
+</mapper>

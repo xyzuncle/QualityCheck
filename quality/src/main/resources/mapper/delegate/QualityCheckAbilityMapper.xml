@@ -33,7 +33,12 @@
     </select>
 
 
-    <select id="queryByMap"  resultType="map">
+    <select id="queryByMap"  parameterType="string" resultType="map">
         SELECT id as checkAbilityId,specificationCName as checkAbilityName  FROM  quality_check_ability
+        <where>
+            <if test="specificationCName!=null and  specificationCName!=''">
+                AND specificationCName LIKE '%${specificationCName}%'
+            </if>
+        </where>
     </select>
 </mapper>

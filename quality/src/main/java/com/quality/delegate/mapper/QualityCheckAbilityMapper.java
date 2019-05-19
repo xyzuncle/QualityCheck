@@ -2,6 +2,7 @@ package com.quality.delegate.mapper;
 
 import com.quality.delegate.entity.QualityCheckAbility;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -18,5 +19,5 @@ public interface QualityCheckAbilityMapper extends BaseMapper<QualityCheckAbilit
 
     List<QualityCheckAbility> queryByCheckAbilityIds(String[] checkAbilityIds);
 
-    List<Map<String,String>>  queryByMap();
+    List<Map<String,String>>  queryByMap(@Param(value = "specificationCName") String specificationCName);
 }

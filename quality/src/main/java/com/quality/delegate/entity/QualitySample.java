@@ -84,12 +84,18 @@ public class QualitySample extends BaseEntity {
     @TableField("remarks")
     private String remarks;
 
+    @ApiModelProperty(value = "考核能力")
+    @TableField(exist = false)
+    private String checkAbilityId;
 
 
+    public String getCheckAbilityId() {
+        return checkAbilityId;
+    }
 
-
-
-
+    public void setCheckAbilityId(String checkAbilityId) {
+        this.checkAbilityId = checkAbilityId;
+    }
 
     public String getSampleName() {
         return sampleName;

@@ -47,5 +47,5 @@ public interface IQualityUserService extends IService<QualityUser>{
      */
     boolean deleteUserRole(String userId);
 
-    List<Map<String,String>> queryByMap();
+    List<Map<String,String>> queryByMap(String userName);
 }

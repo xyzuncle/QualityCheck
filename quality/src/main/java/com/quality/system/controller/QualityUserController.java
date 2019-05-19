@@ -20,6 +20,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -31,6 +33,7 @@ import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -366,16 +369,39 @@ public class QualityUserController extends BaseController<QualityUser, IQualityU
     @ApiOperation(value = "获取所有的下拉数据")
     @RequestMapping(value = "/queryByMap.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Object queryByMap() {
+    public Object queryByMap(@RequestParam(value = "userName", required = false) String userName,HttpServletRequest request) {
         List<Map<String,String>> result = null;
         try {
 
-            result = this.defaultDAO.queryByMap();
+            result = this.defaultDAO.queryByMap(userName);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("查询失败", 500);
         }
         return super.jsonObjectResult(result, "查询成功");
+    }
+
+
+    @RequestMapping(value = "/queryUser.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public PageResult<QualityUser> queryUser(@RequestParam(value = "userName", required = false) String userName,HttpServletRequest request) throws JSONException {
+        PageResult<QualityUser> QualityUserListPage = null;
+        try {
+            //把查询条件都写好了
+            Map<String, Object> searchParams = new HashMap<>();
+            //如果需要按多个字段排序，请传多个参数,为了反射方便，数据库不使用下划线了
+            Sort sort = new Sort(Sort.DESC, Tools.str2StrArray("crtTime"));
+            if(org.apache.commons.lang.StringUtils.isNotBlank(userName)) {
+                searchParams.put("LIKE-userName",userName);
+            }
+            QualityUserListPage = (PageResult<QualityUser>) queryContion(searchParams, sort);
+            List<QualityUser> list = super.queryContionNoPage(searchParams);
+            QualityUserListPage.setMsg("查询成功");
+            return QualityUserListPage;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BaseException("查询失败", 500);
+        }
     }
 }
 

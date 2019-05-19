@@ -10,7 +10,9 @@ import com.quality.common.util.Tools;
 import com.quality.common.controller.BaseController;
 import com.quality.delegate.entity.QualityDelegateunit;
 import com.quality.delegate.entity.QualitySample;
+import com.quality.delegate.entity.QualitySampleAbility;
 import com.quality.delegate.service.IQualityDelegateunitService;
+import com.quality.delegate.service.IQualitySampleAbilityService;
 import com.quality.delegate.service.IQualitySampleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +56,10 @@ public class QualitySampleController extends BaseController<QualitySample, IQual
     @Autowired
     private IQualityDelegateunitService delegateunitService;
 
+    @Autowired
+    private IQualitySampleAbilityService sampleAbilityService;
+
+
     /**
      * 带分页的查询条件
      *
@@ -70,6 +77,21 @@ public class QualitySampleController extends BaseController<QualitySample, IQual
             //如果需要按多个字段排序，请传多个参数,为了反射方便，数据库不使用下划线了
             Sort sort = new Sort(Sort.DESC, Tools.str2StrArray("crtTime"));
             QualitySampleListPage = (PageResult<QualitySample>) queryContion(searchParams, sort);
+            if(QualitySampleListPage!=null){
+                List<QualitySample> list = QualitySampleListPage.getData();
+                for(int i=0;i<list.size();i++){
+                    QualitySample qualitySample = list.get(i);
+                    List<QualitySampleAbility> checkAbilityList = sampleAbilityService.queryBySampleId(qualitySample.getId());
+                    List<String> checkAbilityIds = new ArrayList<>();
+                    if(checkAbilityList!=null &&checkAbilityList.size()>0){
+                        checkAbilityList.forEach(item->{
+                            checkAbilityIds.add(item.getCheckAbilityId());
+                        });
+                        qualitySample.setCheckAbilityId(Tools.listToString(checkAbilityIds));
+                    }
+
+                }
+            }
             QualitySampleListPage.setMsg("查询成功");
             return QualitySampleListPage;
         } catch (Exception e) {
@@ -87,6 +109,9 @@ public class QualitySampleController extends BaseController<QualitySample, IQual
         try {
 
             String id = qualitySample.getId();
+            String checkAbilityId = qualitySample.getCheckAbilityId();
+            String[] checkAbilityIds = Tools.str2StrArray(checkAbilityId);
+
             if(StringUtils.isBlank(id)){
                 String unitId = qualitySample.getDelegateUnitID();
                 if(StringUtils.isNotBlank(unitId)){
@@ -97,6 +122,18 @@ public class QualitySampleController extends BaseController<QualitySample, IQual
                 }
             }
             result = this.defaultDAO.saveOrUpdate(qualitySample);
+            //TODO 更新关系
+            if(result){
+                //先删除关系
+                sampleAbilityService.deleteBySampleId(id);
+                for(int i=0;i<checkAbilityIds.length;i++){
+                    //在插入关系
+                    QualitySampleAbility sampleAbility = new QualitySampleAbility();
+                    sampleAbility.setSampleId(id);
+                    sampleAbility.setCheckAbilityId(checkAbilityIds[i]);
+                    result =  sampleAbilityService.save(sampleAbility);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("保存失败", 500);
@@ -118,8 +155,16 @@ public class QualitySampleController extends BaseController<QualitySample, IQual
     @ResponseBody
     public Object queryById(@ApiParam(value = "QualitySample唯一标识") @RequestParam(name = "id") String id) {
         try {
-            QualitySample QualitySample = this.defaultDAO.getById(id);
-            return super.jsonObjectResult(QualitySample, "查询成功");
+            QualitySample qualitySample = this.defaultDAO.getById(id);
+            List<QualitySampleAbility> checkAbilityList = sampleAbilityService.queryBySampleId(id);
+            List<String> checkAbilityIds = new ArrayList<>();
+            if(checkAbilityList!=null &&checkAbilityList.size()>0){
+                checkAbilityList.forEach(item->{
+                    checkAbilityIds.add(item.getCheckAbilityId());
+                });
+            }
+            qualitySample.setCheckAbilityId(Tools.listToString(checkAbilityIds));
+            return super.jsonObjectResult(qualitySample, "查询成功");
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("查询失败", 500);

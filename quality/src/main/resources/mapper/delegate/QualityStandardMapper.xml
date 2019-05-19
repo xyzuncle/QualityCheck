@@ -35,4 +35,12 @@
           validityDate, status, crtUser, updUser,remarks,checkAbilityName,checkAbilityId
     </sql>
 
+    <select id="queryByCheckAbilityId" parameterType="string" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/> FROM  quality_standard
+        <where>
+            <if test="checkAbilityId!=null and  checkAbilityId!=''">
+                AND checkAbilityId =#{checkAbilityId}
+            </if>
+        </where>
+    </select>
 </mapper>

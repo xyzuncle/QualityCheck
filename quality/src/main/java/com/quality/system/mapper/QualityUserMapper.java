@@ -24,5 +24,5 @@ public interface QualityUserMapper extends BaseMapper<QualityUser> {
 
     int deleteUserRole(@Param("userId") String userId);
 
-    List<Map<String,String>> queryByMap();
+    List<Map<String,String>> queryByMap(@Param("userName")String userName);
 }

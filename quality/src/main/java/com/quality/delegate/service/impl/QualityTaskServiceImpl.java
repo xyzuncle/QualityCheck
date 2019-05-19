@@ -7,6 +7,7 @@ import com.quality.common.service.ICommonTicketService;
 import com.quality.common.util.BeanCopierUtils;
 import com.quality.common.util.Tools;
 import com.quality.delegate.dto.QualityTaskDto;
+import com.quality.delegate.dto.QualityTaskListDto;
 import com.quality.delegate.entity.*;
 import com.quality.delegate.mapper.QualityTaskMapper;
 import com.quality.delegate.service.*;
@@ -36,21 +37,23 @@ import java.util.*;
 public class QualityTaskServiceImpl extends ServiceImpl<QualityTaskMapper, QualityTask> implements IQualityTaskService {
 
 
-    @Autowired
-    private IQualitySampleService sampleService;
 
     @Autowired
     private IQualityDelegateunitService delegateunitService;
-
-    @Autowired
-    private IQualityCheckAbilityService checkAbilityService;
 
     @Autowired
     private  IQualityReportService  reportService;
 
     @Autowired
     private IQualityUserService userService;
-
+    @Autowired
+    private IQualitySampleService sampleService;
+    @Autowired
+    private IQualitySampleAbilityService sampleAbilityService;
+    @Autowired
+    private IQualityCheckAbilityService  checkAbilityService;
+    @Autowired
+    private IQualityStandardService  qualityStandardService;
 
     @Autowired
     private ICommonTicketService commonTicketService;
@@ -218,4 +221,74 @@ public class QualityTaskServiceImpl extends ServiceImpl<QualityTaskMapper, Quali
         return dto;
     }
 
+    @Override
+    public PageResult<QualityTaskListDto> converTaskPage(PageResult<QualityTask> qualityTaskPage) {
+        PageResult<QualityTaskListDto> qualityTaskListPage = new PageResult<>();
+        List<QualityTaskListDto>  listDtos = new ArrayList<>();
+        List<QualityTask> taskList = qualityTaskPage.getData();
+
+        if (taskList.size()>0){
+            taskList.forEach(item->{
+                QualityTaskListDto dto = new QualityTaskListDto();
+                BeanCopierUtils.copyProperties(item, dto);
+                dto.setParentId("0");
+                listDtos.add(dto);
+                //样品
+                String sampleId = item.getSampleIDs();
+                String[] sampleIds = Tools.str2StrArray(sampleId);
+                for(int i=0;i<sampleIds.length;i++){
+                    //在插入关系
+                    QualitySample sample = sampleService.getById(sampleIds[i]);
+                    QualityTaskListDto subdto = new QualityTaskListDto();
+                    subdto.setParentId(item.getId());
+                    subdto.setId(sample.getId());
+                    subdto.setAgreementNo(sample.getSampleCode());
+                    subdto.setDelegateUnit(sample.getSampleName());
+                    listDtos.add(subdto);
+                    //标准能力
+                    List<QualitySampleAbility> checkAbilityList = sampleAbilityService.queryBySampleId(sample.getId());
+                    for(int j=0;j<checkAbilityList.size();j++){
+                        QualitySampleAbility sampleAbility = checkAbilityList.get(j);
+                        QualityCheckAbility checkAbility = checkAbilityService.getById(sampleAbility.getCheckAbilityId());
+                        QualityTaskListDto thdto = new QualityTaskListDto();
+                        thdto.setParentId(sample.getId());
+                        thdto.setId(checkAbility.getId());
+                        thdto.setAgreementNo(checkAbility.getSpecificationEName());
+                        thdto.setDelegateUnit(checkAbility.getSpecificationCName());
+                        listDtos.add(thdto);
+                        //标准器
+                        List<QualityStandard> standardList = qualityStandardService.queryByCheckAbilityId(checkAbility.getId());
+                        for(int k=0;k<standardList.size();k++){
+                            QualityStandard standard =  standardList.get(i);
+                            QualityTaskListDto fdto = new QualityTaskListDto();
+                            fdto.setParentId(checkAbility.getId());
+                            fdto.setId(standard.getId());
+                            fdto.setAgreementNo(standard.getInstrumentCode());
+                            fdto.setDelegateUnit(standard.getStandardName());
+                            listDtos.add(fdto);
+                        }
+                    }
+
+                }
+            });
+        }
+
+        List<String> list = new ArrayList<>();
+        List<QualityTaskListDto>  dtos = new ArrayList<>();
+        for(int i=0;i<listDtos.size();i++){
+            QualityTaskListDto qualityTaskListDto= listDtos.get(i);
+            String id = qualityTaskListDto.getId();
+            String parentId =  qualityTaskListDto.getParentId();
+            String key =parentId+"#"+id;
+            if(!list.contains(key)){
+                list.add(key);
+                dtos.add(qualityTaskListDto);
+            }
+        }
+        qualityTaskListPage.setCount(qualityTaskPage.getCount());
+        qualityTaskListPage.setData(dtos);
+        qualityTaskListPage.setCode(qualityTaskPage.getCode());
+        qualityTaskListPage.setPages(qualityTaskPage.getPages());
+        return qualityTaskListPage;
+    }
 }

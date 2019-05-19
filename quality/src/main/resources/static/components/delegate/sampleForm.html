@@ -1,102 +1,134 @@
 <!-- sample表单弹窗 -->
 <form id="sampleForm" lay-filter="sampleForm" class="layui-form model-form">
     <input name="id" type="hidden"/>
-    <div class="layui-form-item">
-        <label class="layui-form-label">选择委托单位</label>
-        <input type="hidden" name="unitName" id="unitName">
-        <div class="layui-input-block">
-            <select  name="delegateUnitID" id="delegateUnitID" lay-filter="delegateUnitID" lay-search="">
-            </select>
+
+    <div class="layui-form-item layui-row">
+        <div class="layui-inline layui-col-md11">
+            <label class="layui-form-label">名称</label>
+            <div class="layui-input-block">
+                <input name="sampleName" placeholder="请输入名称" type="text" class="layui-input" maxlength="100"
+                       lay-verify="required"/>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item layui-row">
+        <div class="layui-inline layui-col-md5">
+            <label class="layui-form-label">编号</label>
+            <div class="layui-input-block">
+                <input name="sampleCode" placeholder="请输入编号" type="text" class="layui-input" maxlength="100"
+                       lay-verify="required" />
+            </div>
+        </div>
+        <div class="layui-inline layui-col-md6">
+            <label class="layui-form-label">型号</label>
+            <div class="layui-input-block">
+                <input name="sampleModel" placeholder="请输入型号" type="text" class="layui-input" maxlength="100"
+                       lay-verify="required"/>
+            </div>
         </div>
     </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">名称</label>
-        <div class="layui-input-block">
-            <input name="sampleName" placeholder="请输入名称" type="text" class="layui-input" maxlength="100"
-                   lay-verify="required"/>
+    <div class="layui-form-item layui-row">
+        <div class="layui-inline layui-col-md5">
+            <label class="layui-form-label">数量</label>
+            <div class="layui-input-block">
+                <input name="sampleNum" placeholder="请输入数量" type="number" class="layui-input"
+                       lay-verify="required"/>
+            </div>
         </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">编号</label>
-        <div class="layui-input-block">
-            <input name="sampleCode" placeholder="请输入编号" type="text" class="layui-input" maxlength="100"
-                   lay-verify="required" />
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">型号</label>
-        <div class="layui-input-block">
-            <input name="sampleModel" placeholder="请输入型号" type="text" class="layui-input" maxlength="100"
-                   lay-verify="required"/>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">规格</label>
-        <div class="layui-input-block">
-            <input name="sampleSpecification" placeholder="请输入规格" type="text" class="layui-input" maxlength="100"
-             />
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">管理编号</label>
-        <div class="layui-input-block">
-            <input name="managementCode" placeholder="请输入管理编号" type="text" class="layui-input" maxlength="100"
-            />
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">内部编号</label>
-        <div class="layui-input-block">
-            <input name="internalCode" placeholder="请输入内部编号" type="text" class="layui-input" maxlength="100"
-            />
+        <div class="layui-inline layui-col-md6">
+            <label class="layui-form-label">收样日期</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input date-icon" id="date" name="receivedDate" placeholder="yyyy-MM-dd">
+            </div>
         </div>
     </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">数量</label>
-        <div class="layui-input-block">
-            <input name="sampleNum" placeholder="请输入数量" type="number" class="layui-input"
-                   lay-verify="required"/>
+
+   <!-- <div class="layui-form-item layui-row">
+        <div class="layui-inline layui-col-md5">
+            <label class="layui-form-label">管理编号</label>
+            <div class="layui-input-block">
+                <input name="managementCode" placeholder="请输入管理编号" type="text" class="layui-input" maxlength="100"
+                />
+            </div>
+        </div>
+        <div class="layui-inline layui-col-md6">
+            <label class="layui-form-label">内部编号</label>
+            <div class="layui-input-block">
+                <input name="internalCode" placeholder="请输入内部编号" type="text" class="layui-input" maxlength="100"
+                />
+            </div>
+        </div>
+    </div>-->
+
+
+    <div class="layui-form-item layui-row">
+        <div class="layui-inline layui-col-md11">
+            <label class="layui-form-label">标准能力</label>
+            <div class="layui-input-block">
+                <input type="hidden" id="checkAbility">
+                <select name="checkAbilityId" id="checkAbilityId" xm-select="checkAbilityId" lay-verify="checkAbilityId" xm-select-search="">
+                    <option value="">请选择</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item layui-row">
+        <div class="layui-inline layui-col-md11">
+            <label class="layui-form-label">选择委托单位</label>
+            <input type="hidden" name="unitName" id="unitName">
+            <div class="layui-input-block">
+                <select  name="delegateUnitID" id="delegateUnitID" lay-filter="delegateUnitID" lay-search="">
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item layui-row">
+        <div class="layui-inline layui-col-md5">
+            <label class="layui-form-label">送样人</label>
+            <div class="layui-input-block">
+                <input name="sender" placeholder="请输入送样人" type="text" class="layui-input" maxlength="100"
+                />
+            </div>
+        </div>
+        <div class="layui-inline layui-col-md6">
+            <label class="layui-form-label">来样方式</label>
+            <div class="layui-input-block">
+                <input name="receivedType" placeholder="请输入来样方式" type="text" class="layui-input" maxlength="100"
+                />
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item layui-row">
+        <div class="layui-inline layui-col-md11">
+            <label class="layui-form-label">规格</label>
+            <div class="layui-input-block">
+                <input name="sampleSpecification" placeholder="请输入规格" type="text" class="layui-input" maxlength="100"
+                />
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item layui-row">
+        <div class="layui-inline layui-col-md11">
+            <label class="layui-form-label">生产厂家</label>
+            <div class="layui-input-block">
+                <input name="manufacturer" placeholder="请输入生产厂家" type="text" class="layui-input" maxlength="100"
+                />
+            </div>
         </div>
     </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">收样日期</label>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input date-icon" id="date" name="receivedDate" placeholder="yyyy-MM-dd">
+    <div class="layui-form-item layui-row">
+        <div class="layui-inline layui-col-md11">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <input name="remarks" placeholder="请输入备注" type="text" class="layui-input" maxlength="1000"
+                />
+            </div>
         </div>
     </div>
 
-    <div class="layui-form-item">
-        <label class="layui-form-label">送样人</label>
-        <div class="layui-input-block">
-            <input name="sender" placeholder="请输入送样人" type="text" class="layui-input" maxlength="100"
-            />
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <label class="layui-form-label">来样方式</label>
-        <div class="layui-input-block">
-            <input name="receivedType" placeholder="请输入来样方式" type="text" class="layui-input" maxlength="100"
-            />
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">生产厂家</label>
-        <div class="layui-input-block">
-            <input name="manufacturer" placeholder="请输入生产厂家" type="text" class="layui-input" maxlength="100"
-            />
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">备注</label>
-        <div class="layui-input-block">
-            <input name="remarks" placeholder="请输入备注" type="text" class="layui-input" maxlength="1000"
-            />
-        </div>
-    </div>
 
     <div class="layui-form-item text-right">
         <button class="layui-btn layui-btn-primary" ew-event="closeDialog" type="button">取消</button>
@@ -114,7 +146,50 @@
         var admin = layui.admin;
         var config = layui.config;
         var laydate = layui.laydate;
+        var formSelects = layui.formSelects;
         // 渲染laydate
+
+        //监听下拉框的打开
+        var options ={
+            type: 'GET',                //请求方式: post, get, put, delete...
+            header: {"Content-Type":"application/json;charset=UTF-8"},                 //自定义请求头
+            data: {},                   //自定义除搜索内容外的其他数据
+            searchUrl: config.base_server + 'QualityCheckAbility/queryByMap.do',              //搜索地址, 默认使用xm-select-search的值, 此参数优先级高
+            searchName: 'checkAbilityName',      //自定义搜索内容的key值
+            searchVal: '',              //自定义搜索内容, 搜素一次后失效, 优先级高于搜索框中的值
+            keyName: 'checkAbilityName',            //自定义返回数据中name的key, 默认 name
+            keyVal: 'checkAbilityId',            //自定义返回数据中value的key, 默认 value
+            keySel: 'selected',         //自定义返回数据中selected的key, 默认 selected
+            keyDis: 'disabled',         //自定义返回数据中disabled的key, 默认 disabled
+            keyChildren: 'children',    //联动多选自定义children
+            delay: 500,                 //搜索延迟时间, 默认停止输入500ms后开始搜索
+            direction: 'auto',          //多选下拉方向, auto|up|down
+            response: {
+                statusCode: 200,          //成功状态码
+                statusName: 'status',     //code key
+                msgName: 'message',         //msg key
+                dataName: 'data'        //data key
+            },
+            success: function(id, url, searchVal, result){      //使用远程方式的success回调
+                debugger
+                var  checkAbilityId = $("#checkAbility").val();
+                if(checkAbilityId){
+                    formSelects.value('checkAbilityId',checkAbilityId.split(','),true);
+                }
+            },
+            error: function(id, url, searchVal, err){           //使用远程方式的error回调
+            },
+            beforeSuccess: function(id, url, searchVal, result){        //success之前的回调, 干嘛呢? 处理数据的, 如果后台不想修改数据, 你也不想修改源码, 那就用这种方式处理下数据结构吧
+                debugger
+                //然后返回数据
+                return result;  //必须return一个结果, 这个结果要符合对应的数据结构
+            },
+            beforeSearch: function(id, url, searchVal){         //搜索前调用此方法, return true将触发搜索, 否则不触发
+                return true;
+            },
+            clearInput: false,          //当有搜索内容时, 点击选项是否清空搜索内容, 默认不清空
+        };
+        formSelects.config('checkAbilityId',options);
 
 
         $.ajax({
@@ -133,7 +208,6 @@
                 }
                 $("#delegateUnitID").append(html);
             }
-
         });
 
 
@@ -152,8 +226,11 @@
         // 回显数据
         var data = admin.getTempData('quality_sample');
         $('#sampleForm').attr('method', 'GET');
+
         if (data) {
             form.val('sampleForm', data);
+            $("#checkAbility").val(data.checkAbilityId);
+            formSelects.render();
             $('#sampleForm').attr('method', 'GET');
         }
 

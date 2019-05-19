@@ -18,5 +18,5 @@ public interface IQualityCheckAbilityService extends IService<QualityCheckAbilit
 
     List<QualityCheckAbility> queryByCheckAbilityIds(String[] checkAbilityIds);
 
-    List<Map<String,String>>  queryByMap();
+    List<Map<String,String>>  queryByMap(String specificationCName);
 }

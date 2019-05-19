@@ -106,7 +106,7 @@ public class QualityUserServiceImpl extends ServiceImpl<QualityUserMapper, Quali
     }
 
     @Override
-    public List<Map<String, String>> queryByMap() {
-        return baseMapper.queryByMap();
+    public List<Map<String, String>> queryByMap(String userName) {
+        return baseMapper.queryByMap(userName);
     }
 }

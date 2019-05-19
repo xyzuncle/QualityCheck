@@ -11,9 +11,9 @@ import com.quality.delegate.service.IQualityCheckAbilityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,20 +142,20 @@ public class QualityCheckAbilityController extends BaseController<QualityCheckAb
         }
     }
 
-
     @ApiOperation(value = "获取所有的下拉数据")
     @RequestMapping(value = "/queryByMap.do", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public Object queryByMap() {
+    public Object queryByMap(@RequestParam(value = "checkAbilityName", required = false) String checkAbilityName,HttpServletRequest request) {
         List<Map<String,String>> result = null;
         try {
-
-            result = this.defaultDAO.queryByMap();
+            result = this.defaultDAO.queryByMap(checkAbilityName);
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("查询失败", 500);
         }
         return super.jsonObjectResult(result, "查询成功");
     }
+
+
 }
 

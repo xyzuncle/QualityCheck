@@ -133,6 +133,8 @@
             admin.putTempData('quality_delegateunit',data);
             admin.open({
                 title: data ? '修改委托单位信息' : '添加委托单位信息',
+                area: '500px',
+                type: 2,
                 url: 'components/delegate/delegateunitForm.html',
                 success: function (layero, index) {
                     $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条

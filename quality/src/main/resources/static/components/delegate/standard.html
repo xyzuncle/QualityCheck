@@ -130,6 +130,8 @@
         function showEditModel(data) {
             admin.putTempData('quality_standard',data);
             admin.open({
+                type:2,
+                area:'700px',
                 title: data ? '修改标准器' : '添加标准器',
                 url: 'components/delegate/standardForm.html',
                 success: function (layero, index) {

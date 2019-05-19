@@ -110,7 +110,9 @@
                             <input id="sampleName"  name="sampleName" class="layui-input" type="text" placeholder="输入样品名称"/>
                         </div>
                     </div>
-
+                    <div class="layui-inline">
+                        <button id="assignmentSampleFromBtnAdd" class="layui-btn icon-btn"><i class="layui-icon">&#xe654;</i>添加</button>
+                    </div>
 
                 </div>
             </div>
@@ -119,7 +121,24 @@
 
     </div>
 
+    <div class="layui-card">
+        <div class="layui-card-header">考核能力</div>
+        <div class="layui-card-body">
+            <div class="layui-form toolbar">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label w-auto">规范名称</label>
+                        <div class="layui-input-inline">
+                            <input id="specificationCName"  name="specificationCName" class="layui-input" type="text" placeholder="输入规范名称"/>
+                        </div>
+                    </div>
 
+                </div>
+            </div>
+            <table class="layui-table" id="taskCheckAbilityTable" lay-filter="taskCheckAbilityTable"></table>
+        </div>
+
+    </div>
 
     <div class="layui-card">
             <div style="text-align: center;margin-top: 30px;margin-bottom: 20px;">
@@ -183,7 +202,7 @@
                 dataName: 'data'        //data key
             },
             success: function(id, url, searchVal, result){      //使用远程方式的success回调
-
+                debugger
                 var  projectLeader = $("#projectLeaderID").val();
                 if(projectLeader){
                     formSelects.value('projectLeader',projectLeader.split(','),true);
@@ -273,6 +292,28 @@
         })
 
 
+        // 样品添加按钮点击事件
+        $('#assignmentSampleFromBtnAdd').click(function () {
+
+            var filed = new Object();
+            filed["unitName"]= $("#delegateUnit").val();
+            filed["delegateUnitID"]= $("#delegateUnitID").val();
+
+            admin.putTempData('quality_task_sample',filed);
+            var data ={title: '添加样品信息',url:"#/delegate/assignmentSampleForm"}
+            index.openNewTab(data)
+
+      /*      admin.open({
+                title: '',
+                url: 'components/delegate/.html',
+                success: function (layero, index) {
+                    $(layero).children('.layui-layer-content').css('overflow', 'visible');  // 禁止出现滚动条
+                }
+            });*/
+
+        });
+
+
 
         table.render({
             elem: '#taskSampleTable'
@@ -306,6 +347,51 @@
                 doDelete(obj);
             }
         });
+
+
+
+        /**校验能力列表*/
+        var caTableData=new Array(); // 用于存放表格数据
+
+        tableSelect.render({
+            elem: '#specificationCName',
+            checkedKey: 'id',
+            searchKey: 'search-LIKE-specificationCName', //searchKey: 'search-LIKE-sampleName',
+            table: {
+                method: 'POST',
+                page: true,
+                url: config.base_server + 'QualityCheckAbility/query.do',
+                cols: [[
+                    { type: 'checkbox' }
+                    ,{field: 'id', title: 'ID'}
+                    ,{field: 'specificationCName',title: '规范名称'}
+                    ,{field: 'specificationEName', title: '规范名称（英文）'}
+                    ,{field: 'codeCName', title: '代号'}
+                    ,{field: 'codeEName', title: '代号（英文）'}
+                ]]
+            },
+            done: function (elem, data) {
+                layui.each(data.data, function (index, item) {
+                    var rsTableData =  table.cache["taskCheckAbilityTable"];
+                    rsTableData.push(item);
+                    table.reload('taskCheckAbilityTable',{
+                        data : rsTableData
+                    });
+                })
+
+            }
+        })
+
+
+        // 工具条点击事件
+        table.on('tool(taskCheckAbilityTable)', function (obj) {
+            var data = obj.data;
+            var layEvent = obj.event;
+         if (layEvent === 'del') { // 删除
+                doDelete(obj);
+            }
+        });
+
         // 删除
         function doDelete(obj) {
             layer.confirm("你确定删除数据吗？", {icon: 3, title:'提示'},
@@ -317,6 +403,23 @@
                     }
             );
         }
+        table.render({
+            elem: '#taskCheckAbilityTable'
+            ,data:tableData
+            ,cols: [[
+                ,{field: 'id', title: 'ID'}
+                ,{field: 'specificationCName',title: '规范名称'}
+                ,{field: 'specificationEName', title: '规范名称（英文）'}
+                ,{field: 'codeCName', title: '代号'}
+                ,{field: 'codeEName', title: '代号（英文）'}
+                ,{align: 'center', toolbar: '#taskCheckAbilityTableBar', title: '操作'}
+
+            ]]
+            , done: function(res, curr, count){
+                //关闭新增表单，追加表数据
+            }
+
+        });
 
         function removeEmptyArrayEle(arr){
             for(var i = 0; i < arr.length; i++) {
@@ -328,10 +431,12 @@
             }
             return arr;
         };
+
+
         // 提交按钮
         $('#formAdvBtnSubmit').click(function () {
             var filed = new Object();
-
+            debugger
             //任务单
             filed["taskId"]= $("#taskId").val();
 
@@ -348,9 +453,10 @@
 
             //样品
             var sampledata =  table.cache["taskSampleTable"];
-
+            //参考信息
+            var askCheckAbilitydata =  table.cache["taskCheckAbilityTable"];
             filed["qualitySamples"] = removeEmptyArrayEle(sampledata);
-
+            filed["qualityCheckAbilities"] =removeEmptyArrayEle(askCheckAbilitydata);
 
             layer.load(2);
             $.ajax({
@@ -378,7 +484,7 @@
 
         //回写数据
         var data =  admin.getTempData('quality_task');
-
+        debugger
         if (data) {
             layer.closeAll('loading');
             $("#taskId").val(data.taskId);
@@ -400,7 +506,10 @@
             table.reload('taskSampleTable',{
                 data : sampledata
             });
-
+            var askCheckAbilitydata =  data.qualityCheckAbilities;
+            table.reload('taskCheckAbilityTable',{
+                data : askCheckAbilitydata
+            });
         }
     });
 </script>

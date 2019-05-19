@@ -53,6 +53,12 @@
 
     <select id="queryByMap"  resultType="map">
         SELECT id as userID,userName  FROM  quality_user
+        <where> deleted=0
+            <if test="userName!=null and  userName!=''">
+               AND userName LIKE '%${userName}%'
+            </if>
+        </where>
+
     </select>
 
 
